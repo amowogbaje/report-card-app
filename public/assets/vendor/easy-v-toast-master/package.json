@@ -1,0 +1,29 @@
+{
+  "name": "easy-v-toast",
+  "version": "1.0.1",
+  "description": "Easy toast notifications in vanilla JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --watch",
+    "build": "webpack --config webpack.without.css.js && webpack --config webpack.include.css.js"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Vladislav Cheremuhin",
+    "website": "https://vladislav.in",
+    "telegram": "@cr1gger"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^6.7.1",
+    "file-loader": "^6.2.0",
+    "mini-css-extract-plugin": "^2.6.1",
+    "node-sass": "^7.0.1",
+    "path": "^0.12.7",
+    "remove": "^0.1.5",
+    "sass-loader": "^13.0.2",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
+  }
+}

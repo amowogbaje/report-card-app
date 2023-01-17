@@ -1,0 +1,163 @@
+.underline {
+    text-decoration: underline;
+}
+
+
+
+.height-30 td, .height-30 th {
+    height: 50px;
+}
+.fs-1 {
+    font-size: 8px;
+}
+
+.fs-2 {
+    font-size: 12px;
+}
+
+.fs-3 {
+    font-size: 14px;
+}
+
+.fs-4 {
+    font-size: 65px;
+}
+
+.fs-5 {
+    font-size: 95px;
+}
+
+.m-0 {
+    margin: 0;
+}
+
+.m-1 {
+    margin: 4px;
+}
+
+.m-2 {
+    margin: 8px;
+}
+
+.m-3 {
+    margin: 16px;
+}
+
+.mx-0 {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.mx-1 {
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.mx-2 {
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.mx-3 {
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+.my-0 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.my-1 {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.my-2 {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.my-3 {
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.px-0, .px-0 th, .px-0 td {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.px-1, .px-1 th, .px-1 td {
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.px-2, .px-2 th, .px-2 td {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.px-3, .px-3 th, .px-3 td {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.py-0, .py-0 th, .py-0 td {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.py-1, .py-1 th, .py-1 td {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.py-2, .py-2 th, .py-3 td {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.py-3, .py-3 th, .py-3 td {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+.text-center {
+    text-align: center
+}
+
+.text-left {
+    text-align: left
+}
+
+.text-uppercase {
+    text-transform: uppercase;
+}
+
+.border-line, .border-line tbody {
+    border: solid #000 thin;
+    
+}
+.border-line {
+    border-collapse: collapse;
+}
+.border-line td, .border-line th {
+    border: solid #000 thin;
+    margin: 0px;
+}
+
+.border-rect {
+    border: solid #000 thin;
+}
+
+.border-radius-5 {
+    border-radius: 5px;
+}
+
+
+/* .table-pos-left{}
+.table-pos-right{
+    align: left
+} */
+

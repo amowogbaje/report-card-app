@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Easy toast notification</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="container">
+    <main>
+        <div class="py-5 text-center">
+            <img class="d-block mx-auto mb-4" src="images/notification.gif" alt="" width="200" height="200">
+            <h2>Easy toast notification</h2>
+            <p class="lead">
+                Lightweight library for toast notifications. Written in vanilla javascript and does not require other dependencies.
+                Try the pop-up notifications on this page.
+            </p>
+            <div class="flex-row mb-3">
+                <a class="mx-2" href="https://github.com/cr1gger/easy-v-toast">Github Source</a>
+                <a class="mx-2" href="https://www.npmjs.com/package/easy-v-toast">NPM</a>
+            </div>
+        </div>
+
+        <div class="row g-5 bg-light rounded-3">
+
+            <div class="col-md-5 col-lg-4 order-md-last">
+                <h4 class="mb-3">Config properties</h4>
+                <ul>
+                    <li><strong>duration</strong> - In seconds</li>
+                    <li><strong>type</strong> - Notification style</li>
+<!--                    <li><strong>position</strong> - Notification display position</li>-->
+                    <li><strong>hasCloseButton</strong> - Show close button</li>
+                    <li><strong>showTimeline</strong> - Show timeline (progress bar)</li>
+                    <li><strong>autoclose</strong> - Close notification when timer ends</li>
+                    <li><strong>stopOnHover</strong> - Pause the timer when you hover over a notification</li>
+                    <li><strong>events</strong> - Object contains two available event: click and closeClick</li>
+
+                </ul>
+            </div>
+            <div class="col-md-7 col-lg-8">
+                <h4 class="mb-3">Build you toast notification</h4>
+                <form id="toastConfigure">
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label for="toastMessage" class="form-label">Message</label>
+                            <input type="text" class="form-control" id="toastMessage" value="Hello, i'm easy toast!" required="" name="message">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="toastType" class="form-label">Type</label>
+                            <select class="form-select" id="toastType" required="" name="type">
+                                <option value="notify">Default</option>
+                                <option value="success">Success</option>
+                                <option value="danger">Danger</option>
+                                <option value="warning">Warning</option>
+                                <option value="dark">Dark</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="toastPosition" class="form-label">Position</label>
+                            <select class="form-select" id="toastPosition" required="" name="position">
+                                <option value="top-left">Top-Left</option>
+                                <option value="top-middle">Top-Middle</option>
+                                <option value="top-right">Top-Right</option>
+                                <option value="center">Center</option>
+                                <option value="bottom-left">Bottom-Left</option>
+                                <option value="bottom-middle">Bottom-Middle</option>
+                                <option value="bottom-right" selected>Bottom-Right</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="toastDuration" class="form-label">Duration</label>
+                            <input type="number" class="form-control" id="toastDuration" value="3" required="" name="duration" min="1">
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="hasCloseBtn" name="hasCloseButton" checked>
+                        <label class="form-check-label" for="hasCloseBtn">Show close button</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="autoClose" name="autoclose" checked>
+                        <label class="form-check-label" for="autoClose">Auto close notification</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="stopOnHover" name="stopOnHover" checked>
+                        <label class="form-check-label" for="stopOnHover">Stop the timer when hovering over a notification</label>
+                    </div>
+
+                    <hr class="my-4">
+
+
+
+                    <button class="w-100 btn btn-primary btn-lg" id="try">Try</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="my-5 pt-5 text-muted text-center text-small">
+        <p class="mb-1">© 2022 Easy toast</p>
+
+    </footer>
+</div>
+
+<script src="js/toast.with.css.js"></script>
+<script>
+    document.querySelector('#try').addEventListener('click', (e) => {
+        e.preventDefault()
+
+        let form = document.querySelector('#toastConfigure');
+
+        let defaultCheckbox = {
+            hasCloseButton: false,
+            autoclose: false,
+            stopOnHover: false,
+        }
+
+        let formConfig = Object.fromEntries(new FormData(form).entries());
+        let config = {...defaultCheckbox, ...formConfig};
+
+        toast.configure(config)
+
+        toast[config.type](config.message);
+
+    })
+</script>
+</body>
+</html>
