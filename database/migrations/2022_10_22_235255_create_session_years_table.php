@@ -17,6 +17,10 @@ class CreateSessionYearsTable extends Migration
             $table->id();
             $table->string('name');
             $table->tinyInteger('active')->default(false);
+            $table->tinyInteger('ended')->default(false);
+            $table->string('start_date')->default(false);
+            $table->string('end_date')->default(false);
+            $table->string('next_term_begins')->default(false);
             $table->timestamps();
         });
     }

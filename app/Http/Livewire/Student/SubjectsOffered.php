@@ -18,7 +18,7 @@ class SubjectsOffered extends Component
     public function mount() 
     {
         $userId = Auth::user()->id;
-        $student = Student::where('user_id', $userId)->where('active', 1)->first();
+        $student = Student::where('user_id', $userId)->where('status', 1)->first();
         $this->student = $student;
         $classStageId = $student->class_stage_id;
         $category = $student->category;

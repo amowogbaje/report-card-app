@@ -9,10 +9,12 @@
             body {
                 margin: 0;
                 padding: 0;
+                /* font-size: 1.7em; */
                 font-family: Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", "serif";
                 /* background-image: url({{URL::asset("assets/images/avatar-3.jpg")}}); */
                 background-position: center center;
                 background-repeat: no-repeat;
+                color: black;
     
             }
         </style>
@@ -32,121 +34,44 @@
     </head>
 
     <body>
-        <table width="2155" >
+        <table width="2155" style="margin-left: auto; margin-right:auto;">
             <tbody>
                 <tr>
                     <td>
-                        <h4 class="fs-5 my-2 text-center">{{$schoolInfo->name}}</h4>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5 class="fs-4 my-2 text-center">{{$student->class_stage->name}} End of {{$current_term->name}} Report</h4>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <table width="2200">
-                            <tbody>
-                                <tr>
-                                    <td width="900">
-                                        <table width="600" class="border-line">
-                                            <tbody>
-                                                <tr>
-                                                    <td height="40" colspan="10">
-                                                        <h4 class="text-center my-1 text-uppercase">
-                                                            Student's Particular</h4>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td height="40" colspan="10">
-                                                        <h4 class="my-1 text-uppercase">Name: {{$student->user->fullname}}</h4>
-                                                    </td>
-                                                </tr>
-                                                <tr class="text-center">
-                                                    <td height="40">Year Admitted</td>
-                                                    <td>Admission No</td>
-                                                    <td>File No</td>
-                                                    <td>Session</td>
-                                                    <td>Class</td>
-                                                    <td>House</td>
-                                                    <td>Sex</td>
-                                                    <td>Age</td>
-                                                    <td>Height</td>
-                                                    <td>Weight</td>
-                                                </tr>
-                                                <tr class="text-center">
-                                                    <td height="40"></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td>{{$current_session->name}}</td>
-                                                    <td>{{$student->class->shortname}}</td>
-                                                    <td></td>
-                                                    <td>{{ucfirst($student->user->gender)}}</td>
-                                                    <td>{{$physicalAssessmentArray['age']}}</td>
-                                                    <td>{{$physicalAssessmentArray['height']}}</td>
-                                                    <td>{{$physicalAssessmentArray['weight']}}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                    <td width="400"></td>
-                                    <td width="800">
-                                        <table width="700" align="right">
-                                            <tbody>
-                                                <tr>
-                                                    <td width="700">
-                                                        <table width="700"  class="border-line">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td height="40" colspan="8">
-                                                                        <h4 class="text-center my-1 text-uppercase">
-                                                                            Summary of Performance</h4>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr class="text-center">
-                                                                    <td height="40">No. In Class</td>
-                                                                    <td>Mark Obtainable</td>
-                                                                    <td>Mark Obtained</td>
-                                                                    <td>Average Score</td>
-                                                                    <td>Lowest Score in Class</td>
-                                                                    <td>Highest Score in Class</td>
-                                                                    <td>Percentage</td>
-                                                                    <td>Position</td>
-
-
-                                                                </tr>
-                                                                <tr class="text-center">
-                                                                    <td height="40" >{{$noInClass}}</td>
-                                                                    <td>{{$academicAssessmentsArray['markObtainable']}}</td>
-                                                                    <td>{{$academicAssessmentsArray['markObtained']}}</td>
-                                                                    <td>{{$classAssessment->average_score}}</td>
-                                                                    <td>{{$classAssessment->lowest_score}}</td>
-                                                                    <td>{{$classAssessment->highest_score}}</td>
-                                                                    <td>{{$academicAssessmentsArray['percentage']}}</td>
-                                                                    <td></td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </tbody>
+                        <img width="300" style="float:left" src="{{url('uploads/'.$schoolInfo->stamp_img_url)}}" alt="" srcset="">
+                        @if($student->user->profile_pics != "")
+                        <img width="300" style="float:right; border-radius: 10em;" src="{{url('uploads/'.$student->user->profile_pics)}}" alt="" srcset="">
+                        @endif
+                        <table width="1525" align="center" style="padding-top: 4em; margin-bottom: 8em;">
+                            <tr>
+                                <td>
+                                    <h4 class="fs-5 my-2 text-center">{{$schoolInfo->name}}</h4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h5 class="fs-4 my-2 text-center">{{$student->class_stage->name}} End of {{$current_term->name}} Report</h4>
+                                </td>
+                            </tr>
                         </table>
+                        
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <table width="2200">
+                        <table width="2200" style="margin-bottom: 8em;">
                             <tr>
                                 <td style="vertical-align: top" width="1750">
-                                    <table width="1750">
-                                        <tr class="text-uppercase text-center">
-                                            <td>Student's Performance In Subjects Offered</td>
+                                    <table width="1700">
+                                        <tr>
+                                            <td class="text-center text-uppercase" style="color: #ffffff; font-size: 1.5em; padding: 5px; border-bottom-left-radius: 0.3em; border-bottom-right-radius: 0.3em; height: 100px; background-color: {{$colorsArray['mainTextColor']}}">
+                                                Student's Performance In Subjects Offered
+                                            </td>
                                         </tr>
+                                        <tr class="text-center text-uppercase">
+                                            <td class="text-bold" style="font-size: 1.5em;font-weight: 700; color: {{$colorsArray['mainTextColor']}}">&nbsp; </td>
+                                        </tr>
+                                        
                                         <tr>
                                             <td>
                                                 <table width = "1700" class="border-line">
@@ -219,27 +144,32 @@
                                     </table>
                                 </td>
                                 <td style="vertical-align: top" width="450">
-                                    <table width="300" align="right">
+                                    <table width="450" align="left">
+                                        <tr>
+                                            <td class="text-center text-uppercase" style="color: #ffffff; font-size: 1.5em; padding: 5px; border-bottom-left-radius: 0.3em; border-bottom-right-radius: 0.3em; height: 100px; background-color: {{$colorsArray['mainTextColor']}}">
+                                                Behaviour Assessment
+                                            </td>
+                                        </tr>
                                         <tr class="text-center text-uppercase">
-                                            <td>Skills and Behaviour</td>
+                                            <td class="text-bold" style="font-size: 1.5em;font-weight: 700; color: {{$colorsArray['mainTextColor']}}">&nbsp; </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <table width="300" class="border-line">
-                                                    <tr class="text-center">
-                                                        <th class="text-left px-2 py-2">Skills</th>
-                                                        <th>5</th>
-                                                        <th>4</th>
-                                                        <th>3</th>
-                                                        <th>2</th>
-                                                        <th>1</th>
+                                                <table width="450" class="border-line border-decorated">
+                                                    <tr class="text-center py-3" bgcolor="{{$colorsArray['mainTextColor']}}" style="color:white">
+                                                        <th width="200" class="text-left text-uppercase px-2 py-2">Behaviour</th>
+                                                        <th width="40">5</th>
+                                                        <th width="40">4</th>
+                                                        <th width="40">3</th>
+                                                        <th width="40">2</th>
+                                                        <th width="40">1</th>
                                                     </tr>
-                                                    @foreach ($skillAssessmentsArray as $title => $mark)
-                                                        <tr class="text-right">
-                                                            <td class="px-2 text-left">{{$title}}</td>
+                                                    @foreach ($behaviourAssessmentsArray as $title => $mark)
+                                                        <tr class="text-right py-2">
+                                                            <th width = "250" style="color: {{$colorsArray['mainTextColor']}}" class="px-2 text-left text-uppercase">{{camelCase($title)}}</th>
                                                             @for ($i = 5; $i >= 1; $i--)
                                                             @if($mark == $i)
-                                                            <td style="padding: 10px, 0">
+                                                            <td width = "40" style="padding: 10px, 0">
                                                                 <img width="20" src="{{URL::asset('assets/libs/svg/check.png')}}" />
                                                             </td>
                                                             @else
@@ -251,35 +181,9 @@
                                                             
                                                         </tr>
                                                     @endforeach
-
-                                                    <tr class="text-center">
-                                                        <th class="px-2 py-2 text-left">Behaviour</th>
-                                                        <th>5</th>
-                                                        <th>4</th>
-                                                        <th>3</th>
-                                                        <th>2</th>
-                                                        <th>1</th>
-                                                    </tr>
-                                                    @foreach ($behaviourAssessmentsArray as $title => $mark)
-                                                        <tr class="text-right">
-                                                            <td class="px-2 text-left">{{$title}}</td>
-                                                            @for ($i = 5; $i >= 1; $i--)
-                                                            @if($mark == $i)
-                                                            <td style="padding: 10px, 0">
-                                                                <img width="20" src="{{URL::asset('assets/libs/svg/check.png')}}" alt="" srcset="">
-                                                            </td>
-                                                            @else
-                                                            <td  style="padding: 20px, 0"></td>
-                                                            @endif
-                                                            @endfor
-                                                            
-                                                            
-                                                            
-                                                        </tr>
-                                                    @endforeach
                                                     
-
-
+                                                    
+                                                    
                                                 </table>
                                             </td>
                                         </tr>
@@ -292,13 +196,252 @@
                 </tr>
                 <tr>
                     <td>
+                        <table width="2200" class="my-3" style="margin-bottom: 8em;">
+                            <tr>
+                                <td style="vertical-align: top" width="440">
+                                    <table width="400" align="left">
+                                        <tr>
+                                            <td class="text-center text-uppercase" style="color: white; font-size: 1.5em; padding: 5px; border-bottom-left-radius: 1em; border-bottom-right-radius: 1em; height: 80px; background-color: {{$colorsArray['mainTextColor']}}">
+                                                Student's Biodata
+                                            </td>
+                                        </tr>
+                                        <tr class="text-center text-uppercase">
+                                            <td class="text-bold" style="font-size: 1.5em;font-weight: 700; color: {{$colorsArray['mainTextColor']}}">&nbsp; </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table width="400" class="border-line border-decorated py-3">
+                                                    <tr class="text-center" bgcolor="{{$colorsArray['mainTextColor']}}" style="color:white">
+                                                        <th width="200" class="text-left text-uppercase px-2 py-2">Admission No</th>
+                                                        <td width="200">{{$student->user->username}}</td>
+                                                    </tr>
+                                                    <tr class="text-center">
+                                                        <th width="200" style="color: {{$colorsArray['mainTextColor']}}" class="text-left text-uppercase px-2 py-2">Session</th>
+                                                        <td width="200">{{$current_session->name}}</td>
+                                                    </tr>
+                                                    <tr class="text-center" >
+                                                        <th width="200" style="color: {{$colorsArray['mainTextColor']}}" class="text-left text-uppercase px-2 py-2">Class</th>
+                                                        <td width="200">{{$student->class->shortname}}</td>
+                                                    </tr>
+                                                    <tr class="text-center">
+                                                        <th width="200"  style="color: {{$colorsArray['mainTextColor']}}" class="text-left text-uppercase px-2 py-2">Gender</th>
+                                                        <td width="200">{{ucfirst($student->user->gender)}}</td>
+                                                    </tr>
+                                                    <tr class="text-center" >
+                                                        <th width="200" style="color: {{$colorsArray['mainTextColor']}}" class="text-left text-uppercase px-2 py-2">Age</th>
+                                                        <td width="200">{{$physicalAssessmentArray['age']}}</td>
+                                                    </tr>
+                                                    <tr class="text-center" >
+                                                        <th width="200" style="color: {{$colorsArray['mainTextColor']}}" class="text-left text-uppercase px-2 py-2">Height</th>
+                                                        <td width="200">{{$physicalAssessmentArray['height']}}</td>
+                                                    </tr>
+                                                    <tr class="text-center">
+                                                        <th width="200" style="color: {{$colorsArray['mainTextColor']}}" class="text-left text-uppercase px-2 py-2">Weight</th>
+                                                        <td width="200">{{$physicalAssessmentArray['weight']}}</td>
+                                                    </tr>
+                                                    
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align: top" width="440">
+                                    <table width="400" align="left">
+                                        <tr>
+                                            <td class="text-center text-uppercase" style="color: white; font-size: 1.5em; padding: 5px; border-bottom-left-radius: 1em; border-bottom-right-radius: 1em; height: 80px; background-color: {{$colorsArray['mainTextColor']}}">
+                                                Student's Performance
+                                            </td>
+                                        </tr>
+                                        <tr class="text-center text-uppercase">
+                                            <td class="text-bold" style="font-size: 1.5em;font-weight: 700; color: {{$colorsArray['mainTextColor']}}">&nbsp; </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table width="400" class="border-line border-decorated py-3">
+                                                    <tr class="text-center" bgcolor="{{$colorsArray['mainTextColor']}}" style="color:white">
+                                                        <th width="300" class="text-left text-uppercase px-2 py-2">Number In Class</th>
+                                                        <td width="100">{{$noInClass}}</td>
+                                                    </tr>
+                                                    <tr class="text-center">
+                                                        <th width="300" style="color: {{$colorsArray['mainTextColor']}}" class="text-left text-uppercase px-2 py-2">Mark Obtainable</th>
+                                                        <td width="100">{{$academicAssessmentsArray['markObtainable']}}</td>
+                                                    </tr>
+                                                    <tr class="text-center" >
+                                                        <th width="300" style="color: {{$colorsArray['mainTextColor']}}" class="text-left text-uppercase px-2 py-2">Mark Obtained</th>
+                                                        <td width="100">{{$academicAssessmentsArray['markObtained']}}</td>
+                                                    </tr>
+                                                    <tr class="text-center">
+                                                        <th width="300"  style="color: {{$colorsArray['mainTextColor']}}" class="text-left text-uppercase px-2 py-2">Student Average Score</th>
+                                                        <td width="100">{{$classAssessment->average_score}}</td>
+                                                    </tr>
+                                                    <tr class="text-center" >
+                                                        <th width="300" style="color: {{$colorsArray['mainTextColor']}}" class="text-left text-uppercase px-2 py-2">Lowest Score in Class</th>
+                                                        <td width="100">{{$classAssessment->lowest_score}}</td>
+                                                    </tr>
+                                                    <tr class="text-center" >
+                                                        <th width="300" style="color: {{$colorsArray['mainTextColor']}}" class="text-left text-uppercase px-2 py-2">Highest Score in Classs</th>
+                                                        <td width="100">{{$classAssessment->highest_score}}</td>
+                                                    </tr>
+                                                    <tr class="text-center">
+                                                        <th width="300" style="color: {{$colorsArray['mainTextColor']}}" class="text-left text-uppercase px-2 py-2">Percentage</th>
+                                                        <td width="100">{{$academicAssessmentsArray['percentage']}}</td>
+                                                    </tr>
+                                                    
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="vertical-align: top" width="440">
+                                    <table width="400" align="left">
+                                        <tr>
+                                            <td class="text-center text-uppercase" style="color: #ffffff; font-size: 1.5em; padding: 5px; border-bottom-left-radius: 1em; border-bottom-right-radius: 1em; height: 80px; background-color: {{$colorsArray['mainTextColor']}}">
+                                                Skill Assessment
+                                            </td>
+                                        </tr>
+                                        <tr class="text-center text-uppercase">
+                                            <td class="text-bold" style="font-size: 1.5em;font-weight: 700; color: {{$colorsArray['mainTextColor']}}">&nbsp; </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table width="400" class="border-line border-decorated">
+                                                    <tr class="text-center py-3" bgcolor="{{$colorsArray['mainTextColor']}}" style="color:white">
+                                                        <th width="200" class="text-left text-uppercase px-2 py-2">Skills</th>
+                                                        <th width="40">5</th>
+                                                        <th width="40">4</th>
+                                                        <th width="40">3</th>
+                                                        <th width="40">2</th>
+                                                        <th width="40">1</th>
+                                                    </tr>
+                                                    @foreach ($skillAssessmentsArray as $title => $mark)
+                                                        <tr class="text-right py-2">
+                                                            <th width = "200" style="color: {{$colorsArray['mainTextColor']}}" class="px-2 text-left text-uppercase">{{camelCase($title)}}</th>
+                                                            @for ($i = 5; $i >= 1; $i--)
+                                                            @if($mark == $i)
+                                                            <td width = "40" style="padding: 10px, 0">
+                                                                <img width="20" src="{{URL::asset('assets/libs/svg/check.png')}}" />
+                                                            </td>
+                                                            @else
+                                                            <td style="padding: 20px, 0"></td>
+                                                            @endif
+                                                            @endfor
+                                                            
+                                                            
+                                                            
+                                                        </tr>
+                                                    @endforeach
+                                                    
+                                                    
+                                                    
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                
+                                <td style="vertical-align: top" width="440">
+                                    
+                                    <table width="400" align="left">
+                                        <tr>
+                                            <td class="text-center text-uppercase" style="color: white; font-size: 1.5em; padding: 5px; border-bottom-left-radius: 1em; border-bottom-right-radius: 1em; height: 80px; background-color: {{$colorsArray['mainTextColor']}}">
+                                                SESSION TIMETABLE
+                                            </td>
+                                        </tr>
+                                        <tr class="text-center text-uppercase">
+                                            <td class="text-bold" style="font-size: 1.5em;font-weight: 700; color: {{$colorsArray['mainTextColor']}}">&nbsp; </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table width="400" class="border-line border-decorated py-3">
+                                                    <tr class="text-center" bgcolor="{{$colorsArray['mainTextColor']}}" style="color:white">
+                                                        <th width="200" class="text-left text-uppercase px-2 py-2">Number In Class</th>
+                                                        <td width="200">September 19, 2022</td>
+                                                    </tr>
+                                                    <tr class="text-center">
+                                                        <th width="200" style="color: {{$colorsArray['mainTextColor']}}" class="text-left text-uppercase px-2 py-2">End of term: </th>
+                                                        <td width="200">December 15, 2022</td>
+                                                    </tr>
+
+                                                    <tr class="text-center">
+                                                        <th width="200" style="color: {{$colorsArray['mainTextColor']}}" class="text-left text-uppercase px-2 py-2">No. of Times School Opened:</th>
+                                                        <td width="200">1200</td>
+                                                    </tr>
+                                                    <tr class="text-center">
+                                                        <th width="200" style="color: {{$colorsArray['mainTextColor']}}" class="text-left text-uppercase px-2 py-2">No. of Times Present:</th>
+                                                        <td width="200">1200</td>
+                                                    </tr>
+                                                    <tr class="text-center">
+                                                        <th width="200" style="color: {{$colorsArray['mainTextColor']}}" class="text-left text-uppercase px-2 py-2">No. of Times Absent:</th>
+                                                        <td width="200">0</td>
+                                                    </tr>
+                                                    <tr class="text-center">
+                                                        <th width="200" style="color: {{$colorsArray['mainTextColor']}}" class="text-left text-uppercase px-2 py-2">Next Term Begins on: </th>
+                                                        <td width="200">Jan 7, 2023</td>
+                                                    </tr>
+                                                    
+                                                    
+                                                    
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+
+                                <td style="vertical-align: top" width="440">
+                                    
+                                    <table width="400" align="left" >
+                                        <tr>
+                                            <td class="text-center text-uppercase" style="color: white; font-size: 1.5em; padding: 10px; border-bottom-left-radius: 1em; border-bottom-right-radius: 1em; height: 80px; background-color: {{$colorsArray['mainTextColor']}}">
+                                                Key to Ratings
+                                            </td>
+                                        </tr>
+                                        <tr class="text-center text-uppercase">
+                                            <td class="text-bold" style="font-size: 1.5em;font-weight: 700; color: {{$colorsArray['mainTextColor']}}">&nbsp; </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table width="400" class="border-line border-decorated py-3">
+                                                    <tr class="text-left" bgcolor="{{$colorsArray['mainTextColor']}}" style="color:white">
+                                                        <th width="50" class="text-center text-uppercase px-2">5</th>
+                                                        <td width="350" class="text-uppercase px-2">Maintains an excellent degree of Observable traits</td>
+                                                    </tr>
+                                                    <tr class="text-left">
+                                                        <th width="50" style="color: {{$colorsArray['mainTextColor']}}" class="text-center text-uppercase px-2">4</th>
+                                                        <td width="350" class="text-uppercase px-2">Maintains high level of Obsservable traits</td>
+                                                    </tr>
+
+                                                    <tr class="text-left">
+                                                        <th width="50" style="color: {{$colorsArray['mainTextColor']}}" class="text-center text-uppercase px-2 py-2">3</th>
+                                                        <td width="350" class="text-uppercase px-2">Acceptable level of Obsservable traits</td>
+                                                    </tr>
+                                                    <tr class="text-left">
+                                                        <th width="50" style="color: {{$colorsArray['mainTextColor']}}" class="text-center text-uppercase px-2 py-2">2</th>
+                                                        <td width="350" class="text-uppercase px-2">Shows minimal regard for Obsservable traits</td>
+                                                    </tr>
+                                                    <tr class="text-left">
+                                                        <th width="50" style="color: {{$colorsArray['mainTextColor']}}" class="text-center text-uppercase px-2 py-2">1</th>
+                                                        <td width="350" class="text-uppercase px-2">Shows no regard for Obsservable traits</td>
+                                                    </tr>
+                                                    
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                
+                                
+                            </tr>
+                        </table>
+                    </td>
+
+                </tr>   
+                
+                <tr>
+                    <td>
                         <table>
                             <tr>
                                 <td width="1000">
-                                    <table>
-                                        <tr><td height="50"></td></tr>
-                                    </table>
-                                    <table width="900" class="my-3 text-left border-rect">
+                                    <table width="900" class="my-3 text-left" style="font-size: 1.7em; border: solid {{$colorsArray['mainTextColor']}}     thin;">
                                         <tr class="px-3">
                                             <th height="40" class="text-left">Class Teacher's Remark:</th>
                                         </tr>
@@ -306,10 +449,9 @@
                                             <td height="40">{{$classTeacherComment}}</td>
                                         </tr>
                                     </table>
-                                    <table>
-                                        <tr><td height="50"></td></tr>
-                                    </table>
-                                    <table width="900" class="my-3 text-left border-rect">
+                                </td>
+                                <td>
+                                    <table width="900" class="my-3 text-left" style="font-size: 1.7em; border: solid {{$colorsArray['mainTextColor']}} thin;">
                                         <tr class="px-3">
                                             <th height="40" class="text-left">Principal's Remark:</th>
                                         </tr>
@@ -318,67 +460,6 @@
                                         </tr>
                                     </table>
 
-                                </td>
-                                <td width="500">
-                                    <table width="500" class="border-line py-3 px-2">
-                                        <tr>
-                                            <th class="text-left">Beginning of Term: <span class="underline ">September
-                                                    19, 2022</span>
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-left">End of term: <span class="underline">1200</span></th>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-left">No. of Times School Opened: <span
-                                                    class="underline">1200</span></th>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-left">No. of Times Present: <span
-                                                    class="underline">1200</span></th>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-left">No. of Times Absent: <span
-                                                    class="underline">1200</span></th>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-left">Next Term Begins on: <span
-                                                    class="underline">1200</span></th>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td width="700" >
-                                    <table width="500"align="right" class="my-3 py-1 px-2">
-                                        <tr class="text-center">
-                                            <td>Keys to Ratings</td>
-                                        </tr>
-                                        <tr class="text-center">
-                                            <td>
-                                                <table width="500" class="border-line px-3">
-                                                    <tr>
-                                                        <td>5</td>
-                                                        <td>Maintains an excellent degree of Observable traits</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>4</td>
-                                                        <td>Maintains high level of Obsservable traits</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>3</td>
-                                                        <td>Acceptable level of Obsservable traits</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>2</td>
-                                                        <td>Shows minimal regard for Obsservable traits</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td>Shows no regard for Obsservable traits</td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
                                 </td>
                             </tr>
                         </table>

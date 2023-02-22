@@ -12,15 +12,15 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="{{url('student/dashboard')}}" ><i class="fa fa-fw fa-user-circle"></i>Dashboard</a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link" href="{{url('student/transactions')}}" ><i class="fas fa-fw fa-dollar-sign"></i>Make Payment</a>
-                </li>
+                </li> --}}
                 {{-- <li class="nav-item">
                     <a class="nav-link" href="{{url('student/subjects')}}" ><i class="fas fa-fw fa-book"></i>My Subjects</a>
                 </li> --}}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{url('student/report-card')}}" ><i class="mdi fa-fw mdi-credit-card-multiple"></i>Report Card</a>
-                </li>
+                {{-- <li class="nav-item">
+                    <a class="nav-link" href="{{url('student/report-card')}}" ><i class="mdi fa-fw mdi-credit-card-multiple"></i>Academic Report</a>
+                </li> --}}
                 <li class="nav-item">
                     <a class="nav-link" href="{{url('/student/profile/'.Auth::user()->id)}}" ><i class="fas fa-fw fa-user"></i>Profile</a>
                 </li>

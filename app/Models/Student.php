@@ -23,6 +23,10 @@ class Student extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function payment_codes() {
+        return $this->hasOne(PaymentCode::class);
+    }
+
     public function classteacher($class_id) {
         $teacherObject = ClassTeacher::join('teachers', 'teachers.id', '=', 'class_teachers.teacher_id')
                     ->join('users', 'users.id', '=', 'teachers.user_id')

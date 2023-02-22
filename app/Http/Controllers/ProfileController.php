@@ -11,6 +11,7 @@ use App\Models\Term;
 use App\Models\Result;
 use App\Models\ClassLevel;
 use App\Models\Assessment;
+use App\Models\ClassAssessment;
 use Auth;
 
 class ProfileController extends Controller
@@ -23,33 +24,49 @@ class ProfileController extends Controller
 
     public function academicReport($studentId) {
         $resultIsReady = 0;
+        $academicAssessmentsArray = [];
+
         
         $current_session_id = active_session()->id;
         $current_term_id = active_term()->id;
         $student = Student::where('id', $studentId)->first();
+
+        $assessment = Assessment::where('session_id', $current_session_id)
+                                ->where('term_id', $current_term_id)
+                                ->where('student_id', $student->id)
+                                ->where('school_info_id', Auth::user()->school_info_id);
+        $countAssessment = $assessment->count();
+        if($assessment->count() == 0) {
+            return back()->with('error', 'Academic Report will not open because Physical Assessment has not filled');
+        }
+
         $studentAssessment = Assessment::where('session_id', $current_session_id)
                                 ->where('term_id', $current_term_id)
                                 ->where('school_info_id', Auth::user()->school_info_id)
                                 ->where('student_id', $student->id)
                                 ->first();
+        $classAssessment = ClassAssessment::where('session_id', $current_session_id)
+                                        ->where('term_id', $current_term_id)
+                                        ->where('class_id', $student->class_id)
+                                        ->first();
         $physicalAssessment = $studentAssessment->physical_assessments;
         $behaviourAssessments = $studentAssessment->behavior_assessments;
         $skillAssessments = $studentAssessment->skill_assessments;
         $academicAssessments = $studentAssessment->academic_assessments;
         if($physicalAssessment != "") {
-            $checklist['physicalAssessmentsFilled'] = "checked";
+            // $checklist['physicalAssessmentsFilled'] = "checked";
             $physicalAssessmentArray = json_decode(html_entity_decode($physicalAssessment), true);
         }
         if($behaviourAssessments != "") {
-            $checklist['behaviourAssessmentsFilled'] = "checked";
+            // $checklist['behaviourAssessmentsFilled'] = "checked";
             $behaviourAssessmentsArray = json_decode(html_entity_decode($behaviourAssessments), true);
         }
         if($skillAssessments != "") {
-            $checklist['skillAssessmentsFilled'] = "checked";
+            // $checklist['skillAssessmentsFilled'] = "checked";
             $skillAssessmentsArray = json_decode(html_entity_decode($skillAssessments), true);
         }
         if($academicAssessments != "") {
-            $checklist['academicAssessmentsFilled'] = "checked";
+            // $checklist['academicAssessmentsFilled'] = "checked";
             $academicAssessmentsArray = json_decode(html_entity_decode($academicAssessments), true);
         }
         
@@ -65,7 +82,7 @@ class ProfileController extends Controller
                         ->where('student_id', $studentId)
                         ->where('class_id', $student->class_id)
                         ->get();
-        return view('student-academic-report', compact('student', 'results', 'studentAssessment', 'resultIsReady', 'checklist'));
+        return view('student-academic-report', compact('student', 'results', 'studentAssessment','classAssessment','academicAssessmentsArray', 'resultIsReady'));
     }
 
     public function viewTeacherProfile($teacherId){
@@ -126,7 +143,7 @@ class ProfileController extends Controller
             $user->othernames = $request->othernames;
             $user->email = $request->email;
             $user->phone = $request->phone;
-            $user->gender = $request->gender;
+            // $user->gender = $request->gender;
             $user->address = $request->address;
             $user->lga_origin = $request->lga_origin;
             $user->state_origin = $request->state_origin;

@@ -14,13 +14,16 @@
                             <thead class="bg-light">
                                 <tr class="border-0">
                                     <th class="border-0">Subject</th>
+                                    @if($student->class_stage_id == 7)
                                     <th class="border-0">Action</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($generalSubjects as $subject)
                                     <tr>
                                         <td>{{$subject->name}}</td>
+                                        @if($student->class_stage_id == 7)
                                         <td>
                                             @if($subject->studentRegistered($student->id, $subject->id) == 0)
                                             <form>
@@ -31,6 +34,7 @@
                                             @endif
                                             
                                         </td>
+                                        @endif
                                     </tr> 
                                 @endforeach
                             </tbody>

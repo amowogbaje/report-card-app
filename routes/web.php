@@ -23,13 +23,18 @@ use App\Http\Controllers\PaymentController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::view('/comeback', 'comeback')->name('comeback');
+Route::get('/timetable', [DashboardController::class, 'timetable']);
 
 Route::get('/change-password', [AdminController::class, 'changePasswordPage'])->name('change-password');
 Route::post('/change-password', [AdminController::class, 'changePasswordAction'])->name('change-password-action');
 
 // Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
-Route::group(['prefix'=>'admin', 'middleware' => 'auth'], function(){
+Route::group(['prefix'=>'admin', 'middleware' => ['auth', 'candoActivities']], function(){
+    Route::view('/setup', 'admin.setup')->name('admin.setup');
     Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
+    Route::get('/school/info', [AdminController::class, 'schoolInfo'])->name('admin.school-info');
+    Route::get('/subject-allocation', [AdminController::class, 'subjectAllocation'])->name('admin.subject-allocation');
     Route::get('/classes', [AdminController::class, 'classPage'])->name('admin.classes');
     Route::get('/subjects', [AdminController::class, 'subjects'])->name('admin.classes');
     Route::get('/teachers', [AdminController::class, 'teachers'])->name('admin.teachers');
@@ -45,11 +50,13 @@ Route::group(['prefix'=>'admin', 'middleware' => 'auth'], function(){
     // Route::post('/profile/edit', [ProfileController::class, 'editTeacherAction'])->name('admin.teacher.profile-edit-action');
     // Route::get('/class/{class_id}/subject/{subject_id}/spreadsheet', [ResultController::class, 'teacherspreadsheet'])->name('admin.teacher.spreadsheet');
     // Route::post('/submit/scores', [ResultController::class, 'submitScores'])->name('admin.teacher.submit-scores');
+
+    Route::get('/change-password/{id}', [AdminController::class, 'changePasswordPage'])->name('admin-change-password');
 });
 
 
 
-Route::group(['prefix'=>'teacher', 'middleware' => 'auth'], function(){
+Route::group(['prefix'=>'teacher', 'middleware' => ['auth', 'candoActivities']], function(){
     Route::get('/profile', [TeacherController::class, 'profile'])->name('admin.profile');
     Route::get('/profile/edit', [TeacherController::class, 'editProfile'])->name('admin.profile-edit');
     Route::post('/profile/update', [TeacherController::class, 'updateProfile'])->name('admin.profile-update');
@@ -65,7 +72,7 @@ Route::group(['prefix'=>'teacher', 'middleware' => 'auth'], function(){
 });
 
 
-Route::group(['prefix'=>'student', 'middleware' => 'auth'], function(){
+Route::group(['prefix'=>'student', 'middleware' => ['auth', 'candoActivities']], function(){
     Route::get('/profile/{id}', [ProfileController::class, 'viewStudentProfile'])->name('student.profile');
     Route::get('/profile/{id}/edit', [ProfileController::class, 'editStudentProfile'])->name('student.profile-edit');
     Route::post('/profile/edit-student', [ProfileController::class, 'editStudentAction'])->name('student.profile-edit-action');

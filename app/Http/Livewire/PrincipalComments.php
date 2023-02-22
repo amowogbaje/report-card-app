@@ -7,6 +7,7 @@ use App\Models\SessionYear;
 use App\Models\Term;
 use App\Models\Student;
 use App\Models\Classlevel;
+use App\Models\TeacherSubjectClass;
 use Auth;
 
 use Livewire\Component;
@@ -80,6 +81,27 @@ class PrincipalComments extends Component
             'text' => "Student successfully promoted",
             'modalID' => "#behaviour_assessment_modal"
         ]);
+    }
+
+    public function makeAllocations() {
+        $allPeriods = TeacherSubjectClass::where('term_id', $current_term_id)
+                            ->where('session_id', $current_session_id)
+                            ->get();
+        $maxPeriod = TeacherSubjectClass::where('term_id', $current_term_id)
+                                    ->where('session_id', $current_session_id)
+                                    ->max('periods');
+        $minPeriod = 1;
+        $allocationArray = [];
+        // while($minPeriod <= $maxPeriod) {
+        //     $name = "group".$minPeriod;
+        //     $allocationArray["$name"] = [];
+        //     // $allocationArray["$name"] = [];
+        // }
+
+        foreach ($allPeriods as $key => $periods) {
+            # code...
+        }
+
     }
 
     public function render()

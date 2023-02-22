@@ -43,6 +43,70 @@ class ResultController extends Controller
         $current_session_id = active_session()->id;
         $current_term_id = active_term()->id;
         $scores = $request->get('scores');
+
+        if(isset($first_term_scores))
+        {
+            foreach($scores as $key => $firstTermTotalScore){
+                $resultExist = Result::where('subject_id', $request->subject_id)
+                                    ->where('class_id', $request->class_id)
+                                    ->where('session_id', $current_session_id)
+                                    ->where('term_id', 1)
+                                    ->where('student_id', $key)
+                                    ->count();
+                    if($resultExist == 0) {
+                        DB::table('results')->insert([
+                            'session_id' => $current_session_id,
+                            'term_id' => 1,
+                            'subject_id' => $request->subject_id,
+                            'class_id' => $request->class_id,
+                            'student_id' => $key,
+                            'total_score' => $firstTermTotalScore,
+                        ]);
+                    }
+                    else {
+                        DB::table('results')
+                            ->where('session_id', $current_session_id)
+                            ->where('term_id', 1)
+                            ->where('subject_id', $request->subject_id)
+                            ->where('class_id', $request->class_id)
+                            ->where('student_id', $key)
+                            ->update([ 'total_score' => $firstTermTotalScore]);
+                    }
+            }
+        }
+
+        if(isset($second_term_scores))
+        {
+            foreach($scores as $key => $secondTermTotalScore){
+                // return $score["'ca_1'"];
+                $resultExist = Result::where('subject_id', $request->subject_id)
+                                    ->where('class_id', $request->class_id)
+                                    ->where('session_id', $current_session_id)
+                                    ->where('term_id', 2)
+                                    ->where('student_id', $key)
+                                    ->count();
+                    if($resultExist == 0) {
+                        DB::table('results')->insert([
+                            'session_id' => $current_session_id,
+                            'term_id' => 2,
+                            'subject_id' => $request->subject_id,
+                            'class_id' => $request->class_id,
+                            'student_id' => $key,
+                            'total_score' => $secondTermTotalScore,
+                        ]);
+                    }
+                    else {
+                        DB::table('results')
+                            ->where('session_id', $current_session_id)
+                            ->where('term_id', 2)
+                            ->where('subject_id', $request->subject_id)
+                            ->where('class_id', $request->class_id)
+                            ->where('student_id', $key)
+                            ->update([ 'total_score' => $secondTermTotalScore]);
+                    }
+            }
+        }
+
         foreach($scores as $key => $score){
             // return $score["'ca_1'"];
             $tca = $score["'ca_1'"] + $score["'ca_2'"] + $score["'ca_3'"];
@@ -86,6 +150,7 @@ class ResultController extends Controller
                 }
             
         }
+
         $totalScoreUploaded = Result::where('subject_id', $request->subject_id)
                                     ->where('class_id', $request->class_id)
                                     ->where('session_id', $current_session_id)
@@ -96,7 +161,7 @@ class ResultController extends Controller
                                                     ->where('class_id', $request->class_id)
                                                     ->where('session_id', $current_session_id)
                                                     ->where('term_id', $current_term_id)
-                                                    ->update(['result_uploaded' => 1, 'student_result_processed' => 0, 'class_result_processed' => 0]);
+                                                    ->update(['result_uploaded' => 1, 'class_result_processed' => 0]);
             $updateResultStatus = Result::where('subject_id', $request->subject_id)
                                                     ->where('class_id', $request->class_id)
                                                     ->where('session_id', $current_session_id)
@@ -111,25 +176,34 @@ class ResultController extends Controller
     
 
     public function downloadResult($studentId) {
+        
         $resultIsReady = 0;
         $skillAssessmentsArray = [];
         $behaviourAssessmentsArray = [];
         $physicalAssessmentArray = [];
         $academicAssessmentsArray = [];
+        $colorsArray = [
+            "primaryColor" => "",
+            "secondaryColor" => "",
+            "secondaryTextColor" => "brown",
+            "mainTextColor" => "brown",
+            "secondaryColor" => "blue",
+            "mainColor" => "brown",
+        ];
         
         $schoolInfo = school_info();
 
-        $current_session_id = active_session()->id;
-        $current_term_id = active_term()->id;
+        $current_term = active_term();
+        $current_session = active_session();
         $student = Student::where('id', $studentId)->first();
         $noInClass = Student::where('class_id', $student->class_id)->count();
-        $studentAssessment = Assessment::where('session_id', $current_session_id)
-                                ->where('term_id', $current_term_id)
+        $studentAssessment = Assessment::where('session_id', $current_session->id)
+                                ->where('term_id', $current_term->id)
                                 ->where('student_id', $studentId)
                                 ->where('school_info_id', $student->user->school_info_id)
                                 ->first();
-        $classAssessment = ClassAssessment::where('session_id', $current_session_id)
-                                        ->where('term_id', $current_term_id)
+        $classAssessment = ClassAssessment::where('session_id', $current_session->id)
+                                        ->where('term_id', $current_term->id)
                                         ->where('class_id', $student->class_id)
                                         ->first();
         // return $classAssessment;
@@ -137,6 +211,8 @@ class ResultController extends Controller
         $behaviourAssessments = $studentAssessment->behavior_assessments;
         $skillAssessments = $studentAssessment->skill_assessments;
         $academicAssessments = $studentAssessment->academic_assessments;
+        $studentAttendance = $studentAssessment->student_attendance;
+        $overallAttendance = $studentAssessment->overall_attendance;
         $principalComment = $studentAssessment->principal_comment;
         $classTeacherComment = $studentAssessment->class_teacher_comment;
         if($physicalAssessment != "") {
@@ -166,15 +242,15 @@ class ResultController extends Controller
             $resultIsReady = 0;
         }
         
-        $results = Result::where('session_id', $current_session_id)
-                        ->where('term_id', $current_term_id)
+        $results = Result::where('session_id', $current_session->id)
+                        ->where('term_id', $current_term->id)
                         ->where('student_id', $studentId)
                         ->where('class_id', $student->class_id)
                         ->get();
         
         
-        // return view('student-report-card', compact('student', 'results', 'resultIsReady', 'skillAssessmentsArray', 'behaviourAssessmentsArray', 'physicalAssessmentArray', 'academicAssessmentsArray', 'current_term', 'current_session', 'noInClass', 'classAssessment', 'schoolInfo', 'classTeacherComment', 'principalComment'));
-        $pdf = PDF::loadView('student-report-card', compact('student', 'results', 'resultIsReady', 'skillAssessmentsArray', 'behaviourAssessmentsArray', 'physicalAssessmentArray', 'academicAssessmentsArray', 'current_term', 'current_session', 'noInClass' ,'classAssessment', 'schoolInfo', 'classTeacherComment', 'principalComment'))
+        // return view('student-report-card-basic', compact('student', 'results', 'resultIsReady', 'skillAssessmentsArray', 'behaviourAssessmentsArray', 'physicalAssessmentArray', 'academicAssessmentsArray', 'current_term', 'current_session', 'noInClass', 'classAssessment', 'schoolInfo', 'classTeacherComment', 'principalComment', 'colorsArray'));
+        $pdf = PDF::loadView('student-report-card-basic', compact('student', 'results', 'resultIsReady', 'skillAssessmentsArray', 'behaviourAssessmentsArray', 'physicalAssessmentArray', 'academicAssessmentsArray', 'current_term', 'current_session', 'noInClass' ,'classAssessment', 'schoolInfo', 'studentAttendance', 'overallAttendance', 'classTeacherComment', 'principalComment', 'colorsArray'))
                     ->setPaper('a1', 'landscape');
         return $pdf->download($student->user->fullname. " Report Card.pdf");
     }

@@ -3,7 +3,7 @@
         <div class="col-sm-12 mx-auto">
             <div class="card">
                 <h5 class="card-header text-center">Payment Sheet for All Students</h5>
-                
+                <a href="#" wire:click = "generateOtp">Generate</a>
             </div>
         </div>
         
@@ -41,7 +41,7 @@
                                             <td>{{$student->class->shortname}}</td>
                                             
                                             <td>
-                                                @if($student->payment_complete == 0)
+                                                @if($student->payment_token_available == 0)
                                                 <form>
                                                     <button class="btn btn-sm btn-info text-dark" wire:click.prevent= "confirmPayment({{$student->id}})">Confirm Payment</button>
                                                 </form>

@@ -3,15 +3,22 @@
       <div class="card">
           <div class="card-body">
               <div class="d-flex flex-column align-items-center text-center">
-            @if(!empty($teacher->user->profile_pics))
-                <img src="{{$teacher->user->profile_pics}}" alt="user" class="rounded" width="110">
-            @else
-                @if($teacher->user->gender == 'male')
-                <img src="{{asset('assets/images/male-avatar.png')}}" alt="Teacher" class="rounded-circle p-1 bg-primary" width="110">
-                @elseif($teacher->user->gender == 'female')
-                <img src="{{asset('assets/images/female-avatar.png')}}" alt="Teacher" class="rounded-circle p-1 bg-primary" width="110">
-                @endif
-            @endif
+                <form action="">
+                    <label for="profilePics">
+                        @if(!empty($teacher->user->profile_pics))
+                            <img src="{{url('uploads/'.$teacher->user->profile_pics)}}" alt="user" class="rounded-circle border border-info" width="110">
+                        @else
+                        @if($teacher->user->gender == 'male')
+                            <img src="{{asset('assets/images/male-avatar.png')}}" alt="Teacher" class="rounded-circle p-1 bg-primary" width="110">
+                        @elseif($teacher->user->gender == 'female')
+                            <img src="{{asset('assets/images/female-avatar.png')}}" alt="Teacher" class="rounded-circle p-1 bg-primary" width="110">
+                        @endif
+                        @endif
+                    </label>
+                    <input style="display: none" wire:model = "pics" id="profilePics" type="file" accept="image/*"/>
+                    <br>
+                    <button class="btn btn-info form-control" wire:click.prevent = "uploadPics">Save</button>
+                </form>
                   <div class="mt-3">
                       <h4>{{$teacher->user->full_name}}</h4>
                       @if($teacher->class_id != "")
@@ -112,6 +119,9 @@
                   <div class="col-sm-12">
                       <a class="btn btn-info " target="_blank"
                           href="{{url('/teacher/profile/'.$teacher->user_id.'/edit')}}">Edit</a>
+                    @if(Auth::user()->role == "admin")
+                        <a class="btn btn-info mx-2" target="_blank" href="{{url('admin/change-password/'.$teacher->user_id)}}"><i class="fas fa-fw fa-unlock"></i>Change Password</a>
+                    @endif
                   </div>
               </div>
           </div>

@@ -3,15 +3,23 @@
       <div class="card">
         <div class="card-body">
           <div class="d-flex flex-column align-items-center text-center">
-            @if(!empty($student->user->profile_pics))
-              <img src="{{$student->user->profile_pics}}" alt="user" class="rounded" width="110">
-            @else
-              @if($student->user->gender == 'male')
-                <img src="{{asset('assets/images/male-avatar.png')}}" alt="Student" class="rounded-circle p-1 bg-primary" width="110">
-              @elseif($student->user->gender == 'female')
-                <img src="{{asset('assets/images/female-avatar.png')}}" alt="Student" class="rounded-circle p-1 bg-primary" width="110">
-              @endif
-            @endif
+            <form action="">
+              <label for="profilePics">
+                @if(!empty($student->user->profile_pics))
+                  <img src="{{url('uploads/'.$student->user->profile_pics)}}" alt="user" class="rounded-circle border border-info" width="110">
+                @else
+                  @if($student->user->gender == 'male')
+                    <img src="{{asset('assets/images/male-avatar.png')}}" alt="Student" class="rounded-circle p-1 bg-primary" width="110">
+                  @elseif($student->user->gender == 'female')
+                    <img src="{{asset('assets/images/female-avatar.png')}}" alt="Student" class="rounded-circle p-1 bg-primary" width="110">
+                  @endif
+                @endif
+              </label>
+              <input style="display: none" wire:model = "pics" id="profilePics" type="file" accept="image/*"/>
+              <br>
+              <button class="btn btn-info form-control" wire:click.prevent = "uploadPics">Save</button>
+            </form>
+            
             <div class="mt-3">
               <h4>{{$student->user->full_name}}</h4>
               <p class="text-primary mb-1">{{$student->class->shortname}} Student</p>
@@ -20,7 +28,7 @@
                 @if($student->payment_complete)
                   <a href="{{url('/student/'.$student->id.'/academic-report')}}" class="btn btn-primary">Academic Report</a>
                 @else
-                  <a href="javascript::void()" wire:click ="report" class="btn btn-primary">Academic Report</a>
+                  <a href="javascript::void()" data-toggle="modal" data-target="#enter_acess_code_modal" class="btn btn-primary" >Academic Report</a>
                 @endif
                 
               @else
@@ -74,11 +82,11 @@
           @endif
         </ul>
       </div>
-      {{-- @if(Auth::user()->role == "student") --}}
+      @if(Auth::user()->role == "student")
         @if($student->user->dob != "")
           @livewire('student.physical-assessment', ['student_id' => $student->id])
         @endif
-      {{-- @endif --}}
+      @endif
     </div>
     <div class="col-md-8">
       <div class="card mb-3">
@@ -128,17 +136,30 @@
               {{$student->guardian_address}}
             </div>
           </div>
+          @if($student->payment_token_available)
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Payment Verification Code</h6>
+            </div>
+            <div class="col-sm-9 text-primary">
+              {{$student->payment_codes->payment_verification_code}}
+            </div>
+          </div>
+          @endif
           <hr>
           <div class="row">
             <div class="col-sm-12">
               <a class="btn btn-info mx-2" target="_blank" href="{{url('/student/profile/'.$student->user_id.'/edit')}}">Edit</a>
-              
+              @if(Auth::user()->role == "admin")
+              <a class="btn btn-info mx-2" target="_blank" href="{{url('admin/change-password/'.$student->user_id)}}"><i class="fas fa-fw fa-unlock"></i>Change Password</a>
+              @endif
             </div>
           </div>
         </div>
       </div>
 
-      <div class="row gutters-sm">
+      {{-- <div class="row gutters-sm">
         <div class="col-sm-12 mb-3">
             <div class="card mt-0">
                 <ul class="list-group list-group-flush">
@@ -166,9 +187,37 @@
             </div>
             
         </div>
-      </div>
+      </div> --}}
 
 
 
+    </div>
+    <div wire:ignore.self class="modal fade" id="enter_acess_code_modal" tabindex="-1" role="dialog"
+    aria-labelledby="enterAcessClassModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="assign_teacher_topic" class="modal-title">Enter Payment Verification Code</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                      <div class="form-group mb-2">
+                        <input type="text" class="form-control @error('payment_verification_code') is-invalid @enderror" id="phone" placeholder="Enter Payment Verification Code Here" wire:model.defer="payment_verification_code">
+                        @error('payment_verification_code') <span class="text-danger">{{ $message }}</span>@enderror
+                    </div>
+
+
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-secondary" data-dismiss="modal">Close</a>
+                    <button wire:click="verifyPayment()" class="btn btn-primary">Verify Payment</button>
+                </div>
+            </div>
+        </div>
     </div>
   </div>

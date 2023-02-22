@@ -16,6 +16,9 @@
                     <a class="nav-link" href="{{url('admin/classes')}}" ><i class="fas fa-fw fa-edit"></i>My Classes</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{url('admin/school/info')}}" ><i class="fas fa-fw fa-graduation-cap"></i>Schoo Info</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{url('admin/subjects')}}" ><i class="fas fa-fw fa-book"></i>Subjects</a>
                 </li>
                 <li class="nav-item">
@@ -23,6 +26,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{url('admin/students')}}" ><i class="fas fa-fw fa-book"></i>Students</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url('admin/subject-allocation')}}" ><i class="fas fa-fw fa-book"></i>Subject Allocation</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{url('admin/transactions')}}" ><i class="fas fa-fw fa-dollar-sign"></i>Transaction</a>

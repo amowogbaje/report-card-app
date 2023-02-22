@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3dbaa6501ffcb266544587422206bbce",
+    "content-hash": "936abffa8332233d4b5668f1ce430c06",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -556,6 +556,80 @@
                 }
             ],
             "time": "2020-12-29T14:50:06+00:00"
+        },
+        {
+            "name": "emiracle/kudaping",
+            "version": "v0.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/e-Miracle/kudaping.git",
+                "reference": "9153e74d7182f2bf969e294c6693e8c20f2d48a2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/e-Miracle/kudaping/zipball/9153e74d7182f2bf969e294c6693e8c20f2d48a2",
+                "reference": "9153e74d7182f2bf969e294c6693e8c20f2d48a2",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^5.0|^6.0|^7.0|^8.0|^9.0",
+                "php": "^7.2|^8.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.2",
+                "orchestra/testbench": "^4.0",
+                "phpunit/phpunit": "^8.3",
+                "satooshi/php-coveralls": ">0.7",
+                "scrutinizer/ocular": "^1.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "eMiracle\\Kudaping\\KudapingServiceProvider"
+                    ],
+                    "aliases": {
+                        "Kudaping": "eMiracle\\Kudaping\\Facades\\Kudaping"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "eMiracle\\Kudaping\\": "src/"
+                },
+                "classmap": [
+                    "src/Kudaping.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "emiracle",
+                    "email": "miraclechibuzo@gmail.com"
+                }
+            ],
+            "description": "A Laravel Package for Kudabank API",
+            "keywords": [
+                "Kuda",
+                "emiracle",
+                "github",
+                "kuda bank",
+                "kudabank.com",
+                "kudaping",
+                "laravel",
+                "laravel 5",
+                "open source",
+                "payments",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/e-Miracle/kudaping/issues",
+                "source": "https://github.com/e-Miracle/kudaping/tree/v0.0.2"
+            },
+            "time": "2022-09-10T16:08:30+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",

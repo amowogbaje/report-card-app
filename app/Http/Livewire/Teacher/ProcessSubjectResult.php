@@ -136,9 +136,9 @@ class ProcessSubjectResult extends Component
 
     }
 
-    public function calcPostion(array $scores, $score) {
+    public function calcPosition(array $scores, $studentScore) {
         $position = "1st";
-        sort($scores);
+        rsort($scores);
         $scorePosition = [];
         
         // dd(($scores));
@@ -161,8 +161,11 @@ class ProcessSubjectResult extends Component
             $scorePosition["$position"] = $score;
         }
 
+        
+
         $noDuplicates = array_unique($scorePosition);
-        return array_search($score, $noDuplicates);
+        // return json_encode($noDuplicates);
+        return array_search($studentScore, $noDuplicates);
 
     }
     
@@ -170,39 +173,41 @@ class ProcessSubjectResult extends Component
     public function distributeSubjectPosition() {
         $current_session_id = active_session()->id;
         $current_term_id = active_term()->id;
-        $result = Result::where('subject_id', $this->subject_id)
+        $results = Result::where('subject_id', $this->subject_id)
                                 ->where('class_id', $this->class_id)
                                 ->where('session_id', $current_session_id)
                                 ->where('term_id', $current_term_id)
                                 ->get();
+            
         if($current_term_id <=2) {
-            foreach ($result as $student) {
-                $allScores = Result::where('subject_id', $this->subject_id)
+            $allScores = Result::where('subject_id', $this->subject_id)
                                 ->where('class_id', $this->class_id)
                                 ->where('session_id', $current_session_id)
                                 ->where('term_id', $current_term_id)
                                 ->pluck('total_score')->toArray();
+            foreach ($results as $result) {
                 Result::where('subject_id', $this->subject_id)
                                 ->where('class_id', $this->class_id)
                                 ->where('session_id', $current_session_id)
                                 ->where('term_id', $current_term_id)
-                                ->where('student_id', $student->student_id)
-                                ->update(["position"=>$this->calcPostion($allScores, $student->total_score)]);
+                                ->where('student_id', $result->student_id)
+                                ->update(["position"=>$this->calcPosition($allScores, $result->total_score)]);
             }
         }
         elseif($current_term_id ==3) {
-            foreach ($result as $student) {
-                $allScores = Result::where('subject_id', $this->subject_id)
-                                ->where('class_id', $this->class_id)
-                                ->where('session_id', $current_session_id)
-                                ->where('term_id', $current_term_id)
-                                ->pluck('cumulative_percentage')->toArray();
+            $allScores = Result::where('subject_id', $this->subject_id)
+            ->where('class_id', $this->class_id)
+            ->where('session_id', $current_session_id)
+            ->where('term_id', $current_term_id)
+            ->pluck('cumulative_percentage')->toArray();
+
+            foreach ($results as $result) {
                 Result::where('subject_id', $this->subject_id)
                                 ->where('class_id', $this->class_id)
                                 ->where('session_id', $current_session_id)
                                 ->where('term_id', $current_term_id)
-                                ->where('student_id', $student->student_id)
-                                ->update(["position"=>$this->calcPostion($allScores, $student->cumulative_percentage)]);
+                                ->where('student_id', $result->student_id)
+                                ->update(["position"=>$this->calcPosition($allScores, $result->cumulative_percentage)]);
                     
             }
         }
@@ -210,6 +215,8 @@ class ProcessSubjectResult extends Component
             'title' => 'Position Distributed',
             'text' => "....",
         ]);
+
+        return redirect(request()->header('Referer'));
     }
 
     public function getGradeForSenior($scores) {
@@ -292,6 +299,7 @@ class ProcessSubjectResult extends Component
             'title' => 'Grading Completed',
             'text' => "....",
         ]);
+        
     }
 
     

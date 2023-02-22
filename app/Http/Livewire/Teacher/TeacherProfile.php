@@ -5,18 +5,45 @@ namespace App\Http\Livewire\Teacher;
 use Livewire\Component;
 
 use App\Models\Teacher;
+use App\Models\User;
 use App\Models\ClassLevel;
 use App\Models\TeacherSubjectClass;
 use App\Models\SessionYear;
 use App\Models\Term;
 
+
+use Illuminate\Support\Facades\Storage;
+use Livewire\WithFileUploads;
+
 class TeacherProfile extends Component
 {
-    public $profileId;
+    use WithFileUploads;
+    public $profileId, $pics;
 
     public function assignClass() {
         session()->flash('error','Something goes wrong while creating category!!');
     }
+    public function uploadPics() {
+        // $param = $this->validate([
+        //     'pics' => 'image|mimes:png,jpg|max:102400'
+        // ]);
+        sleep(3);
+        $user = User::where('id',$this->profileId)->first();
+        $updateUserInfo = User::find($this->profileId);
+        $oldfile = $user->profile_pics;
+        $fileName = $this->pics->store('profile-pics/teachers', 'public_uploads');
+        $updateUserInfo->profile_pics = $fileName;
+        $updateUserInfo->save();
+        // unlink($oldfile);
+        // Storage::disk('public_uploads')->delete($oldfile);
+        $this->emit('toast:success', [
+            'text' => "Your Profil has been updated: ",
+            'modalID' => "#behaviour_assessment_modal"
+        ]);
+        $this->mount();
+        $this->render();
+    }
+
     public function render()
     {
         $classlevels = ClassLevel::all();

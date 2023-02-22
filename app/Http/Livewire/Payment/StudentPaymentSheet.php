@@ -6,6 +6,7 @@ use Livewire\Component;
 
 use App\Models\Student;
 use App\Models\ClassLevel;
+use DB;
 
 class StudentPaymentSheet extends Component
 {
@@ -24,7 +25,7 @@ class StudentPaymentSheet extends Component
 
     public function confirmPayment($studentId) {
         $student = Student::find($studentId);
-        $student->payment_complete = 1;
+        $student->payment_token_available = 1;
         $student->save();
         $this->emit('toast:success', [
             'text' => $student->user->firstname." ".$student->user->lastname." payment status confirmed",
@@ -34,9 +35,27 @@ class StudentPaymentSheet extends Component
         $this->render();
     }
 
+    public function generateOtp() {
+        $students = Student::all();
+        foreach($students as $student) {
+            DB::table('payment_codes')->insert([
+                'student_id' => $student->id,
+                'payment_verification_code' => FLOOR(RAND() * 401) + 100
+            ]);
+        }
+
+        $this->emit('toast:success', [
+            'text' => 'OTP Generated Successfully!!',
+            // 'modalID' => "#change_session_modal"
+        ]);
+        $this->mount();
+        $this->render();
+    }
+
     public function unconfirmPayment($studentId) {
         $student = Student::find($studentId);
         $student->payment_complete = 0;
+        $student->payment_token_available = 0;
         $student->save();
         $this->emit('toast:failure', [
             'text' => $student->user->firstname." ".$student->user->lastname." payment status unconfirmed",

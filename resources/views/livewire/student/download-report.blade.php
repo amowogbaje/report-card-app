@@ -25,22 +25,22 @@
                             
                             <div class="form-group mb-2">
                                 <label class="custom-control custom-checkbox">
-                                    <input type="checkbox" {{$checklist['physicalAssessmentsFilled']}} class="custom-control-input"><span class="custom-control-label">Physical Assessment(by Student)</span>
+                                    <input type="checkbox" {{$checklist['physicalAssessmentsFilled']}} ><span>Physical Assessment(by Student)</span>
                                 </label>
                                 <label class="custom-control custom-checkbox">
-                                    <input type="checkbox" {{$checklist['academicAssessmentsFilled']}} class="custom-control-input"><span class="custom-control-label">Academic Assessment(by Teacher)</span>
+                                    <input type="checkbox" {{$checklist['academicAssessmentsFilled']}} ><span>Academic Assessment(by Teacher)</span>
                                 </label>
                                 <label class="custom-control custom-checkbox">
-                                    <input type="checkbox" {{$checklist['behaviourAssessmentsFilled']}} class="custom-control-input"><span class="custom-control-label">Behaviour Assessment(by Teacher)</span>
+                                    <input type="checkbox" {{$checklist['behaviourAssessmentsFilled']}} ><span>Behaviour Assessment(by Teacher)</span>
                                 </label>
                                 <label class="custom-control custom-checkbox">
-                                    <input type="checkbox" {{$checklist['skillAssessmentsFilled']}} class="custom-control-input"><span class="custom-control-label">Skill Assessment(by Teacher)</span>
+                                    <input type="checkbox" {{$checklist['skillAssessmentsFilled']}} ><span>Skill Assessment(by Teacher)</span>
                                 </label>
                                 <label class="custom-control custom-checkbox">
-                                    <input type="checkbox" {{$checklist['teacherCommentFilled']}} class="custom-control-input"><span class="custom-control-label">Comment on Student(by Teacher)</span>
+                                    <input type="checkbox" {{$checklist['teacherCommentFilled']}} ><span>Comment on Student(by Teacher)</span>
                                 </label>
                                 <label class="custom-control custom-checkbox">
-                                    <input type="checkbox" {{$checklist['principalCommentFilled']}} class="custom-control-input"><span class="custom-control-label">Comment on Student(by Principal)</span>
+                                    <input type="checkbox" {{$checklist['principalCommentFilled']}} ><span>Comment on Student(by Principal)</span>
                                 </label>
                             </div>
                         </form>

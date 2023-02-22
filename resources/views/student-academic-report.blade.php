@@ -15,8 +15,8 @@
         </div>
     </div>
     <div class="container-fluid">
+        @if((Auth::user()->role == 'student' && $student->payment_complete == 1) || Auth::user()->role != 'student')
         @livewire('student.download-report', ['student_id' => $student->id])
-        
         <div class="row">
             <div class="col-md-12 col-sm-12">
                 <!-- DataTales Example -->
@@ -54,6 +54,8 @@
                                         <th>Total</th>
                                         <th>Mark Obtained</th>
                                         <th>Total</th>
+                                        <th>Grade</th>
+                                        <th>Position</th>
                                     </tr>
                                 </thead>
                                 {{-- <tfoot>
@@ -77,21 +79,102 @@
                                     @foreach ($results as $result)
                                     <tr>
                                         <td>{{$result->subject->name}}</td>
-                                        <td>{{$result->ca_1}}</td>
-                                        <td>10</td>
-                                        <td>{{$result->ca_2}}</td>
-                                        <td>10</td>
-                                        <td>{{$result->ca_3}}</td>
-                                        <td>10</td>
-                                        <td>{{$result->totalca}}</td>
-                                        <td>30</td>
-                                        <td>{{$result->exam}}</td>
-                                        <td>70</td>
-                                        <td>{{$result->total_score}}</td>
-                                        <td>100</td>
+                                        <td>
+                                            @if($result->ca_1 != 0)
+                                            {{$result->ca_1}}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($result->ca_1 != 0)
+                                            10
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($result->ca_2 != 0)
+                                            {{$result->ca_2}}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($result->ca_2 != 0)
+                                            10
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($result->ca_3 != 0)
+                                            {{$result->ca_3}}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($result->ca_3 != 0)
+                                            10
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($result->totalca != 0)
+                                            {{$result->totalca}}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($result->totalca != 0)
+                                            30
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($result->exam != 0)
+                                            {{$result->exam}}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($result->exam != 0)
+                                            70
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($result->total_score != 0)
+                                            {{$result->total_score}}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($result->total_score != 0)
+                                            100
+                                            @endif
+                                        </td>
+                                        <td>{{$result->grade}}</td>
+                                        <td>{!!$result->position!!}</td>
+                                        
                                     </tr>
                                     @endforeach
                                     
+                                </tbody>
+                            </table>
+                            <table width="700" class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td height="40" colspan="8">
+                                            <h4 class="text-center my-1 text-uppercase">
+                                                Summary of Performance</h4>
+                                        </td>
+                                    </tr>
+                                    <tr class="text-center">
+                                        <td>Mark Obtainable</td>
+                                        <td>Mark Obtained</td>
+                                        <td>Average Score</td>
+                                        <td>Lowest Score in Class</td>
+                                        <td>Highest Score in Class</td>
+                                        <td>Percentage</td>
+                                        {{-- <td>Position</td> --}}
+
+
+                                    </tr>
+                                    <tr class="text-center">
+                                        <td>{{$academicAssessmentsArray['markObtainable']}}</td>
+                                        <td>{{$academicAssessmentsArray['markObtained']}}</td>
+                                        <td>{{$classAssessment->average_score}}</td>
+                                        <td>{{$classAssessment->lowest_score}}</td>
+                                        <td>{{$classAssessment->highest_score}}</td>
+                                        <td>{{$academicAssessmentsArray['percentage']}}</td>
+                                        {{-- <td></td> --}}
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -107,20 +190,23 @@
                         
                     @endif
                 @endif
-                {{-- @if(Auth::user()->role == "admin") --}}
+                @if(Auth::user()->role == "admin")
                     @livewire('principal-comments', ['student_id' => $student->id])
-                {{-- @endif --}}
+                @endif
             </div>
             <div class="col-md-6 col-sm-12">
                 
-                {{-- @if($student->classteacher($student->class_id)->count() != 0) --}}
-                    {{-- @if(Auth::user()->id == $student->classteacher($student->class_id)->first()->user_id) --}}
+                @if($student->classteacher($student->class_id)->count() != 0)
+                    @if(Auth::user()->id == $student->classteacher($student->class_id)->first()->user_id)
                         @livewire('teacher.student-behaviour-assessment', ['student_id' => $student->id])
-                    {{-- @endif --}}
-                {{-- @endif --}}    
+                    @endif
+                @endif    
             </div>
 
         </div>
+        @else
+        @livewire('illegal-entry')
+        @endif
 
     </div>
 </x-admin-layout>

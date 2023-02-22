@@ -1,5 +1,5 @@
 <div>
-    <div class="my-1"><a href="#" data-toggle="modal" data-target="#change_session_modal" class="btn btn-block btn-primary text-center">Change Session</a></div>
+    <div class="my-1"><a href="#" data-toggle="modal" data-target="#change_session_modal" class="btn btn-block btn-primary text-center">Activate Session</a></div>
     <div class="modal fade" id="change_session_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -10,7 +10,7 @@
                             <label for="sessionYearID">Session Year</label>
                             <select class="form-control" id="sessionYearID" wire:model.defer="session_year_id" required>
                                 @foreach ($sessionYears as $sessionYear)
-                                    <option value="{{$sessionYear->id}}">{{$sessionYear->name}}</option>
+                                    <option selected value="{{$sessionYear->id}}">{{$sessionYear->name}}</option>
                                 @endforeach
                             </select>
                         </div>

@@ -38,7 +38,11 @@
                             <div class="col-sm-8 text-primary">
     
                                 <input type="password" name="password" class="form-control" placeholder="Type New Password Here" value="">
-                                <input type="hidden" name="user_id" class="form-control" value="{{Auth::user()->id}}">
+                                @if($user_id == null)
+                                <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
+                                @else
+                                <input type="hidden" name="user_id" value="{{$user_id}}">
+                                @endif
                             </div>
                         </div>
                         <div class="row mb-3">

@@ -11,7 +11,7 @@ use Auth;
 
 class Comments extends Component
 {
-    public $student_id, $class_teacher_comment;
+    public $student_id, $class_teacher_comment, $overall_attendance, $student_attendance;
     protected $rules = [
         'class_teacher_comment' => 'required|string',
     ];
@@ -25,6 +25,8 @@ class Comments extends Component
                                 ->where('school_info_id', Auth::user()->school_info_id);
         if($assessment->count() != 0) {
             $this->class_teacher_comment = $assessment->first()->class_teacher_comment;
+            $this->student_attendance = $assessment->first()->student_attendance;
+            $this->overall_attendance = $assessment->first()->overall_attendance;
         }
     }
     public function store() {
@@ -42,6 +44,8 @@ class Comments extends Component
             $newAssessment->student_id = $this->student_id;
             $newAssessment->school_info_id = Auth::user()->school_info_id;
             $newAssessment->class_teacher_comment = $this->class_teacher_comment;
+            $newAssessment->student_attendance = $this->student_attendance;
+            $newAssessment->overall_attendance = $this->overall_attendance;
             $newAssessment->save();
             // session()->flash('success',"Teacher has been Assigned to class!");
             $this->emit('toast:success', [
@@ -50,7 +54,11 @@ class Comments extends Component
             ]);
         }
         elseif($assessment->count() > 0) {
-            $assessment->update(['class_teacher_comment' => $this->class_teacher_comment]);
+            $assessment->update([
+                'class_teacher_comment' => $this->class_teacher_comment,
+                'student_attendance' => $this->student_attendance,
+                'overall_attendance' => $this->overall_attendance
+            ]);
             $this->emit('toast:success', [
                 'text' => "Your Comment has been updated",
                 'modalID' => "#behaviour_assessment_modal"

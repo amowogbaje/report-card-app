@@ -67,7 +67,7 @@ class ClassesTableSeeder extends Seeder
 
         \DB::table('class_levels')->insert([
 
-            'name' => 'Junior Secondary School 3',
+            'name' => 'Senior Secondary School 3',
             'shortname' => 'SSS3',
             'code' =>"006",
             'type' => 'secondary',

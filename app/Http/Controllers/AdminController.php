@@ -20,6 +20,10 @@ class AdminController extends Controller
         return view('admin.admin-subjects');
     }
 
+    public function subjectAllocation() {
+        return view('admin.subject-allocation');
+    }
+
     public function teachers() 
     {
         return view('admin.admin-teachers');
@@ -79,8 +83,9 @@ class AdminController extends Controller
 
     }
 
-    public function changePasswordPage() {
-        return view('admin.change-password');
+    public function changePasswordPage($id = null) {
+        $user_id = $id;
+        return view('admin.change-password', compact('user_id'));
     }
 
     public function changePasswordAction(Request $request) {
@@ -107,5 +112,9 @@ class AdminController extends Controller
 
     public function setSchoolName() {
         $this->setEnv('SCHOOL_NAME', 'KINGS VISION COLLEGE');
+    }
+
+    public function schoolInfo() {
+        return view('admin.admin-school-info');
     }
 }

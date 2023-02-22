@@ -19,6 +19,10 @@
     font-size: 14px;
 }
 
+.fs-32 {
+    font-size: 67px;
+}
+
 .fs-4 {
     font-size: 65px;
 }
@@ -135,8 +139,10 @@
     text-transform: uppercase;
 }
 
+
+
 .border-line, .border-line tbody {
-    border: solid #000 thin;
+    /* border: solid #666 thin; */
     
 }
 .border-line {
@@ -145,6 +151,10 @@
 .border-line td, .border-line th {
     border: solid #000 thin;
     margin: 0px;
+}
+
+.border-decorated td{
+    font-size: 1.2em;
 }
 
 .border-rect {

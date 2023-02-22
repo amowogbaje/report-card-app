@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Result;
+use App\Models\ClassLevel;
 
 class Subject extends Model
 {
@@ -16,9 +17,13 @@ class Subject extends Model
     }
 
     public function classlevels($classStageId) {
-        return Classlevels::where('class_stage_id', $classStageId)->get();
+        return ClassLevel::where('class_stage_id', $classStageId)->get();
 
         // subject ()
+    }
+
+    public function noOfClass($classStageId) {
+        return ClassLevel::where('class_stage_id', $classStageId)->count(); 
     }
 
     public function studentRegistered($studentId, $subjectId) {

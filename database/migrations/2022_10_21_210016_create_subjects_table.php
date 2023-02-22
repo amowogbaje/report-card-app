@@ -16,6 +16,7 @@ class CreateSubjectsTable extends Migration
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->tinyInteger('status')->default(1);
             $table->integer('class_stage_id')->default(0); //zero(0) signifies general 
             $table->enum('category', [null, 'art', 'science', 'commercial'])->nullable();
             $table->timestamps();

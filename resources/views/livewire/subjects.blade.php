@@ -27,8 +27,9 @@
                             
                             
                             <td>
-                                <a href="#" wire:click="selectSubject" onclick="pickSubjectId({{$subject->id}})" data-toggle="modal" data-target="#assign_teacher_to_subject_modal"><i class="fa fa-share"></i></a>
+                                <a href="#" wire:click="selectSubject" onclick="pickSubjectId({{$subject->id}})" data-toggle="modal" data-target="#assign_teacher_to_subject_modal"><i class="fa fa-tags"></i></a>
                                 <a href="#" onclick="update({{$subject->id}})" wire:click="edit({{$subject->id}})"  data-toggle="modal" data-target="#add_subject_modal"><i class="fa fa-edit"></i></a>
+                                {{-- <a href="#" wire:click="delete({{$subject->id}})"  data-toggle="modal"><i class="fa fa-trash"></i></a> --}}
                             </td>
                         </tr> 
                     @endforeach
@@ -64,7 +65,7 @@
                             @error('periods') <span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <div class="form-group mb-2">
-                            <select class="form-control @error('class_id') is-invalid @enderror" id="class_id"
+                            <select wire:change = "hasAssigned" class="form-control @error('class_id') is-invalid @enderror" id="class_id"
                                 wire:model.defer="class_id" required>
                                 <option value="NULL" selected>Select an Option</option>
                                 @foreach ($classlevels as $classlevel)
@@ -83,7 +84,11 @@
                     <a href="#" class="btn btn-secondary" data-dismiss="modal">Close</a>
                     <input type="hidden" id="subjectId" wire:model="subject_id">
                     <input type="hidden" id="classId" wire:model="class_id">
+                    @if($isAssigned)
+                    <button wire:click="assignTeachers()" class="btn btn-primary">Update Teacher</button>
+                    @else
                     <button wire:click="assignTeachers()" class="btn btn-primary">Save changes</button>
+                    @endif
                 </div>
             </div>
         </div>

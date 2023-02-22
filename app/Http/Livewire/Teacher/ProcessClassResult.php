@@ -23,7 +23,7 @@ class ProcessClassResult extends Component
         $markObtainedArray = [];
         $current_session_id = active_session()->id;
         $current_term_id = active_term()->id;
-        $allStudentsInAClass = Student::where('class_id', $this->class_id)->where('active', 1)->get();
+        $allStudentsInAClass = Student::where('class_id', $this->class_id)->where('status', 1)->get();
         foreach ($allStudentsInAClass as $key => $student) {
             $resultObject = Result::where('student_id', $student->id)
                                 ->where('class_id', $this->class_id)

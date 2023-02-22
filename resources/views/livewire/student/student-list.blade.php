@@ -34,7 +34,7 @@
                         <tr>
                             <td>
                                 @if(!empty($student->user->profile_pics))
-                                    <div class="m-r-10"><img src="{{URL::asset($student->user->rofile_pics)}}" alt="user" class="rounded" width="45"></div>
+                                    <div class="m-r-10"><img src="{{ url('uploads/'.$student->user->profile_pics)}}" alt="user" class="rounded-circle" width="45"></div>
                                 @else
                                     @if($student->user->gender == 'male')
 
@@ -64,9 +64,9 @@
                             <td>
                                 <a href="{{url('/student/profile/'.$student->user_id)}}"><i class="fa fa-eye"></i></a>
                                 @if($student->status == 1)
-                                <a class="btn btn-danger text-white" wire:click="delete({{$student->id}})"><i class="fa fa-trash"></i></a>
+                                <a class="text-danger" wire:click="delete({{$student->id}})"><i class="fa fa-trash"></i></a>
                                 @elseif($student->status == 0)
-                                <a class="btn btn-success text-white" wire:click="restore({{$student->id}})"><i class="fa fa-recycle"></i></a>
+                                <a class="text-success" wire:click="restore({{$student->id}})"><i class="fa fa-recycle"></i></a>
                                 @endif
                             </td>
                         </tr> 

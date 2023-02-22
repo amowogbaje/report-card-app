@@ -6,11 +6,25 @@ use Livewire\Component;
 
 use App\Models\SessionYear;
 use App\Models\Term;
+use App\Models\Student;
+
+use App\Jobs\ActiveResultForStudent;
 
 
 class ChangeSession extends Component
 {
-    public  $session_year_id=1, $term_id=1;
+    public  $session_year_id, $term_id=1;
+
+    public function getNextSession($current) {
+        $year = explode("/", $current)[1];
+        $next = intval($year)+1;
+        $nextSession = $year."/".$next;
+        return $nextSession;
+    }
+
+    public function mount() {
+        $this->session_year_id = SessionYear::latest()->first()->id;
+    }
 
     public function activateSession() {
         // alert("Hi");
@@ -30,11 +44,16 @@ class ChangeSession extends Component
             $sessionYear->save();
             $term->save();
             // // Set flash field
+            $students = Student::where('status', 1)->get();
+            ActiveResultForStudent::dispatch($students);
+            $this->generateOtp();
             $this->emit('toast:success', [
                 'text' => 'Session & Term Activated Successfully!!',
                 'modalID' => "#change_session_modal"
             ]);
-            $this->cancel();
+
+            
+            return redirect(request()->header('Referer'));
         // }
         // catch(\Exception $e){
             // Set Flash Message
@@ -42,6 +61,46 @@ class ChangeSession extends Component
             // $this->resetFields();
         // }
 
+    }
+
+    public function closeSectionAndTerm() {
+        SessionYear::query()->update(['active'=>false]);
+        Term::query()->update(['active'=>false]);
+        return redirect('/setup');
+
+    }
+
+    public function createNextSession() {
+        SessionYear::query()->update(['active'=>false]);
+        $lastSession = Session::latest()->first();
+        $nextSession = $this->getNextSession($lastSession);
+        SessionYear::create([
+            'name' => $nextSession
+        ]);
+        
+        // session()->flash('success',"g ".$sessionYearID." ".$termID);
+        
+        // // Set flash field
+        $this->emit('toast:success', [
+            'text' => 'Session Created Successfully!!',
+            'modalID' => "#change_session_modal"
+        ]);
+        $this->cancel();
+    }
+
+    public function generateOtp() {
+        $students = Student::all();
+        foreach($students as $student) {
+            DB::table('payment_codes')->insert([
+                'student_id' => $student->id,
+                'payment_verification_code' => FLOOR(RAND() * 401) + 100
+            ]);
+        }
+
+        $this->emit('toast:success', [
+            'text' => 'OTP Generated Successfully!!',
+            'modalID' => "#change_session_modal"
+        ]);
     }
 
     public function cancel() {

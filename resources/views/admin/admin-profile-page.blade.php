@@ -30,7 +30,7 @@
                 <div class="card-body">
                     <div class="d-flex flex-column align-items-center text-center">
                   @if(!empty($user->profile_pics))
-                      <img src="{{$user->profile_pics}}" alt="user" class="rounded" width="110">
+                      <img src="{{url('uploads/'.$user->profile_pics)}}" alt="user" class="rounded-circle" width="110">
                   @else
                       @if($user->gender == 'male')
                       <img src="{{asset('assets/images/male-avatar.png')}}" alt="Teacher" class="rounded-circle p-1 bg-primary" width="110">

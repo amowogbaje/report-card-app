@@ -20,7 +20,7 @@ class Subjects extends Component
 {
     public $number, $name, $subject_id, $teacher_id, $class_id, 
             $class_stage_id, $category, $classlevels, $periods,
-            $classStageIsSecondary = false, $update = false,
+            $classStageIsSecondary = false, $update = false, $isAssigned = false,
             $listOfSubjects;
 
     // protected $listeners = ['setCategory', 'setClass_stage_id'];
@@ -157,7 +157,7 @@ class Subjects extends Component
                 $teacherSubjectClass->save();
                 session()->flash('success',"Teacher has been Assigned to Subject!");
                 $this->emit('toast:success', [
-                    'text' => "Teacher has been Assigned to Subject!". $noOfPeriodsTeacherWillHave,
+                    'text' => "Teacher has been Assigned to Subject!",
                     'modalID' => "#assign_teacher_to_subject_modal"
                 ]);
             }
@@ -169,13 +169,32 @@ class Subjects extends Component
                     'modalID' => "#assign_teacher_to_subject_modal"
                 ]);
             }
+            
 
         }
         
 
         // return redirect('/dashboard');
-        $this->cancel();
+        $this->class_id = '';
+        $this->mount($this->number);
+        $this->render();
 
+    }
+
+    public function hasAssigned() {
+        $current_session_id = active_session()->id;
+        $current_term_id = active_term()->id;
+        $teacherSubjectClassCount = TeacherSubjectClass::where('class_id', $this->class_id)
+                                            ->where('term_id', $current_term_id)
+                                            ->where('session_id', $current_session_id)
+                                            ->where('subject_id', $this->subject_id)
+                                            ->count();
+        if($teacherSubjectClassCount == 0) {
+            $this->isAssigned = false;
+        }
+        else {
+            $this->isAssigned = true;
+        }
     }
 
     public function add() {

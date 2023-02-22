@@ -25,8 +25,7 @@ class CreateStudentsTable extends Migration
             $table->string('class_code')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->tinyInteger('payment_complete')->default(0);
-            $table->string('payment_progress')->nullable();
-            $table->string('wallet_amount')->default(0);
+            $table->tinyInteger('payment_token_available')->default(0);
             $table->string('class_stage_id')->default(0);
             $table->enum('category', [null, 'art', 'science', 'commercial'])->nullable();
             $table->timestamps();

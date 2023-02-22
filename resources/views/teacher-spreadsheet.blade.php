@@ -36,11 +36,6 @@
                     @livewire('teacher.process-subject-result', ['subject_id' => $subject_id, 'class_id' =>$class_id])
                 </h6>
 
-                {{-- <h6 class="m-0 font-weight-bold text-primary">
-                    <span>Average Score: 60%</span>
-                    <span>| Highest Score: 90%</span>
-                    <span>| Lowest Score: 40%</span>
-                </h6> --}}
             </div>
             <div class="card-body">
                 @if(count($students) > 0)
@@ -49,9 +44,17 @@
                         <thead>
                             <tr>
                                 <th rowspan="2">Full Name</th>
-                                <th colspan="4">Assessments</th>
+                                @if(active_term()->id >= 2)
+                                <th rowspan="2">1st Term</th>
+                                @endif
+                                @if(active_term()->id == 3)
+                                <th rowspan="2">2nd Term</th>
+                                @endif
+                                <th colspan="4" class="text-center">Assessments</th>
                                 <th rowspan="2">Exam</th>
                                 <th rowspan="2">Total </th>
+                                <th rowspan="2">Grade </th>
+                                <th rowspan="2">Position </th>
                             </tr>
                             <tr>
                                 <th>1st CA</th>
@@ -81,12 +84,23 @@
                                     {{-- <input type="hidden" name="student_id[]" value="{{$student->id}}"> --}}
                                     @if($student->subjectResult($subject_id, $student->id)->count() != 0)
                                         <td><a href="teacher-students-profile.html">{{$student->user->full_name}}</a> </td>
+                                        @if(active_term()->id >= 2)
+                                        <td><input type="text" class="form-control" name="first_term_scores[{{$student->id}}]"></td>
+                                        {{-- <td><input type="text" class="form-control" name="scores[{{$student->id}}]['firstterm']" value="{{$student->subjectResult($subject_id, $student->id)->first()->ca_1}}"></td> --}}
+                                        @endif
+                                        @if(active_term()->id == 3)
+                                        <td><input type="text" class="form-control" name="second_term_scores[{{$student->id}}]"></td>
+                                        {{-- <td><input type="text" class="form-control" name="scores[{{$student->id}}]['firstterm']" value="{{$student->subjectResult($subject_id, $student->id)->first()->ca_1}}"></td> --}}
+                                        @endif
                                         <td><input type="text" class="form-control" name="scores[{{$student->id}}]['ca_1']" value="{{$student->subjectResult($subject_id, $student->id)->first()->ca_1}}"></td>
                                         <td><input type="text" class="form-control" name="scores[{{$student->id}}]['ca_2']" value="{{$student->subjectResult($subject_id, $student->id)->first()->ca_2}}"></td>
                                         <td><input type="text" class="form-control" name="scores[{{$student->id}}]['ca_3']" value="{{$student->subjectResult($subject_id, $student->id)->first()->ca_3}}"></td>
                                         <td>{{$student->subjectResult($subject_id, $student->id)->first()->totalca}}</td>
                                         <td><input type="text" class="form-control" name="scores[{{$student->id}}]['exam']" value="{{$student->subjectResult($subject_id, $student->id)->first()->exam}}"></td>
                                         <td>{{$student->subjectResult($subject_id, $student->id)->first()->total_score}}</td>
+                                        <td>{{$student->subjectResult($subject_id, $student->id)->first()->grade}}</td>
+                                        {{-- <td>{{$student->subjectResult($subject_id, $student->id)->first()->position}}</td> --}}
+                                        <td>{!!$student->subjectResult($subject_id, $student->id)->first()->position!!}</td>
                                     {{-- @else 
                                         <td><a href="teacher-students-profile.html">{{$student->user->full_name}}</a> </td>
                                         <td><input type="text" class="form-control" name="scores[{{$student->id}}]['ca_1']" value="0"></td>

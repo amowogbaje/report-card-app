@@ -23,7 +23,7 @@
                         <tr>
                             <td>
                                 @if(!empty($teacher->user->profile_pics))
-                                    <div class="m-r-10"><img src="{{ URL::asset($teacher->user->profile_pics) }}" alt="user" class="rounded" width="45"></div>
+                                    <div class="m-r-10"><img src="{{url('uploads/'.$teacher->user->profile_pics)}}" alt="user" class="rounded-circle" width="45"></div>
                                 @else
                                     @if($teacher->user->gender == 'male')
 

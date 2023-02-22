@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\SessionYear;
 
 use App\Models\SessionYear;
+use App\Models\Term;
 
 use Livewire\Component;
 
@@ -25,6 +26,12 @@ class AddSession extends Component
 
     public function closeModal() {
 
+    }
+
+    public function closeSession() {
+        SessionYear::query()->update(['active'=>false]);
+        Term::query()->update(['active'=>false]);
+        return redirect('/admin/dashboard');
     }
 
     public function store() {

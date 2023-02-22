@@ -18,7 +18,10 @@ class CreateTermsTable extends Migration
             $table->string('name');
             $table->integer('number');
             $table->tinyInteger('active')->default(false);
-            $table->tinyInteger('concluded')->default(false);
+            $table->tinyInteger('ended')->default(false);
+            $table->string('start_date')->default(false);
+            $table->string('end_date')->default(false);
+            $table->string('next_term_begins')->default(false);
             $table->timestamps();
         });
     }
