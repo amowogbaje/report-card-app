@@ -1,8 +1,9 @@
 <div class="card">
     <h5 class="card-header">List of Teachers</h5>
     <h5 class="card-header">
+        <a href="javascript::void()" wire:click = "downloadTemplate()" class="text-primary link-primary mx-3"><i class="fas fa-download"></i> Download Template</a>
+        <a href="javascript::void()" wire:click = "upload()" data-toggle="modal" data-target="#upload_teacher_modal" class="text-primary link-primary mx-3" ><i class="fas fa-cloud"></i> Upload</a>
         <a href="javascript::void()" wire:click = "download()" class="text-primary link-primary mx-3"><i class="fas fa-download"></i> Download</a>
-        {{-- <a href="javascript::void()" class="text-primary link-primary mx-3" ><i class="fas fa-cloud"></i> Upload</a> --}}
         <a href="javascript::void()" data-toggle="modal" data-target="#add_teacher_modal" class="text-primary link-primary mx-3" > <i class="fas fa-plus"></i> Add Teacher</a>
     </h5>
     <div class="card-body p-0">
@@ -47,6 +48,35 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div wire:ignore.self class="modal fade" id="upload_teacher_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Teacher</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                            <div class="form-group mb-2">
+                                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" placeholder="Upload File Here" wire:model.defer="file">
+                                @error('file') <span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                            <div wire:loading>Processing....</div>
+                        {{-- </div> --}}
+                        
+                        
+                    </form>
+                    
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-secondary" data-dismiss="modal">Close</a>
+                    <button wire:click.prevent="upload()" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
         </div>
     </div>
     <div wire:ignore.self class="modal fade" id="add_teacher_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

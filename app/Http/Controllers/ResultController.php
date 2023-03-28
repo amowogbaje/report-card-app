@@ -28,14 +28,14 @@ class ResultController extends Controller
 
     public function teacherspreadsheet($class_id, $subject_id) {
         $subject = Subject::where('id', $subject_id)->first();
-        if($subject->category == NULL) {
+        if($subject->category == NULL || $subject->category == "") {
             $students = Student::where('class_id', $class_id)->where('status', 1)->get();
         }
         else {
             $students = Student::where('class_id', $class_id)->where('status', 1)->where('category', $subject->category)->get();
         }
         
-        
+        // return $subject;
         return view('teacher-spreadsheet', compact('students', 'subject_id', 'class_id', 'subject'));
     }
 
@@ -43,11 +43,15 @@ class ResultController extends Controller
         $current_session_id = active_session()->id;
         $current_term_id = active_term()->id;
         $scores = $request->get('scores');
+        $first_term_scores = $request->get('first_term_scores');
+        $second_term_scores = $request->get('second_term_scores');
 
         if(isset($first_term_scores))
         {
-            foreach($scores as $key => $firstTermTotalScore){
-                $resultExist = Result::where('subject_id', $request->subject_id)
+            // return $first_term_scores;
+            foreach($first_term_scores as $key => $firstTermTotalScore){
+                if(($firstTermTotalScore) != "") {
+                    $resultExist = Result::where('subject_id', $request->subject_id)
                                     ->where('class_id', $request->class_id)
                                     ->where('session_id', $current_session_id)
                                     ->where('term_id', 1)
@@ -72,14 +76,17 @@ class ResultController extends Controller
                             ->where('student_id', $key)
                             ->update([ 'total_score' => $firstTermTotalScore]);
                     }
+                }
+                    
             }
         }
 
         if(isset($second_term_scores))
         {
-            foreach($scores as $key => $secondTermTotalScore){
+            foreach($second_term_scores as $key => $secondTermTotalScore){
                 // return $score["'ca_1'"];
-                $resultExist = Result::where('subject_id', $request->subject_id)
+                if(trim($secondTermTotalScore) != "") {
+                    $resultExist = Result::where('subject_id', $request->subject_id)
                                     ->where('class_id', $request->class_id)
                                     ->where('session_id', $current_session_id)
                                     ->where('term_id', 2)
@@ -104,6 +111,8 @@ class ResultController extends Controller
                             ->where('student_id', $key)
                             ->update([ 'total_score' => $secondTermTotalScore]);
                     }
+                }
+                    
             }
         }
 

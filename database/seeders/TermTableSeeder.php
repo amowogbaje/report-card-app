@@ -20,7 +20,7 @@ class TermTableSeeder extends Seeder
 
             'name' => 'First',
             'number' => '1',
-            'active' => 1,
+            // 'active' => 1,
         ]);
 
         \DB::table('terms')->insert([

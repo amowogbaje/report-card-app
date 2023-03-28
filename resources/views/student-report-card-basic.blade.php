@@ -153,7 +153,7 @@
                                                             <th colspan="6">Continous Assessment</th>
                                                             <th colspan="2" rowspan="2">Term's Exam</th>
                                                             <th colspan="2" rowspan="2">Total </th>
-                                                            <th colspan="7" rowspan="2">Summary of Term's Work </th>
+                                                            <th colspan="8" rowspan="2">Summary of Term's Work </th>
                                                         </tr>
                                                         <tr class="text-uppercase px-1">
 
@@ -198,14 +198,23 @@
                                                                 class=" text-left py-0 px-2">{{$result->subject->name}}
                                                             </td>
                                                             @if(active_term()->id == 2)
-                                                            <th>{{$result->firstterm($student, $result->subject->id)->cumulative_percentage}}
-                                                            </th>
+                                                                @if($student->prevSubjectResult($result->subject->id, $student->id, 1)->count() == 0)
+                                                                    <td></td>
+                                                                @else
+                                                                    <td>{{$student->prevSubjectResult($result->subject->id, $student->id, 1)->first()->total_score}}</td>
+                                                                @endif
                                                             @endif
                                                             @if(active_term()->id == 3)
-                                                            <th>{{$result->firstterm($student, $result->subject->id)->cumulative_percentage}}
-                                                            </th>
-                                                            <th>{{$result->secondterm($student, $result->subject->id)->cumulative_percentage}}
-                                                            </th>
+                                                                @if($student->prevSubjectResult($result->subject->id, $student->id, 1)->count() == 0)
+                                                                    <td></td>
+                                                                @else
+                                                                    <td>{{$student->prevSubjectResult($result->subject->id, $student->id, 1)->first()->total_score}}</td>
+                                                                @endif
+                                                                @if($student->prevSubjectResult($result->subject->id, $student->id, 2)->count() == 0)
+                                                                    <td></td>
+                                                                @else
+                                                                    <td>{{$student->prevSubjectResult($result->subject->id, $student->id, 2)->first()->total_score}}</td>
+                                                                @endif
                                                             @endif
                                                             <td>10</td>
                                                             <td>{{$result->ca_1}}</td>

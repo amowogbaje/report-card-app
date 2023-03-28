@@ -16,7 +16,7 @@ use Auth;
 
 class ProcessClassResult extends Component
 {
-    public $class_id , $allSubjectsInClassIsProcessed, $noOfStudents, $noOfResults;
+    public $class_id , $allSubjectsInClassIsProcessed, $noOfStudents, $noOfResults, $subjectTeachersRemaining;
 
     public function process() {
         $assessment;
@@ -97,7 +97,17 @@ class ProcessClassResult extends Component
 
     }
 
+    public function getSubjectTeachersRemaining () {
+        $subjectTeachersRemaining = TeacherSubjectClass::where('class_id', $this->class_id)
+                                                ->where('session_id', active_session()->id)
+                                                ->where('term_id', active_term()->id)
+                                                ->where('class_result_processed', 0)
+                                                ->get();
+        return $subjectTeachersRemaining;
+    }
+
     public function mount() {
+        $this->subjectTeachersRemaining = $this->getSubjectTeachersRemaining();
         $allSubjectsInClassIsProcessed = false;
         $current_session_id = SessionYear::where('active', true)->first()->id;
         $current_term_id = Term::where('active', true)->first()->id;

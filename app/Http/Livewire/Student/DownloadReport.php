@@ -33,6 +33,7 @@ class DownloadReport extends Component
         $behaviourAssessments = $studentAssessment->behavior_assessments;
         $skillAssessments = $studentAssessment->skill_assessments;
         $academicAssessments = $studentAssessment->academic_assessments;
+        $academicAssessmentsArray = json_decode(html_entity_decode($academicAssessments), true);
         $teacherComment = $studentAssessment->class_teacher_comment;
         $principalComment = $studentAssessment->principal_comment;
         if($physicalAssessment != "") {
@@ -47,7 +48,7 @@ class DownloadReport extends Component
             $boolSkillAssessment = 1;
             $this->checklist['skillAssessmentsFilled'] = "checked";
         }
-        if($academicAssessments != "") {
+        if($academicAssessmentsArray['markObtained'] != "Not Ready") {
             $boolAcademicAssessment = 1;
             $this->checklist['academicAssessmentsFilled'] = "checked";
         }

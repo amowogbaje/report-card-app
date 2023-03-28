@@ -72,21 +72,34 @@ class ProcessSubjectResult extends Component
 
         if($current_term_id == 2) {
             foreach($subjectResults as $result) {
-                $studentPreviousSubjectResult = Result::where('session_id', $current_session_id)
+                $checkFirstTermSubjectResult = Result::where('session_id', $current_session_id)
+                                            ->where('term_id', 1)
+                                            ->where('student_id', $result->student_id)
+                                            ->where('subject_id', $this->subject_id)
+                                            ->count();
+                if($checkFirstTermSubjectResult != 0) {
+                    $studentPreviousSubjectResult = Result::where('session_id', $current_session_id)
                                             ->where('term_id', 1)
                                             ->where('student_id', $result->student_id)
                                             ->where('subject_id', $this->subject_id)
                                             ->first()->total_score;
+                }
+                
                 $studentCurrentSubjectResult = Result::where('session_id', $current_session_id)
                                             ->where('term_id', 2)
                                             ->where('student_id', $result->student_id)
-                                            ->where('subject_id', $subject_id)
+                                            ->where('subject_id', $this->subject_id)
                                             ->first()->total_score;
-                $cumulativePercentage = ($studentPreviousSubjectResult + $studentCurrentSubjectResult)/2;
+                if($checkFirstTermSubjectResult != 0) {
+                    $cumulativePercentage = ($studentPreviousSubjectResult + $studentCurrentSubjectResult)/2;
+                }
+                else {
+                    $cumulativePercentage = $studentCurrentSubjectResult;
+                }
                 $studentSubjectResult = Result::where('session_id', $current_session_id)
                                             ->where('term_id', $current_term_id)
                                             ->where('student_id', $result->student_id)
-                                            ->where('subject_id', $subject_id)
+                                            ->where('subject_id', $this->subject_id)
                                             ->update(
                                                 [
                                                     'cumulative_percentage' => round($cumulativePercentage),
@@ -98,26 +111,51 @@ class ProcessSubjectResult extends Component
 
         if($current_term_id == 3) {
             foreach($subjectResults as $result) {
-                $studentPreviousSubjectResult1 = Result::where('session_id', $current_session_id)
+                $checkFirstTermSubjectResult = Result::where('session_id', $current_session_id)
+                                            ->where('term_id', 1)
+                                            ->where('student_id', $result->student_id)
+                                            ->where('subject_id', $this->subject_id)
+                                            ->count();
+                if($checkFirstTermSubjectResult != 0) {
+                    $studentPreviousSubjectResult1 = Result::where('session_id', $current_session_id)
                                             ->where('term_id', 1)
                                             ->where('student_id', $result->student_id)
                                             ->where('subject_id', $this->subject_id)
                                             ->first()->total_score;
-                $studentPreviousSubjectResult2 = Result::where('session_id', $current_session_id)
+                }
+
+                $checkSecondTermSubjectResult = Result::where('session_id', $current_session_id)
+                                            ->where('term_id', 1)
+                                            ->where('student_id', $result->student_id)
+                                            ->where('subject_id', $this->subject_id)
+                                            ->count();
+                if($checkSecondTermSubjectResult != 0) {
+                    $studentPreviousSubjectResult2 = Result::where('session_id', $current_session_id)
                                             ->where('term_id', 2)
                                             ->where('student_id', $result->student_id)
-                                            ->where('subject_id', $subject_id)
+                                            ->where('subject_id', $this->subject_id)
                                             ->first()->total_score;
+                }
+                
+                
                 $studentCurrentSubjectResult = Result::where('session_id', $current_session_id)
                                             ->where('term_id', 3)
                                             ->where('student_id', $result->student_id)
-                                            ->where('subject_id', $subject_id)
+                                            ->where('subject_id', $this->subject_id)
                                             ->first()->total_score;
-                $cumulativePercentage = ($studentPreviousSubjectResult1 + $studentPreviousSubjectResult2 + $studentCurrentSubjectResult)/3;
+                if($checkFirstTermSubjectResult != 0) {
+                    $cumulativePercentage = ($studentPreviousSubjectResult1 + $studentPreviousSubjectResult2 + $studentCurrentSubjectResult)/3;
+                }
+                if($checkFirstTermSubjectResult == 0 && $checkSecondTermSubjectResult != 0) {
+                    $cumulativePercentage = ($studentPreviousSubjectResult2 + $studentCurrentSubjectResult)/2;
+                }
+                if($checkFirstTermSubjectResult == 0 && $checkSecondTermSubjectResult == 0) {
+                    $cumulativePercentage = $studentCurrentSubjectResult;
+                }
                 $studentSubjectResult = Result::where('session_id', $current_session_id)
                                             ->where('term_id', $current_term_id)
                                             ->where('student_id', $result->student_id)
-                                            ->where('subject_id', $subject_id)
+                                            ->where('subject_id', $this->subject_id)
                                             ->update(
                                                 [
                                                     'cumulative_percentage' => round($cumulativePercentage),

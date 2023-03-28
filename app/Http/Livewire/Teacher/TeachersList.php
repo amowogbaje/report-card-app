@@ -7,16 +7,24 @@ use Livewire\Component;
 use App\Models\Teacher;
 use App\Models\User;
 
-use App\Exports\TeachersExport;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\UsersImport;
 use Auth;
+
+use App\Exports\TeachersExport;
+use App\Exports\TeachersTemplateExport;
+
+use Maatwebsite\Excel\Facades\Excel;
+
+use App\Imports\TeachersImport;
+
+use Livewire\WithFileUploads;
+
 
 class TeachersList extends Component
 {
+    use WithFileUploads;
     public $number;
 
-    public $firstname, $lastname, $email, $phone, $gender = 'male';
+    public $file, $firstname, $lastname, $email, $phone, $gender = 'male';
 
     protected $rules = [
         'firstname' => 'required|string',
@@ -88,6 +96,41 @@ class TeachersList extends Component
 
     public function download() {
         return Excel::download(new TeachersExport, 'teachers.xlsx');
+    }
+    public function downloadTemplate() {
+        return Excel::download(new TeachersTemplateExport(), 'Teachers Template.xlsx');
+    }
+
+    public function upload() {
+        // try {
+        //     //code...
+        // } catch (\Throwable $th) {
+        //     //throw $th;
+        // }
+        $param = $this->validate([
+            'file' => ['required','mimes:xlsx']
+        ]);
+        // $fileName = $this->file->store('document', 'public_uploads');
+        $path = $this->file->getRealPath();
+        $data = Excel::import(new TeachersImport, $path);
+
+        if($data) {
+            $this->emit('toast:success', [
+                'text' => 'Mass Upload Successful!!',
+                'modalID' => "#upload_teacher_modal"
+            ]);
+        }
+        else {
+            $this->emit('toast:failure', [
+                'text' => 'Something goes wrong while adding teacher!!',
+                'modalID' => "#upload_teacher_modal"
+            ]);
+        }
+        
+
+
+
+        // $params['file'] = $fileName;
     }
 
     public function render()

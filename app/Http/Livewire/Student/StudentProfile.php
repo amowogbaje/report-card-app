@@ -11,10 +11,24 @@ use App\Models\PaymentCode;
 use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
 
+// use eMiracle\Kudaping\Kudaping;
+
 class StudentProfile extends Component
 {
     use WithFileUploads;
+    // private Kudaping $kuda;
     public $profileId, $student, $pics, $payment_verification_code;
+
+
+    public function pay() {
+        
+        $this->emit('swal:notify', [
+            'title' => 'Kuda in action',
+            'text' => $this->kuda->getBankList(),
+            'icon' => 'error',
+            // 'footer' => '<a href='.route('student.payment-index').'>Click here to make payment</a>'
+        ]);
+    }
 
 
     public function report() {
@@ -28,7 +42,9 @@ class StudentProfile extends Component
 
     public function verifyPayment(){
         $this->payment_verification_code;
-        $payVerification = PaymentCode::where('payment_verification_code', $this->payment_verification_code);
+        $payVerification = PaymentCode::where('payment_verification_code', $this->payment_verification_code)
+                                    ->where('session_id', active_session()->id)
+                                    ->where('term_id', active_term()->id);
         if($payVerification->count() != 0) {
             if(!$payVerification->first()->used) {
                 if($payVerification->first()->student_id == $this->student->id) {
@@ -79,7 +95,7 @@ class StudentProfile extends Component
 
     }
 
-    public function refreshPage() {
+    public function refreshComponent() {
         $this->mount();
         $this->render();
     }
@@ -106,6 +122,7 @@ class StudentProfile extends Component
 
     public function mount() {
         $this->student = Student::where('user_id', $this->profileId)->first();
+        // $this->kuda = new Kudaping();
     }
     public function render()
     {

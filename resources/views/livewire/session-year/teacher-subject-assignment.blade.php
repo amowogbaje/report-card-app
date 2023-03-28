@@ -1,6 +1,7 @@
 <div class="card">
     <h5 class="card-header">Subject Teacher Allocation List</h5>
     @if($noOfSubjectClassesAssigned != $noOfSubjectsPerClass)
+    <h5 class="card-header text-secondary">Note: Allocation of Subject of Subjects Must be Complete before Activities can Start</h5>
     <h5 class="card-header">{{$noOfSubjectClassesAssigned}} out of {{$noOfSubjectsPerClass}}</h5>
     @endif
     <div class="card-body p-0">

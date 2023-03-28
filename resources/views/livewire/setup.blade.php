@@ -13,16 +13,25 @@
                 <li class="nav-item">
                     <a class="nav-link" id="card-tab-2" data-toggle="tab" href="#card-2" role="tab" aria-controls="card-2" aria-selected="false">Add Subjects</a>
                 </li>
+                @if(isset(active_term()->id))
                 <li class="nav-item">
-                    @if(isset(active_term()->id))
-                    <a class="nav-link text-muted" id="card-tab-3" data-toggle="tab" href="#card-3" role="tab" aria-controls="card-3" aria-selected="false">Activated</a>
-                    @else
-                    <a class="nav-link" id="card-tab-3" data-toggle="tab" href="#card-3" role="tab" aria-controls="card-3" aria-selected="false">Activate</a>
-                    @endif
-                    
+                    <a class="nav-link" id="card-tab-3" data-toggle="tab" href="#card-3" role="tab" aria-controls="card-3" aria-selected="false">Update Classes</a>
+                </li>
+                @endif
+                <li class="nav-item">
+                    <a class="nav-link" id="card-tab-4" data-toggle="tab" href="#card-4" role="tab" aria-controls="card-4" aria-selected="false">Teachers List</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="card-tab-4" data-toggle="tab" href="#card-4" role="tab" aria-controls="card-4" aria-selected="false">Assign Teachers</a>
+                    <a class="nav-link text-muted" id="card-tab-5" data-toggle="tab" href="#card-5" role="tab" aria-controls="card-5" aria-selected="false">
+                        @if(isset(active_term()->id))
+                            Activated
+                        @else
+                            Activate
+                        @endif
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="card-tab-6" data-toggle="tab" href="#card-6" role="tab" aria-controls="card-6" aria-selected="false">Assign Teachers</a>
                 </li>
             </ul>
         </div>
@@ -39,13 +48,27 @@
                     @endif
                 </div>
                 <div class="tab-pane fade" id="card-2" role="tabpanel" aria-labelledby="card-tab-2">
-                    @livewire('subjects', ['number' => 30])
+                    @livewire('subjects', ['number' => 45])
                 </div>
-                <div class="tab-pane fade" id="card-3" role="tabpanel" aria-labelledby="card-tab-2">
-                    @livewire('session-year.change-session')
+                @if(isset(active_term()->id))
+                <div class="tab-pane fade" id="card-3" role="tabpanel" aria-labelledby="card-tab-3">
+                    @livewire('classlevels')
+                </div>
+                @endif
+
+                <div class="tab-pane fade" id="card-4" role="tabpanel" aria-labelledby="card-tab-4">
+                    @livewire('teacher.teachers-list', ['number' => 50])
                 </div>
                 
-                <div class="tab-pane fade" id="card-4" role="tabpanel" aria-labelledby="card-tab-3">
+                <div class="tab-pane fade" id="card-5" role="tabpanel" aria-labelledby="card-tab-5">
+                    @if(isset(active_term()->id))
+                        <h4 class="text-center">Term has been actived Kindly complete setup by assign Teachers to Subject. After you have completed allocation kindly reload</h4>
+                    @else
+                        @livewire('session-year.change-session')
+                    @endif
+                </div>
+                
+                <div class="tab-pane fade" id="card-6" role="tabpanel" aria-labelledby="card-tab-6">
                     @if(isset(active_term()->id))
                         @livewire('session-year.teacher-subject-assignment')
                     @else

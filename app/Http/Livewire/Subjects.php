@@ -19,7 +19,7 @@ use DB;
 class Subjects extends Component
 {
     public $number, $name, $subject_id, $teacher_id, $class_id, 
-            $class_stage_id, $category, $classlevels, $periods,
+            $class_stage_id, $category="", $classlevels, $periods,
             $classStageIsSecondary = false, $update = false, $isAssigned = false,
             $listOfSubjects;
 
@@ -69,15 +69,27 @@ class Subjects extends Component
             'name' => 'required|string',
             'class_stage_id' => 'required'
         ]);
-        $subject = new Subject;
-        $subject->name = $this->name;
-        $subject->class_stage_id = $this->class_stage_id;
-        $subject->category = $this->category;
-        $subject->save();
-        $this->emit('toast:success', [
-            'text' => "Subject Added!",
-            'modalID' => "#add_subject_modal"
-        ]);
+        $subjectExist = DB::table('subjects')
+                            ->where('name', trim($this->name))
+                            ->where('class_stage_id', $this->class_stage_id)
+                            ->count();
+        if($subjectExist == 0) {
+            $subject = new Subject;
+            $subject->name = trim($this->name);
+            $subject->class_stage_id = $this->class_stage_id;
+            $subject->category = $this->category;
+            $subject->save();
+            $this->emit('toast:success', [
+                'text' => "Subject Added!",
+                'modalID' => "#add_subject_modal"
+            ]);
+        }
+        else {
+            $this->emit('toast:failure', [
+                'text' => "$this->name has already been Added!",
+                'modalID' => "#add_many_subject_modal"
+            ]);
+        }
         $this->cancel();
         // session()->flash('success',"Subject Added!");
         // return redirect('/dashboard');
@@ -93,13 +105,12 @@ class Subjects extends Component
         $subjectArray = explode(",", $listOfSubjects);
         foreach ($subjectArray as $subjectName) {
             $subjectExist = DB::table('subjects')
-                            ->where('name', $subjectName)
+                            ->where('name', trim($subjectName))
                             ->where('class_stage_id', $this->class_stage_id)
-                            ->where('category', $this->category)
                             ->count();
             if($subjectExist == 0) {
                 DB::table('subjects')->insert([
-                    'name' => $subjectName,
+                    'name' => trim($subjectName),
                     'class_stage_id' => $this->class_stage_id,
                     'category' => $this->category,
                 ]);
@@ -201,7 +212,7 @@ class Subjects extends Component
         $this->update = false;
         $this->name = '';
         $this->class_stage_id = '';
-        $this->category = '';
+        // $this->category = '';
     }
     public function edit($id) {
         $this->update = true;
@@ -240,6 +251,16 @@ class Subjects extends Component
         $classStageId = Subject::where('id',$this->subject_id)->first()->class_stage_id;
         $this->classlevels = ClassLevel::where('class_stage_id', $classStageId)->get();
 
+    }
+
+    public function delete($id) {
+        $subject = Subject::find($id);
+        $subject->delete();
+        $this->emit('toast:success', [
+            'text' => "Subject Deleted!",
+            'modalID' => "#add_subject_modal"
+        ]);
+        $this->cancel();
     }
 
     public function chooseClassStage() {

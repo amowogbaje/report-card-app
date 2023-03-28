@@ -40,6 +40,12 @@ class Student extends Model
         return Result::where('subject_id', $subject_id)
                     ->where('student_id', $student_id);
     }
+    public function prevSubjectResult($subject_id, $student_id, $termId) {
+        return Result::where('subject_id', $subject_id)
+                    ->where('student_id', $student_id)
+                    ->where('term_id', $termId)
+                    ->where('session_id', active_session()->id);
+    }
 
     public function result() {
         return $this->hasMany(Result::class);

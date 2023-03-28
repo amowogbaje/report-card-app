@@ -21,19 +21,22 @@ use App\Http\Controllers\PaymentController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('http://ambassadorscollege.com.ng/');
 });
 Route::view('/comeback', 'comeback')->name('comeback');
 Route::get('/timetable', [DashboardController::class, 'timetable']);
+Route::get('/generate-email', [HomeController::class, 'generateRandomEmail']);
+Route::get('/generate-phone', [HomeController::class, 'generateRandomPhoneNo']);
 
 Route::get('/change-password', [AdminController::class, 'changePasswordPage'])->name('change-password');
 Route::post('/change-password', [AdminController::class, 'changePasswordAction'])->name('change-password-action');
 
 // Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
+Route::get('/admin/school/info', [AdminController::class, 'schoolInfo'])->name('admin.school-info');
 Route::group(['prefix'=>'admin', 'middleware' => ['auth', 'candoActivities']], function(){
     Route::view('/setup', 'admin.setup')->name('admin.setup');
     Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
-    Route::get('/school/info', [AdminController::class, 'schoolInfo'])->name('admin.school-info');
+    // Route::get('/school/info', [AdminController::class, 'schoolInfo'])->name('admin.school-info');
     Route::get('/subject-allocation', [AdminController::class, 'subjectAllocation'])->name('admin.subject-allocation');
     Route::get('/classes', [AdminController::class, 'classPage'])->name('admin.classes');
     Route::get('/subjects', [AdminController::class, 'subjects'])->name('admin.classes');

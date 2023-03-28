@@ -2,8 +2,11 @@
     <div class="row gutter-sm">
         <div class="col-sm-12 mx-auto">
             <div class="card">
-                <h5 class="card-header text-center">Payment Sheet for All Students</h5>
-                <a href="#" wire:click = "generateOtp">Generate</a>
+                <h5 class="card-header text-center">
+                    <span>Payment Sheet for All Students</span>
+                    {{-- <a class="btn btn-secondary" href="#" wire:click = "generateOtp">Generate Token For All Students</a> --}}
+                </h5>
+                
             </div>
         </div>
         

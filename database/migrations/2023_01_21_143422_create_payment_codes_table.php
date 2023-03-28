@@ -18,6 +18,8 @@ class CreatePaymentCodesTable extends Migration
             $table->string('payment_verification_code');
             $table->tinyInteger('used')->default(0);
             $table->integer('student_id');
+            $table->integer('session_id');
+            $table->integer('term_id');
             $table->timestamps();
         });
     }

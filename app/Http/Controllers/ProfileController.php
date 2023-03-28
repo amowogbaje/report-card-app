@@ -18,8 +18,8 @@ class ProfileController extends Controller
 {
     //
     public function viewStudentProfile($user_id){
-        $studentId = $user_id;
-        return view('student-profile-page', compact('studentId'));
+        $userId = $user_id;
+        return view('student-profile-page', compact('userId'));
     }
 
     public function academicReport($studentId) {
@@ -90,9 +90,8 @@ class ProfileController extends Controller
 
     }
     public function editStudentProfile($user_id){
-        $student = Student::where('user_id', $user_id)->first();
-        $classlevels = ClassLevel::all();
-        return view('student-profile-edit', compact('student', 'classlevels'));
+        $userId = $user_id;
+        return view('student-profile-edit', compact('userId'));
     }
     public function editTeacherProfile($userId){
         $teacher = Teacher::where('user_id', $userId)->first();
@@ -154,6 +153,7 @@ class ProfileController extends Controller
             if($user) {
                 $student->user_id = $user->id;
                 $student->guardian_phone = $request->guardian_phone;
+                $student->student_phone = $request->phone;
                 $student->class_id = $request->class_id;
                 $student->category = $request->category;
                 $student->guardian_name = $request->guardian_name;

@@ -8,11 +8,13 @@
                         @if(!empty($teacher->user->profile_pics))
                             <img src="{{url('uploads/'.$teacher->user->profile_pics)}}" alt="user" class="rounded-circle border border-info" width="110">
                         @else
-                        @if($teacher->user->gender == 'male')
-                            <img src="{{asset('assets/images/male-avatar.png')}}" alt="Teacher" class="rounded-circle p-1 bg-primary" width="110">
-                        @elseif($teacher->user->gender == 'female')
-                            <img src="{{asset('assets/images/female-avatar.png')}}" alt="Teacher" class="rounded-circle p-1 bg-primary" width="110">
-                        @endif
+                            @if($teacher->user->gender == 'male')
+                                <img src="{{asset('assets/images/male-avatar.png')}}" alt="Teacher" class="rounded-circle p-1 bg-primary" width="110">
+                            @elseif($teacher->user->gender == 'female')
+                                <img src="{{asset('assets/images/female-avatar.png')}}" alt="Teacher" class="rounded-circle p-1 bg-primary" width="110">
+                            @else
+                                <img src="{{asset('assets/images/female-avatar.png')}}" alt="Teacher" class="rounded-circle p-1 bg-primary" width="110">
+                            @endif
                         @endif
                     </label>
                     <input style="display: none" wire:model = "pics" id="profilePics" type="file" accept="image/*"/>

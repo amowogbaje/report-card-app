@@ -60,9 +60,26 @@ class BootstrapStudents implements ShouldQueue
         $newAssessment->term_id = $current_term_id;
         $newAssessment->student_id = $student->id;
         $newAssessment->school_info_id = Auth::user()->school_info_id;
+        $percentage = "Not Ready"; $markObtained = "Not Ready"; $markObtainable = "Not Ready";
+        $newAssessment->academic_assessments = json_encode(compact('percentage', 'markObtained', 'markObtainable'));
         $newAssessment->save();
         if($student->class_stage_id == 6) {
             $subjects = Subject::where('class_stage_id', $student->class_stage_id)->get();
+            foreach($subjects as $subject) {
+                DB::table('results')->insert([
+                    'session_id' => $current_session_id,
+                    'term_id' => $current_term_id,
+                    'subject_id' => $subject->id,
+                    'class_id' => $student->class_id,
+                    'student_id' => $student->id,
+                    'totalca' => 0,
+                    'total_score' => 0,
+                ]);
+            }
+        }
+        if($student->class_stage_id == 7) {
+            $subjects = Subject::where('class_stage_id', $student->class_stage_id)
+                                ->where('category', "")->get();
             foreach($subjects as $subject) {
                 DB::table('results')->insert([
                     'session_id' => $current_session_id,
@@ -84,5 +101,12 @@ class BootstrapStudents implements ShouldQueue
         $user = User::find($student->user_id);
         $user->username = $schoolInfo->codename."/".$student->class_code."/".$student->class_matric_no;
         $user->save();
+
+        DB::table('payment_codes')->insert([
+            'session_id' => active_session()->id,
+            'term_id' => active_term()->id,
+            'student_id' => $student->id,
+            'payment_verification_code' => FLOOR(RAND() * 401) + 100
+        ]);
     }
 }

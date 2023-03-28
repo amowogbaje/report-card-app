@@ -29,6 +29,7 @@
                             <td>
                                 <a href="#" wire:click="selectSubject" onclick="pickSubjectId({{$subject->id}})" data-toggle="modal" data-target="#assign_teacher_to_subject_modal"><i class="fa fa-tags"></i></a>
                                 <a href="#" onclick="update({{$subject->id}})" wire:click="edit({{$subject->id}})"  data-toggle="modal" data-target="#add_subject_modal"><i class="fa fa-edit"></i></a>
+                                {{-- <a href="#" wire:click="delete({{$subject->id}})"><i class="fa fa-trash"></i></a> --}}
                                 {{-- <a href="#" wire:click="delete({{$subject->id}})"  data-toggle="modal"><i class="fa fa-trash"></i></a> --}}
                             </td>
                         </tr> 
@@ -61,7 +62,7 @@
                             @error('teacher_id') <span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <div class="form-group mb-2">
-                            <input type="number" class="form-control @error('periods') is-invalid @enderror" id="name" placeholder="Enter No of Periods" wire:model.defer="periods">
+                            <input type="number" class="form-control @error('periods') is-invalid @enderror" id="number" placeholder="Enter No of Periods" wire:model.defer="periods">
                             @error('periods') <span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                         <div class="form-group mb-2">
@@ -122,10 +123,10 @@
                         @if($classStageIsSecondary)
                         <div class="form-group mb-2">
                             <select class="form-control @error('category') is-invalid @enderror" id="category" wire:model.defer="category">
-                                <option value="general" @selected(true)>General</option>
-                                <option value="science" @selected(true)>Science</option>
+                                <option value="">General</option>
+                                <option value="science">Sciences</option>
                                 {{-- <option value="commercial" @selected(true)>Commercial</option> --}}
-                                <option value="art" @selected(true)>Art</option>
+                                <option value="art">Art</option>
                             </select>
                             @error('category') <span class="text-danger">{{ $message }}</span>@enderror
                         </div>
@@ -174,9 +175,9 @@
                         @if($classStageIsSecondary)
                         <div class="form-group mb-2">
                             <select class="form-control @error('category') is-invalid @enderror" id="category" wire:model.defer="category">
-                                <option value="general" @selected(true)>General</option>
-                                <option value="science" @selected(true)>Science</option>
-                                <option value="art" @selected(true)>Art</option>
+                                <option value="">General</option>
+                                <option value="science">Science</option>
+                                <option value="art">Art</option>
                             </select>
                             @error('category') <span class="text-danger">{{ $message }}</span>@enderror
                         </div>

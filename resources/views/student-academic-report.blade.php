@@ -182,7 +182,13 @@
                 </div>
             </div>
             <div class="col-md-6 col-sm-12">
-                
+                @if(Auth::user()->role == "student")
+                    @if($student->user->dob != "")
+                      @livewire('student.physical-assessment', ['student_id' => $student->id])
+                    @else
+                    <p class="alert-danger">Kindly Update Your Date of Birth to enable Physical Assessment</p>
+                    @endif
+                @endif
                 @if($student->classteacher($student->class_id)->count() != 0)
                     @if(Auth::user()->id == $student->classteacher($student->class_id)->first()->user_id)
                         @livewire('teacher.student-skill-assessment', ['student_id' => $student->id])

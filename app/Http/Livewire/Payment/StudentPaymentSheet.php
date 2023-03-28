@@ -39,6 +39,8 @@ class StudentPaymentSheet extends Component
         $students = Student::all();
         foreach($students as $student) {
             DB::table('payment_codes')->insert([
+                'session_id' => active_session()->id,
+                'term_id' => active_term()->id,
                 'student_id' => $student->id,
                 'payment_verification_code' => FLOOR(RAND() * 401) + 100
             ]);

@@ -24,5 +24,5 @@
                 </div>
         @endif
     </div>
-    @livewire('student.student-profile', ['profileId' => $studentId])
+    @livewire('student.student-profile', ['profileId' => $userId])
 </x-admin-layout>

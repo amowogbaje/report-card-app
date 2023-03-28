@@ -11,6 +11,7 @@ use Illuminate\Queue\SerializesModels;
 
 use DB;
 use App\Models\ClassLevel;
+use App\Models\ClassAssessment;
 use App\Models\Student;
 use App\Jobs\BootstrapStudents;
 
@@ -51,13 +52,12 @@ class ImportStudentFromSheet implements ShouldQueue
             $phoneExist = DB::table('users')->where('phone', $row['phone'])->count();
             if($emailExist == 0 && $phoneExist == 0) {
                 $userId = DB::table('users')->insertGetId([
-                // $user = DB::table('users')->insert([
                     'firstname' => $row['firstname'],
                     'lastname' => $row['lastname'],
                     'othernames' => $row['othernames'],
                     'email' => $row['email'],
                     'phone' => $row['phone'],
-                    'dob' => $row['date_of_birth'],
+                    // 'dob' => $row['date_of_birth'],
                     'username' => "not yet assigned",
                     'school_info_id' => $schoolInfo->id,
                     'gender' => strtolower($row['gender']),
@@ -115,5 +115,14 @@ class ImportStudentFromSheet implements ShouldQueue
             
             
         }
+
+        ClassAssessment::insert([
+            'highest_score' => 0,
+            'lowest_score' => 0,
+            'average_score' => 0,
+            'session_id' => $current_session_id,
+            'term_id' => $current_term_id,
+            'class_id' => $this->class_id
+        ]);
     }
 }

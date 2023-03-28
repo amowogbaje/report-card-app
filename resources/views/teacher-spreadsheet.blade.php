@@ -53,6 +53,7 @@
                                 <th colspan="4" class="text-center">Assessments</th>
                                 <th rowspan="2">Exam</th>
                                 <th rowspan="2">Total </th>
+                                <th rowspan="2">Percentage </th>
                                 <th rowspan="2">Grade </th>
                                 <th rowspan="2">Position </th>
                             </tr>
@@ -83,9 +84,13 @@
                                 <tr>
                                     {{-- <input type="hidden" name="student_id[]" value="{{$student->id}}"> --}}
                                     @if($student->subjectResult($subject_id, $student->id)->count() != 0)
-                                        <td><a href="teacher-students-profile.html">{{$student->user->full_name}}</a> </td>
+                                        <td><a href="#">{{$student->user->full_name}}</a> </td>
                                         @if(active_term()->id >= 2)
-                                        <td><input type="text" class="form-control" name="first_term_scores[{{$student->id}}]"></td>
+                                            @if($student->prevSubjectResult($subject_id, $student->id, 1)->count() == 0)
+                                                <td><input type="text" class="form-control" name="first_term_scores[{{$student->id}}]"></td>
+                                            @else
+                                                <td><input type="text" class="form-control" name="first_term_scores[{{$student->id}}]" value="{{$student->prevSubjectResult($subject_id, $student->id, 1)->first()->total_score}}"></td>
+                                            @endif
                                         {{-- <td><input type="text" class="form-control" name="scores[{{$student->id}}]['firstterm']" value="{{$student->subjectResult($subject_id, $student->id)->first()->ca_1}}"></td> --}}
                                         @endif
                                         @if(active_term()->id == 3)
@@ -98,6 +103,7 @@
                                         <td>{{$student->subjectResult($subject_id, $student->id)->first()->totalca}}</td>
                                         <td><input type="text" class="form-control" name="scores[{{$student->id}}]['exam']" value="{{$student->subjectResult($subject_id, $student->id)->first()->exam}}"></td>
                                         <td>{{$student->subjectResult($subject_id, $student->id)->first()->total_score}}</td>
+                                        <td>{{$student->subjectResult($subject_id, $student->id)->first()->cumulative_percentage}}</td>
                                         <td>{{$student->subjectResult($subject_id, $student->id)->first()->grade}}</td>
                                         {{-- <td>{{$student->subjectResult($subject_id, $student->id)->first()->position}}</td> --}}
                                         <td>{!!$student->subjectResult($subject_id, $student->id)->first()->position!!}</td>
@@ -123,6 +129,8 @@
                         </tbody>
                     </table>
                 </div>
+                @else
+                 No student in this class Uploaded Yet
                 @endif
             </div>
         </div>
