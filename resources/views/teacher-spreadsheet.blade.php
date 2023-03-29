@@ -25,7 +25,7 @@
                         {{ session()->get('error') }}
                     </div>
         @endif
-        <h1 class="h3 mb-2 text-gray-800">{{$subject->name}} Results Spreadsheet</h1>
+        <h1 class="h3 mb-2 text-gray-800">{{$subject->name}} Results Spreadsheet for {{$classLevel->shortname}}</h1>
         
 
         <!-- DataTales Example -->
@@ -45,22 +45,22 @@
                             <tr>
                                 <th rowspan="2">Full Name</th>
                                 @if(active_term()->id >= 2)
-                                <th rowspan="2">1st Term</th>
+                                <th rowspan="2" class="px-4">First Term</th>
                                 @endif
                                 @if(active_term()->id == 3)
-                                <th rowspan="2">2nd Term</th>
+                                <th rowspan="2" class="px-4">Second Term</th>
                                 @endif
                                 <th colspan="4" class="text-center">Assessments</th>
-                                <th rowspan="2">Exam</th>
+                                <th rowspan="2" class="px-4">Exam</th>
                                 <th rowspan="2">Total </th>
                                 <th rowspan="2">Percentage </th>
                                 <th rowspan="2">Grade </th>
                                 <th rowspan="2">Position </th>
                             </tr>
                             <tr>
-                                <th>1st CA</th>
-                                <th>2nd CA</th>
-                                <th>3rd CA</th>
+                                <th>1st Continous Assessment</th>
+                                <th>2nd Continous Assessment</th>
+                                <th>3rd Continous Assessment</th>
                                 <th>TCA</th>
                             </tr>
                         </thead>
@@ -80,6 +80,7 @@
                                 {{-- <input type="hidden" name="student_id" value="{{$student_id}}"> --}}
                                 <input type="hidden" name="subject_id" value="{{$subject_id}}">
                                 <input type="hidden" name="class_id" value="{{$class_id}}">
+                                <input type="hidden" name="class_code" value="{{$classLevel->code}}">
                                 @foreach ($students as $student)
                                 <tr>
                                     {{-- <input type="hidden" name="student_id[]" value="{{$student->id}}"> --}}
@@ -121,7 +122,7 @@
                             @endforeach
                                 <tr>
                                     {{ csrf_field() }}
-                                    <td><button type="submit" class="btn btn-primary">Submit</button></td>
+                                    <td><button type="submit" class="btn btn-primary">Save Changes</button></td>
                                 </tr>
                             </form>
                             

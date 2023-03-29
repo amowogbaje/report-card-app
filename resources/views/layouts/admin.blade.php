@@ -6,7 +6,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Favicon -->
+   <!-- Favicon -->
     <link href="{{URL::asset('assets/images/favicon.ico') }}" rel="shortcut icon" />
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{URL::asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}">
@@ -19,8 +19,15 @@
     <link rel="stylesheet" href="{{URL::asset('assets/vendor/charts/c3charts/c3.css') }}">
     <link rel="stylesheet" href="{{URL::asset('assets/vendor/fonts/flag-icon-css/flag-icon.min.css') }}">
     <link rel="stylesheet" href="{{URL::asset('assets/vendor/inputmask/css/inputmask.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
     {{-- <script src="{{URL::asset('assets/vendor/easy-v-toast-master/dist/toast.min.css') }}"></script> --}}
     <script src="{{URL::asset('assets/vendor/easy-v-toast-master/dist/toast.with.css.js') }}"></script>
+    <style>
+        /*label{margin-left: 20px;}*/
+        #datepicker{width:100%; margin:none;}
+        #datepicker > span:hover{cursor: pointer;}
+    </style>
+    
     @livewireStyles
     <title>{{config('app.name')}}</title>
 </head>
@@ -129,6 +136,7 @@
     <script src="{{URL::asset('assets/vendor/charts/c3charts/C3chartjs.js') }}"></script>
     <script src="{{URL::asset('assets/libs/js/dashboard-ecommerce.js') }}"></script>
     <script src="{{URL::asset('assets/vendor/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     @livewireScripts
 
     
@@ -186,6 +194,7 @@
         window.addEventListener('teacher-added', event => {
             alert('Save Event Fired: ');
         })
+        
         </script>
         @yield('extra-script')
 </body>

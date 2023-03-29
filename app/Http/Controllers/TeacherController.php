@@ -52,5 +52,32 @@ class TeacherController extends Controller
 
         return view('teachers.class-assigned', compact('class_teacher_id'));
     }
+    
+    public function updateProfile(Request $request){
+
+        $user_id = $request->user_id;
+        $user = User::find($user_id);
+            $user->firstname = $request->firstname;
+            $user->lastname = $request->lastname;
+            $user->othernames = $request->othernames;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->gender = $request->gender;
+            $user->address = $request->address;
+            $user->lga_origin = $request->lga_origin;
+            $user->state_origin = $request->state_origin;
+            $user->citizenship = $request->citizenship;
+            $user->dob = $request->dob;
+            // if($this->dob =="null")
+            $user->save();
+            if($user) {
+                return back()->with('success', $request->firstname.' info has been Successfully edited');
+            }
+            else {
+                return back()->with('error','Something goes wrong while updating....!!');
+                // $this->resetFields();
+            }
+
+    }
 
 }

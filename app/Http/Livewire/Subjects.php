@@ -21,7 +21,7 @@ class Subjects extends Component
     public $number, $name, $subject_id, $teacher_id, $class_id, 
             $class_stage_id, $category="", $classlevels, $periods,
             $classStageIsSecondary = false, $update = false, $isAssigned = false,
-            $listOfSubjects;
+            $listOfSubjects, $noOfJuniorSubjects, $noOfSeniorSubjects;
 
     // protected $listeners = ['setCategory', 'setClass_stage_id'];
 
@@ -31,8 +31,10 @@ class Subjects extends Component
     ];
 
     public function mount($number) {
+        $this->noOfJuniorSubjects = Subject::where('class_stage_id', 6)->count();
+        $this->noOfSeniorSubjects = Subject::where('class_stage_id', 7)->count();
         $this->number = $number;
-        $this->classlevels = ClassLevel::all();
+        $this->classlevels = ClassLevel::orderBy('code')->get();
         $this->listOfSubjects = "English Language, Mathematics, Biology, Economics, Civics";
     }
 
@@ -216,7 +218,11 @@ class Subjects extends Component
     }
     public function edit($id) {
         $this->update = true;
+        $this->subject_id = $id;
+        
+        
         $subject = Subject::where('id', $id)->first();
+        $this->chooseClassStageWithParameter($subject->class_stage_id);
         $this->name = $subject->name;
         $this->class_stage_id = $subject->class_stage_id;
         $this->category = $subject->category;
@@ -249,7 +255,7 @@ class Subjects extends Component
 
     public function selectSubject() {
         $classStageId = Subject::where('id',$this->subject_id)->first()->class_stage_id;
-        $this->classlevels = ClassLevel::where('class_stage_id', $classStageId)->get();
+        $this->classlevels = ClassLevel::where('class_stage_id', $classStageId)->orderBy('code')->get();
 
     }
 
@@ -266,6 +272,18 @@ class Subjects extends Component
     public function chooseClassStage() {
         if(ClassStage::where('id',$this->class_stage_id)->count() > 0) {
             if(ClassStage::where('id',$this->class_stage_id)->first()->shortname == 'senior') {
+                $this->classStageIsSecondary = true;
+            }
+            else {
+                $this->classStageIsSecondary = false;
+            }
+        }
+        
+    }
+    
+    public function chooseClassStageWithParameter($stage) {
+        if(ClassStage::where('id',$stage)->count() > 0) {
+            if(ClassStage::where('id',$stage)->first()->shortname == 'senior') {
                 $this->classStageIsSecondary = true;
             }
             else {

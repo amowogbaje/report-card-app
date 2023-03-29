@@ -14,11 +14,10 @@ class StudentPaymentSheet extends Component
 
     public function mount() {
         // $this->allStudents = Student::all();
-        $classlevels = ClassLevel::all();
+        $classlevels = ClassLevel::orderby('code')->get();
         foreach($classlevels as $classlevel) {
             $this->classes["$classlevel->shortname $classlevel->alias"] = $classlevel->name. " ". $classlevel->alias;
-            $this->allStudents["$classlevel->shortname $classlevel->alias"] = Student::where('class_id', $classlevel->id)
-                                                                                    ->where('status', 1)->get();
+            $this->allStudents["$classlevel->shortname $classlevel->alias"] = Student::where('class_id', $classlevel->id)->where('status', 1)->get();
         }
         // $this->allStudents = json_encode($this->allStudents);
     }

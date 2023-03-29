@@ -44,6 +44,13 @@
                                 <div class="h6 mb-0 text-center font-weight-bold text-gray-800">
                                     <span class="text-secondary">{{$subjectAndClass->class->shortname}}</span>
                                 </div>
+                                
+                                <div class="h6 my-1 text-center font-weight-bold text-gray-800">
+                                    <a class="btn btn-outline border-primary text-primary link-info" href="{{url('/teacher/class/'.$subjectAndClass->class->id.'/subject/'.$subjectAndClass->subject->id.'/spreadsheet')}}">Fill Score Sheet</a>
+                                </div>
+                                <div class="h6 my-1 text-center font-weight-bold text-gray-800">
+                                    <a class="btn btn-outline border-secondary text-secondary link-info" href="{{url('teacher/subject-registration/class/'.$subjectAndClass->class->id.''.'/subject/'.$subjectAndClass->subject->id)}}">Register Students</a>
+                                </div>
                                 {{-- <div class="h6 mb-0 font-weight-bold text-gray-800">
                                     <span>{{$noOfSubjects}}</span>
                                 </div> --}}

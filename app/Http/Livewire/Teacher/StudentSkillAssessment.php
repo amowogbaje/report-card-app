@@ -86,7 +86,7 @@ class StudentSkillAssessment extends Component
             $skillAssessment = $studentAssessment->skill_assessments;
             if($skillAssessment != "") {
                 $skillAssessmentArray = json_decode(html_entity_decode($skillAssessment), true);
-                $this->hand_writing = 4;
+                $this->hand_writing = $skillAssessmentArray['hand_writing'];
                 $this->games_sport_and_gymnastics = $skillAssessmentArray['games_sport_and_gymnastics'];
                 $this->handling_of_tools = $skillAssessmentArray['handling_of_tools'];
                 $this->labour_and_workshop = $skillAssessmentArray['labour_and_workshop'];

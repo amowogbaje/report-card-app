@@ -66,7 +66,7 @@
                                         <td>
                                             @if($subject->studentRegistered($student->id, $subject->id) == 0)
                                             <form>
-                                                <input type="checkbox" value="{{$subject->id}}" wire:model= "selectedSubjects">
+                                                <input type="checkbo" value="{{$subject->id}}" wire:model= "selectedSubjects">
                                             </form>
                                             @else
                                                 <a wire:click="confirmDelete({{$subject->id}})"><i class="fa fa-trash"></i></a>

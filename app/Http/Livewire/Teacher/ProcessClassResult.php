@@ -13,12 +13,55 @@ use App\Models\ClassAssessment;
 use App\Models\ClassTeacher;
 use App\Models\TeacherSubjectClass;
 use Auth;
+use DB;
+
+use App\Jobs\DoClassPosition;
 
 class ProcessClassResult extends Component
 {
-    public $class_id , $allSubjectsInClassIsProcessed, $noOfStudents, $noOfResults, $subjectTeachersRemaining;
+    public $class_id, $allSubjectsInClassIsProcessed, $noOfStudents, $noOfResults, $subjectTeachersRemaining;
+    
+    public function calcPosition(array $scores, $studentScore) {
+        $position = "1st";
+        rsort($scores);
+        $scorePosition = [];
+        
+        // dd(($scores));
+        foreach ($scores as $pos => $score) {
+            $pos = $pos + 1;
+            $pos = "$pos";
+            if(strlen($pos) == 1) {
+                if(substr($pos, strlen($pos)-1)  == 1 ) { $position = $pos ."<sup>st</sup>"; }
+                elseif(substr($pos, strlen($pos)-1) == 2) { $position = $pos ."<sup>nd</sup>";}
+                elseif(substr($pos, strlen($pos)-1) == 3) { $position = $pos ."<sup>rd</sup>";}
+                else {$position = $pos."<sup>th<sup>";}
+            }
+            else if(strlen($pos) >= 2) {
+                if(substr($pos, strlen($pos)-1)  == 1 && substr($pos,0,1) !=1) { $position = $pos ."<sup>st</sup>";}
+                elseif(substr($pos, strlen($pos)-1) == 2 && substr($pos,0,1) !=1) { $position = $pos ."<sup>nd</sup>";}
+                elseif(substr($pos, strlen($pos)-1) == 3 && substr($pos,0,1) !=1) { $position = $pos ."<sup>rd</sup>";}
+                else {$position = $pos."<sup>th<sup>";}
+            }
 
+            $scorePosition["$position"] = $score;
+        }
+
+        
+
+        $noDuplicates = array_unique($scorePosition);
+        // return json_encode($noDuplicates);
+        return array_search($studentScore, $noDuplicates);
+
+    }
+    
+    
     public function process() {
+        $this->updateAssessments();
+        // $this->getClassPosition();
+    }
+    
+
+    public function updateAssessments() {
         $assessment;
         $markObtainedArray = [];
         $current_session_id = active_session()->id;
@@ -30,12 +73,7 @@ class ProcessClassResult extends Component
                                 ->where('session_id', $current_session_id)
                                 ->where('term_id', $current_term_id);
             $markObtainable = 100*($resultObject->count());
-            if($current_term_id == 1 || $current_term_id == 2) {
-                $markObtained = $resultObject->sum('total_score');
-            }
-            elseif($current_session_id == 3){
-                $markObtained = $resultObject->sum('cumulative_percentage');
-            }
+            $markObtained = $resultObject->sum('cumulative_percentage');
             $markObtainedArray[$key] = $markObtained;
             $percentage = round($markObtained/$markObtainable *100). "%";
 
@@ -67,7 +105,7 @@ class ProcessClassResult extends Component
         ClassTeacher::where('session_id', $current_session_id)
                     ->where('term_id', $current_term_id)
                     ->where('class_id', $this->class_id)
-                    ->update(['result_processed' => 0]);
+                    ->update(['result_processed' => 1]);
 
         $classAssessmentObject = ClassAssessment::where('session_id', $current_session_id)
                                                 ->where('term_id', $current_term_id)
@@ -94,10 +132,53 @@ class ProcessClassResult extends Component
         $this->emit('toast:notify', [
             'text' => "Your Academic Assessment has been saved",
         ]);
+        
+        DoClassPosition::dispatch($this->class_id);
 
     }
+    
+    public function getClassPosition() {
+        $assessment;
+        $allPercentages;
+        $markObtainedArray = [];
+        $current_session_id = active_session()->id;
+        $current_term_id = active_term()->id;
+        $class_code = ClassLevel::where('id', $this->class_id)->first()->code;
+        $allStudentsInAClass = Student::where('class_code', $class_code)->where('status', 1)->get();
+        foreach ($allStudentsInAClass as $key => $student) {
+            $assessment = Assessment::where('session_id', $current_session_id)
+                                        ->where('term_id', $current_term_id)
+                                        ->where('student_id', $student->id)
+                                        ->where('school_info_id', Auth::user()->school_info_id);
+            $countAssessment = $assessment->count();
+            if($assessment->count() > 0) {
+                $academic_assessments = $assessment->first()->academic_assessments;
+            if($academic_assessments != "") {
+                $academicAssessmentsArray = json_decode(html_entity_decode($academic_assessments), true);
+            }
+            $allPercentages[] = $academicAssessmentsArray['percentage'];
+            // $assessment->update(['academic_assessments' => $academicAssessment]);
+            }
+        }
+        foreach ($allStudentsInAClass as $key => $student) {
+            $assessment = Assessment::where('session_id', $current_session_id)
+                                        ->where('term_id', $current_term_id)
+                                        ->where('student_id', $student->id)
+                                        ->where('school_info_id', Auth::user()->school_info_id);
+            $countAssessment = $assessment->count();
+            if($assessment->count() > 0) {
+                $academic_assessments = $assessment->first()->academic_assessments;
+            if($academic_assessments != "") {
+                $academicAssessmentsArray = json_decode(html_entity_decode($academic_assessments), true);
+            }
+            $position_in_class = $this->calcPosition($allPercentages, $academicAssessmentsArray['percentage']);
+            $assessment->update(['position_in_class' => $position_in_class]);
+            }
+        }
+        
+    }
 
-    public function getSubjectTeachersRemaining () {
+    public function getSubjectTeachersRemaining() {
         $subjectTeachersRemaining = TeacherSubjectClass::where('class_id', $this->class_id)
                                                 ->where('session_id', active_session()->id)
                                                 ->where('term_id', active_term()->id)

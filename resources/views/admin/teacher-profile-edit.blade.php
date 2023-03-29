@@ -149,7 +149,12 @@
                                 <h6 class="mb-0">Date of Birth</h6>
                             </div>
                             <div class="col-sm-9 text-primary">
-                                <input type="date" name="dob" class="form-control" value="{{$teacher->user->dob}}">
+                                <div id="datepicker" class="input-group date" data-date-format="mm-dd-yyyy">
+                                    <input type="text" name="dob" class="form-control" value="{{$teacher->user->dob}}" placeholder="Select Date" readonly>
+                                    <div class="input-group-prepend">
+                                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -164,4 +169,15 @@
             
         </div>
     </div>
+@section('extra-script')
+    <script>
+        $(function () {
+              $("#datepicker").datepicker({ 
+                    autoclose: true, 
+                    todayHighlight: true,
+                    format: 'yyyy-mm-dd'
+              });
+            });
+    </script>
+@endsection
 </x-admin-layout>

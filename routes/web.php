@@ -21,19 +21,25 @@ use App\Http\Controllers\PaymentController;
 */
 
 Route::get('/', function () {
-    return redirect('http://ambassadorscollege.com.ng/');
+    return redirect('/login');
+});
+Route::get('/artisan-calls', function() {
+    $exitCode = Artisan::call('route:list');
+    return $exitCode;
 });
 Route::view('/comeback', 'comeback')->name('comeback');
-Route::get('/timetable', [DashboardController::class, 'timetable']);
+Route::view('/404', '404')->name('not-found');
+Route::view('/403', '403')->name('unauthorized');
+Route::get('/timetable', [DashboardController::class, 'demoTimetable']);
+Route::get('/update-result-with-class-code', [ResultController::class, 'updateResultWithClassCode']);
 Route::get('/generate-email', [HomeController::class, 'generateRandomEmail']);
-Route::get('/generate-phone', [HomeController::class, 'generateRandomPhoneNo']);
 
-Route::get('/change-password', [AdminController::class, 'changePasswordPage'])->name('change-password');
-Route::post('/change-password', [AdminController::class, 'changePasswordAction'])->name('change-password-action');
+Route::get('/change-password', [AdminController::class, 'changePasswordPage'])->name('change-password')->middleware('admin');
+Route::post('/change-password', [AdminController::class, 'changePasswordAction'])->name('change-password-action')->middleware('admin');
 
 // Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
-Route::get('/admin/school/info', [AdminController::class, 'schoolInfo'])->name('admin.school-info');
-Route::group(['prefix'=>'admin', 'middleware' => ['auth', 'candoActivities']], function(){
+Route::get('/admin/school/info', [AdminController::class, 'schoolInfo'])->name('admin.school-info')->middleware('admin');
+Route::group(['prefix'=>'admin', 'middleware' => ['auth','admin', 'candoActivities']], function(){
     Route::view('/setup', 'admin.setup')->name('admin.setup');
     Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
     // Route::get('/school/info', [AdminController::class, 'schoolInfo'])->name('admin.school-info');
@@ -59,19 +65,20 @@ Route::group(['prefix'=>'admin', 'middleware' => ['auth', 'candoActivities']], f
 
 
 
-Route::group(['prefix'=>'teacher', 'middleware' => ['auth', 'candoActivities']], function(){
+Route::group(['prefix'=>'teacher', 'middleware' => ['auth', 'teacher', 'candoActivities']], function(){
     Route::get('/profile', [TeacherController::class, 'profile'])->name('admin.profile');
     Route::get('/profile/edit', [TeacherController::class, 'editProfile'])->name('admin.profile-edit');
-    Route::post('/profile/update', [TeacherController::class, 'updateProfile'])->name('admin.profile-update');
+    Route::post('/profile/update', [TeacherController::class, 'updateProfile'])->name('teacher.profile-update');
     
     Route::get('/profile/{id}', [ProfileController::class, 'viewTeacherProfile'])->name('teacher.profile');
     Route::get('/profile/{id}/edit', [ProfileController::class, 'editTeacherProfile'])->name('teacher.profile-edit');
-    Route::post('/profile/edit-teacher', [ProfileController::class, 'editTeacherAction'])->name('teacher.profile-edit-action');
-    Route::get('/class/{class_id}/subject/{subject_id}/spreadsheet', [ResultController::class, 'teacherspreadsheet'])->name('teacher.spreadsheet');
+    // Route::post('/profile/edit-teacher', [ProfileController::class, 'editTeacherAction'])->name('teacher.profile-edit-action');
+    Route::get('/class/{class_id}/subject/{subject_id}/spreadsheet', [ResultController::class, 'teacherspreadsheet'])->name('teacher.spreadsheet')->middleware('subject.teacher');
     Route::post('/submit/scores', [ResultController::class, 'submitScores'])->name('teacher.submit-scores');
     Route::get('/dashboard', [DashboardController::class, 'teacher'])->name('teacher.dashboard');
     Route::get('/subjects', [TeacherController::class, 'subjects'])->name('teacher.profile');
     Route::get('/class-assigned', [TeacherController::class, 'classAssigned'])->name('teacher.class-assigned');
+    Route::get('/subject-registration/class/{class_id}/subject/{subject_id}', [ProfileController::class, 'subjectRegistration'])->name('teacher.subject-registration')->middleware('subject.teacher');
 });
 
 

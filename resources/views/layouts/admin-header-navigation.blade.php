@@ -10,6 +10,7 @@
                     <input class="form-control" type="text" placeholder="Search..">
                 </div>
             </li>
+            {{--
             <li class="nav-item dropdown notification">
                 <a class="nav-link nav-icons" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-fw fa-bell"></i> <span class="indicator"></span></a>
                 <ul class="dropdown-menu dropdown-menu-right notification-dropdown">
@@ -57,6 +58,7 @@
                     </li>
                 </ul>
             </li>
+            --}}
             
             <li class="nav-item dropdown nav-user">
                 <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

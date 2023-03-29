@@ -2,7 +2,7 @@
     <h5 class="card-header">List of Teachers</h5>
     <h5 class="card-header">
         <a href="javascript::void()" wire:click = "downloadTemplate()" class="text-primary link-primary mx-3"><i class="fas fa-download"></i> Download Template</a>
-        <a href="javascript::void()" wire:click = "upload()" data-toggle="modal" data-target="#upload_teacher_modal" class="text-primary link-primary mx-3" ><i class="fas fa-cloud"></i> Upload</a>
+        <a href="javascript::void()" data-toggle="modal" data-target="#upload_teacher_modal" class="text-primary link-primary mx-3" ><i class="fas fa-cloud"></i> Upload</a>
         <a href="javascript::void()" wire:click = "download()" class="text-primary link-primary mx-3"><i class="fas fa-download"></i> Download</a>
         <a href="javascript::void()" data-toggle="modal" data-target="#add_teacher_modal" class="text-primary link-primary mx-3" > <i class="fas fa-plus"></i> Add Teacher</a>
     </h5>
@@ -62,7 +62,7 @@
                 <div class="modal-body">
                     <form>
                             <div class="form-group mb-2">
-                                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" placeholder="Upload File Here" wire:model.defer="file">
+                                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" placeholder="Upload File Here" wire:model="file">
                                 @error('file') <span class="text-danger">{{ $message }}</span>@enderror
                             </div>
                             <div wire:loading>Processing....</div>

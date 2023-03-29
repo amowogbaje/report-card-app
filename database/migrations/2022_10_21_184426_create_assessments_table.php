@@ -23,6 +23,7 @@ class CreateAssessmentsTable extends Migration
             $table->json('skill_assessments')->nullable();
             $table->json('behavior_assessments')->nullable();
             $table->json('academic_assessments')->nullable();
+            $table->string('position_in_class')->nullable();
             $table->string('student_attendance')->nullable();
             $table->string('overall_attendance')->nullable();
             $table->string('class_teacher_comment')->nullable();

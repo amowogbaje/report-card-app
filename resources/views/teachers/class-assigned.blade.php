@@ -30,7 +30,7 @@
         </div>
     </div>
     @else
-        @livewire('student.student-list', ['number' => 30, 'class_teacher_id' => $class_teacher_id])
+        @livewire('student.student-list', ['number' => 150, 'class_teacher_id' => $class_teacher_id])
     @endif
     
 </x-admin-layout>

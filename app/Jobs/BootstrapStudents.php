@@ -10,6 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
 use App\Models\ClassStudent;
+use App\Models\ClassLevel;
 use App\Models\Assessment;
 use App\Models\Result;
 use App\Models\Student;
@@ -93,10 +94,12 @@ class BootstrapStudents implements ShouldQueue
             }
         }
         
-        // $classCode = Classlevel::where('id', $student->class_id)->first()->code;
+        $classCode = Classlevel::where('id', $student->class_id)->first()->code;
         
-        // $studentIDInThreeDigits = sprintf("%03d", $student->id);
-        // $classIDInThreeDigits = sprintf("%03d", $student->class_id);
+        $studentIDInThreeDigits = sprintf("%03d", $student->id);
+        $classIDInThreeDigits = sprintf("%03d", $student->class_id);
+        
+        // Previously used to assign automatic matric no but the client said it should be manually inputed since there are pre-exisiting admission no for students already
 
         $user = User::find($student->user_id);
         $user->username = $schoolInfo->codename."/".$student->class_code."/".$student->class_matric_no;

@@ -14,5 +14,5 @@
             </div>
         </div>
     </div>
-    @livewire('subjects', ['number' => 30])
+    @livewire('subjects', ['number' => 100])
 </x-admin-layout>

@@ -8,7 +8,11 @@
     <h5 class="card-header">
         @if($class_teacher_id != null)
             <a href="javascript::void()" wire:click = "downloadTemplate()" class="text-primary link-primary mx-3"><i class="fas fa-download"></i> Download Template</a>
-            <a href="javascript::void()" wire:click = "upload()" data-toggle="modal" data-target="#upload_student_modal" class="text-primary link-primary mx-3" ><i class="fas fa-cloud"></i> Upload</a>
+            <a href="javascript::void()" data-toggle="modal" data-target="#upload_student_modal" class="text-primary link-primary mx-3" ><i class="fas fa-cloud"></i> Upload</a>
+            <a href="javascript::void()" wire:click = "normalizeNames()" class="text-primary link-primary mx-3"><i class="fas fa-user"></i> Normalize Names</a>
+            {{ count($students)}} Students
+            <!--<a href="javascript::void()" wire:click = "givepassword()" class="text-primary link-primary mx-3"><i class="fas fa-user"></i> Give Password</a>-->
+            
         @endif
         <a href="javascript::void()" wire:click = "downloadStudentList({{$class_teacher_id}})" class="text-primary link-primary mx-3"><i class="fas fa-download"></i> Download Student List</a>
         
@@ -164,6 +168,10 @@
                                 <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" placeholder="Enter Email" wire:model.defer="email">
                                 @error('email') <span class="text-danger">{{ $message }}</span>@enderror
                             </div>
+                            <!--<div class="form-group mb-2">-->
+                            <!--    <input type="text" class="form-control @error('admission_no') is-invalid @enderror" id="email" placeholder="Enter Admission No" wire:model.defer="admission_no">-->
+                            <!--    @error('admission_no') <span class="text-danger">{{ $message }}</span>@enderror-->
+                            <!--</div>-->
                             <div class="form-group mb-2">
                                 <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" placeholder="Enter Guardian Phone Number" wire:model.defer="phone">
                                 @error('phone') <span class="text-danger">{{ $message }}</span>@enderror

@@ -7,6 +7,7 @@
             Add In Bulk
         </a>
     </h5>
+    <h5>Junior Subjects: {{$noOfJuniorSubjects}}, Senior Subjects: {{$noOfSeniorSubjects}} </h5>
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table">

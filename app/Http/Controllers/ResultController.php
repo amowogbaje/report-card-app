@@ -28,6 +28,7 @@ class ResultController extends Controller
 
     public function teacherspreadsheet($class_id, $subject_id) {
         $subject = Subject::where('id', $subject_id)->first();
+        $classLevel = ClassLevel::where('id', $class_id)->first();
         if($subject->category == NULL || $subject->category == "") {
             $students = Student::where('class_id', $class_id)->where('status', 1)->get();
         }
@@ -36,7 +37,7 @@ class ResultController extends Controller
         }
         
         // return $subject;
-        return view('teacher-spreadsheet', compact('students', 'subject_id', 'class_id', 'subject'));
+        return view('teacher-spreadsheet', compact('students', 'subject_id', 'class_id', 'subject', 'classLevel'));
     }
 
     public function submitScores(Request $request) {
@@ -63,6 +64,7 @@ class ResultController extends Controller
                             'term_id' => 1,
                             'subject_id' => $request->subject_id,
                             'class_id' => $request->class_id,
+                            'class_code' => $request->class_code,
                             'student_id' => $key,
                             'total_score' => $firstTermTotalScore,
                         ]);
@@ -98,6 +100,7 @@ class ResultController extends Controller
                             'term_id' => 2,
                             'subject_id' => $request->subject_id,
                             'class_id' => $request->class_id,
+                            'class_code' => $request->class_code,
                             'student_id' => $key,
                             'total_score' => $secondTermTotalScore,
                         ]);
@@ -132,6 +135,7 @@ class ResultController extends Controller
                         'term_id' => $current_term_id,
                         'subject_id' => $request->subject_id,
                         'class_id' => $request->class_id,
+                        'class_code' => $request->class_code,
                         'student_id' => $key,
                         'ca_1' => $score["'ca_1'"],
                         'ca_2' => $score["'ca_2'"],
@@ -262,6 +266,20 @@ class ResultController extends Controller
         $pdf = PDF::loadView('student-report-card-basic', compact('student', 'results', 'resultIsReady', 'skillAssessmentsArray', 'behaviourAssessmentsArray', 'physicalAssessmentArray', 'academicAssessmentsArray', 'current_term', 'current_session', 'noInClass' ,'classAssessment', 'schoolInfo', 'studentAttendance', 'overallAttendance', 'classTeacherComment', 'principalComment', 'colorsArray'))
                     ->setPaper('a1', 'landscape');
         return $pdf->download($student->user->fullname. " Report Card.pdf");
+    }
+    
+    public function updateResultWithClassCode() {
+        $allClasses = ClassLevel::all();
+        foreach($allClasses as $classlevel) {
+            $result;
+            DB::table('results')
+                    ->where('class_id', $classlevel->id)
+                    ->update([
+                            'class_code' => $classlevel->code,
+            ]);
+        }
+        
+        return "Class Code Updated";
     }
 
     

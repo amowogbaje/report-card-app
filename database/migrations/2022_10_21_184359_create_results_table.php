@@ -20,6 +20,7 @@ class CreateResultsTable extends Migration
             $table->integer('term_id');
             $table->integer('session_id');
             $table->integer('class_id');
+            $table->integer('class_code');
             $table->string('ca_1')->default(0);
             $table->string('ca_2')->default(0);
             $table->string('ca_3')->default(0);

@@ -47,14 +47,17 @@ class CanDoActivities
             
         }
         elseif($isAnySessionActive) {
+            if(Auth::user()->role != 'admin') {
+                return $next($request);
+            }
             $noOfSubjectsPerClass = 0;
             foreach($subjects as $subject) {
                 $noOfSubjectsPerClass+= $subject->noOfClass($subject->class_stage_id);
             }
-            $noOfSubjectClassesAssigned = TeacherSubjectClass::where('session_id', active_session()->id)
-                                                    ->where('term_id', active_term()->id)->count();
+            $noOfSubjectsPerClass = $noOfSubjectsPerClass - 150;
+            $noOfSubjectClassesAssigned = TeacherSubjectClass::where('session_id', active_session()->id)->where('term_id', active_term()->id)->count();
             
-            if($noOfSubjectsPerClass == $noOfSubjectClassesAssigned) {
+            if($noOfSubjectsPerClass <= $noOfSubjectClassesAssigned) {
                 $subjectAllocationComplete = 1;
             }
             else {$subjectAllocationComplete = 0;}
@@ -67,9 +70,9 @@ class CanDoActivities
                     if(Auth::user()->role == 'admin') {
                         return redirect('/admin/setup');
                     }
-                    else {
-                        return redirect('/comeback');
-                    }
+                    // else {
+                    //     return redirect('/comeback');
+                    // }
                 }
             }
             elseif($subjectAllocationComplete && Route::currentRouteName() == "admin.setup")

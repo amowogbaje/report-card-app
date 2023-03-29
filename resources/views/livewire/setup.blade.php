@@ -48,7 +48,7 @@
                     @endif
                 </div>
                 <div class="tab-pane fade" id="card-2" role="tabpanel" aria-labelledby="card-tab-2">
-                    @livewire('subjects', ['number' => 45])
+                    @livewire('subjects', ['number' => 55])
                 </div>
                 @if(isset(active_term()->id))
                 <div class="tab-pane fade" id="card-3" role="tabpanel" aria-labelledby="card-tab-3">
@@ -57,7 +57,7 @@
                 @endif
 
                 <div class="tab-pane fade" id="card-4" role="tabpanel" aria-labelledby="card-tab-4">
-                    @livewire('teacher.teachers-list', ['number' => 50])
+                    @livewire('teacher.teachers-list', ['number' => 80])
                 </div>
                 
                 <div class="tab-pane fade" id="card-5" role="tabpanel" aria-labelledby="card-tab-5">

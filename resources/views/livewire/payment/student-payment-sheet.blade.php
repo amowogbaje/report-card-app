@@ -15,7 +15,7 @@
     <div class="row gutter-sm">
         <div class="col-sm-12 mx-auto">
             <div class="card">
-                <h5 class="card-header text-center">{{$classes[$key]}}</h5>
+                <h5 class="card-header text-center">{{$classes[$key]}} {{count($classStudents)}}</h5>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table">

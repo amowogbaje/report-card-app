@@ -25,6 +25,7 @@ class StudentExport implements FromCollection,WithHeadings
             'users.firstname',
             'users.lastname',
             'users.othernames',
+            'users.username',
             'users.email',
             'users.phone',
             'users.dob',
@@ -53,7 +54,7 @@ class StudentExport implements FromCollection,WithHeadings
     public function headings(): array
     {
         return [
-            "Firstname", "Lastname", "Othernames",
+            "Firstname", "Lastname", "Othernames",'Admission No',
             "Email", "Phone", "Date of Birth",
             "Gender", "Citizenship",
             "State of Origin", "Local Government", "Guardian Name",

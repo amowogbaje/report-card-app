@@ -33,6 +33,13 @@
                 {{-- <li class="nav-item">
                     <a class="nav-link" href="{{url('student/subjects')}}" ><i class="fa fa-fw fa-rocket"></i>Wallet</a>
                 </li> --}}
+                <li class="nav-item">
+                    <form action="{{url('/logout')}}" method="post">
+                        {{ csrf_field() }}
+                        <button type="submit" class="dropdown-item" href="#"><i class="fas fa-power-off mr-2"></i>
+                        Logout</button>
+                    </form>
+                </li>
             </ul>
         </div>
     </nav>

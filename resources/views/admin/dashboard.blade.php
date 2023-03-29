@@ -63,7 +63,7 @@
                     </div>
                     <div class="card-footer pt-2 mt-4">
                         {{-- @livewire('student.add-student') --}}
-                        <div class="my-1"><a href="#" class="btn btn-block btn-primary text-center">View Students</a></div>
+                        <div class="my-1"><a href="{{ url('/admin/students') }}" class="btn btn-block btn-primary text-center">View Students</a></div>
                     </div>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                     </div>
                     <div class="card-footer pt-2 mt-4">
                         {{-- @livewire('teacher.add-teacher', ['role' => 'teacher']) --}}
-                        <div class="my-1"><a href="#" class="btn btn-block btn-primary text-center">View Teachers</a></div>
+                        <div class="my-1"><a href="{{ url('/admin/teachers') }}" class="btn btn-block btn-primary text-center">View Teachers</a></div>
                     </div>
                 </div>
             </div>
@@ -95,9 +95,7 @@
                             <span>-2.00%</span>
                         </div> --}}
                     </div>
-                    <div class="card-footer pt-2 mt-4">
-                        <div class="my-1"><a href="#" class="btn btn-block btn-primary text-center">View Students</a></div>
-                    </div>
+                    
                 </div>
             </div>
         </div>

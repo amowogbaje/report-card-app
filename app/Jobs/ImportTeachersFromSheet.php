@@ -68,10 +68,10 @@ class ImportTeachersFromSheet implements ShouldQueue
                 }
             }
             elseif($emailExist != 0) {
-                return null;
+                continue;
             }
             elseif($phoneExist != 0) {
-                return null;
+                continue;
             }
         }
     }

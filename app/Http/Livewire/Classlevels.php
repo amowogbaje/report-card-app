@@ -22,12 +22,13 @@ class Classlevels extends Component
     protected $rules = [
         'name' => 'required|string',
         'shortname' => 'required|string',
-        'alias' => 'required',
+        // 'alias' => 'required',
         'class_stage_id' => 'required',
-        'school_fee' => 'required',
+        // 'school_fee' => 'required',
     ];
 
     public function assignTeachers() {
+        $this->validate(['teacher_id' => 'required']);
         $current_session_id = active_session()->id;
         $current_term_id = active_term()->id;
 

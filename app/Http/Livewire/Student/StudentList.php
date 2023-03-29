@@ -13,6 +13,7 @@ use App\Models\Term;
 use App\Models\SchoolInfo;
 use App\Models\ClassStage;
 use Auth;
+use DB;
 
 use App\Jobs\BootstrapStudents;
 
@@ -32,17 +33,18 @@ class StudentList extends Component
     use WithFileUploads;
     public $number, $file, $class_teacher_id=null;
 
-    public $firstname, $lastname, $class_stage_id, $class_id, $email, $phone, $guardian_name, $classStageIsSecondary = false, $guardian_phone, $student_phone, $guardian_address, $gender = 'male', $category;
+    public $firstname, $lastname, $class_stage_id, $class_id, $email, $phone, $guardian_name, $classStageIsSecondary = false, $guardian_phone, $student_phone, $guardian_address,  $gender = 'male', $category;
+    // public $admission_no
 
     protected $rules = [
         'firstname' => 'required|string',
         'lastname' => 'required|string',
-        'email' => 'required|email',
+        'email' => 'required|email|unique:users',
         'class_id' => 'required|integer',
         'class_stage_id' => 'required|integer',
         'phone' => 'required|string',
         'gender' => 'required|string',
-        // 'category' => 'required|string',
+        // 'admission_no' => 'required|string',
         // 'guardian_phone' => 'required|string',
         'guardian_name' => 'required|string',
     ];
@@ -69,6 +71,7 @@ class StudentList extends Component
             $user->school_info_id = $schoolInfo->id;
             $user->gender = strtolower($this->gender);
             $user->address = $this->guardian_address;
+            // $user->username = $this->admission_no;
             $user->role = "student";
             $user->password = bcrypt(strtolower($this->firstname));
             $user->save();
@@ -145,6 +148,36 @@ class StudentList extends Component
             }
         }
         
+    }
+    
+    public function normalizeNames() {
+        $students = Student::where('class_id', $this->class_teacher_id)->get();
+        foreach ($students as $student) {
+            if(strpos($student->user->lastname, " ") !== false) {
+                DB::table('users')->where("id", $student->user->id)->update([
+                    'firstname' => $this->correctNameArrangement($student->user->lastname)[1],
+                    'lastname' => $this->correctNameArrangement($student->user->lastname)[0]
+                ]);
+            }
+            DB::table('users')->where("id", $student->user->id)->update([
+                    'password' => bcrypt(strtolower(trim($student->user->firstname)))
+                ]);
+            
+        }
+        $this->cancel();
+        
+    }
+    public function correctNameArrangement($name) {
+        $nameArray = explode(' ', $name);
+        return $nameArray;
+    }
+    public function givepassword() {
+        $students = Student::where('class_id', $this->class_teacher_id)->get();
+        foreach ($students as $student) {
+            DB::table('users')->where("id", $student->user->id)->update([
+                'password' => bcrypt(trim($student->user->firstname))
+            ]);
+        }
     }
 
 

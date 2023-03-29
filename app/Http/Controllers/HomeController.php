@@ -50,34 +50,4 @@ class HomeController extends Controller
 
         return "<p style='text-align: justify; font-size:6px; font-family: tahoma'>".implode(" ", $content)."</p>";
     }
-
-    public function generateRandomPhoneNo() {
-        $numbers = ['0','1','2','3','4', '5', '6', '7', '8', '9'];
-        $numbers = array_merge($numbers, ['01','02','03','04', '05', '06', '07', '08', '09']);
-        $numbers = array_merge($numbers, ['10','12','13','14', '15', '16', '17', '18', '19']);
-        $numbers = array_merge($numbers, ['20','21','23','24', '25', '26', '27', '28', '29']);
-        $numbers = array_merge($numbers, ['30','31','33','34', '35', '36', '37', '38', '39']);
-        $numbers = array_merge($numbers, ['40','41','42','43', '45', '46', '47', '48', '49']);
-        $numbers = array_merge($numbers, ['50','51','53','54','52', '56', '57', '58', '59']);
-        $numbers = array_merge($numbers, ['60','61','62','63','64', '65', '67', '68', '69']);
-        $numbers = array_merge($numbers, ['70','71','72','73','74', '75', '76', '78', '79']);
-        $colors = ['brown', 'purple', 'green', 'brown', 'green', 'purple'];
-        $colors = array_merge($colors, ['brown', 'purple', 'green', 'brown', 'green', 'purple']);
-        $colors = array_merge($colors, ['brown', 'purple', 'purple', 'brown', 'green']);
-        $content =[];
-        $line = "";
-        // return "dd";
-        foreach ($numbers as $number) {
-            for($i = 0; $i<17;$i++) {
-                $line = $line.$number;
-                // $content[] = "<span style='color:".$colors[$i].";'>$line</span>";
-                $content[] = "F234".$line;
-            }
-            $line ="";
-        }
-        
-
-        // return "<p style='text-align: justify; font-size:12px; font-family: tahoma'>".implode(" ", $content)."</p>";
-        return implode("<br>", $content);
-    }
 }

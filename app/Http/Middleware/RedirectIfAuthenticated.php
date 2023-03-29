@@ -23,16 +23,18 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                if(Auth::user()->role =='admin') {
-                    return redirect('/admin/dashboard');
+                if (Auth::guard($guard)->check()) {
+                    if(Auth::user()->role =='admin') {
+                        return redirect('/admin/dashboard');
+                    }
+                    if(Auth::user()->role =='teacher') {
+                        return redirect('/teacher/dashboard');
+                    }
+                    if(Auth::user()->role =='student') {
+                        return redirect('/student/profile/'.Auth::user()->id);
+                    }
+                    // return redirect(RouteServiceProvider::HOME);
                 }
-                if(Auth::user()->role =='teacher') {
-                    return redirect('/teacher/dashboard');
-                }
-                if(Auth::user()->role =='student') {
-                    return redirect('/student/profile/'.Auth::user()->id);
-                }
-                // return redirect(RouteServiceProvider::HOME);
             }
         }
 

@@ -16,6 +16,7 @@ class StudentTemplateExport implements FromCollection, WithHeadings
             'users.firstname',
             'users.lastname',
             'users.othernames',
+            // 'users.username',
             'users.email',
             'users.phone',
             'users.dob',

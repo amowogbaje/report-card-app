@@ -16,7 +16,7 @@ use Auth;
 
 class ProfileController extends Controller
 {
-    //
+    //s
     public function viewStudentProfile($user_id){
         $userId = $user_id;
         return view('student-profile-page', compact('userId'));
@@ -100,6 +100,10 @@ class ProfileController extends Controller
 
     public function subjectOfferedByStudent() {
         return view('students.subjects-offered');
+    }
+    
+    public function subjectRegistration($class_id, $subject_id) {
+        return view('teachers.subject-registration', compact('class_id', 'subject_id'));
     }
 
 

@@ -29,7 +29,7 @@ class TeachersList extends Component
     protected $rules = [
         'firstname' => 'required|string',
         'lastname' => 'required|string',
-        'email' => 'required|email',
+        'email' => 'required|email|unique:users',
         'phone' => 'required|string',
         // 'phone' => 'required|string',
     ];

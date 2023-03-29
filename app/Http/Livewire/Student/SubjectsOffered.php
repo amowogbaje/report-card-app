@@ -18,11 +18,11 @@ class SubjectsOffered extends Component
     public function mount() 
     {
         $userId = Auth::user()->id;
-        $student = Student::where('user_id', $userId)->where('status', 1)->first();
+        $student = Student::where('user_id', $userId)->first();
         $this->student = $student;
         $classStageId = $student->class_stage_id;
         $category = $student->category;
-        $this->generalSubjects = Subject::where('class_stage_id', $classStageId)->where('category', NULL)->get();
+        $this->generalSubjects = Subject::where('class_stage_id', $classStageId)->where('category', "")->get();
         $this->specificSubjects = Subject::where('class_stage_id', $classStageId)->where('category', $category)->get();
     }
 
