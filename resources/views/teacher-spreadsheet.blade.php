@@ -103,11 +103,17 @@
                                         <td><input type="text" class="form-control" name="scores[{{$student->id}}]['ca_3']" value="{{$student->subjectResult($subject_id, $student->id)->first()->ca_3}}"></td>
                                         <td>{{$student->subjectResult($subject_id, $student->id)->first()->totalca}}</td>
                                         <td><input type="text" class="form-control" name="scores[{{$student->id}}]['exam']" value="{{$student->subjectResult($subject_id, $student->id)->first()->exam}}"></td>
+                                        @if($isResultProcessed)
                                         <td>{{$student->subjectResult($subject_id, $student->id)->first()->total_score}}</td>
                                         <td>{{$student->subjectResult($subject_id, $student->id)->first()->cumulative_percentage}}</td>
                                         <td>{{$student->subjectResult($subject_id, $student->id)->first()->grade}}</td>
-                                        {{-- <td>{{$student->subjectResult($subject_id, $student->id)->first()->position}}</td> --}}
                                         <td>{!!$student->subjectResult($subject_id, $student->id)->first()->position!!}</td>
+                                        @else 
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        @endif
                                     {{-- @else 
                                         <td><a href="teacher-students-profile.html">{{$student->user->full_name}}</a> </td>
                                         <td><input type="text" class="form-control" name="scores[{{$student->id}}]['ca_1']" value="0"></td>

@@ -38,7 +38,9 @@ class Student extends Model
 
     public function subjectResult($subject_id, $student_id) {
         return Result::where('subject_id', $subject_id)
-                    ->where('student_id', $student_id);
+                    ->where('student_id', $student_id)
+                    ->where('term_id', active_term()->id)
+                    ->where('session_id', active_session()->id);
     }
     public function prevSubjectResult($subject_id, $student_id, $termId) {
         return Result::where('subject_id', $subject_id)

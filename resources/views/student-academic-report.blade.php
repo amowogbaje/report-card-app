@@ -150,7 +150,7 @@
                             <table width="700" class="table table-bordered">
                                 <tbody>
                                     <tr>
-                                        <td height="40" colspan="8">
+                                        <td height="40" colspan="9">
                                             <h4 class="text-center my-1 text-uppercase">
                                                 Summary of Performance</h4>
                                         </td>
@@ -162,7 +162,9 @@
                                         <td>Lowest Score in Class</td>
                                         <td>Highest Score in Class</td>
                                         <td>Percentage</td>
-                                        {{-- <td>Position</td> --}}
+                                        @if($student->class_stage_id < 7)
+                                            <td>Position</td>
+                                        @endif
 
 
                                     </tr>
@@ -173,7 +175,9 @@
                                         <td>{{$classAssessment->lowest_score}}</td>
                                         <td>{{$classAssessment->highest_score}}</td>
                                         <td>{{$academicAssessmentsArray['percentage']}}</td>
-                                        {{-- <td></td> --}}
+                                        @if($student->class_stage_id < 7)
+                                            <td>{{$position_in_class}}</td>
+                                        @endif
                                     </tr>
                                 </tbody>
                             </table>

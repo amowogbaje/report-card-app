@@ -12,6 +12,10 @@
         <button class="btn btn-primary mx-3" wire:click="distributeSubjectPosition">Get Positions</button> --}}
         <span>Average Score: {{$averageScore}}</span>
         <span>| Highest Score: {{$highestScore}}</span>
+        @if($zeroDoesNotExistInLowestScore)
         <span>| Lowest Score: {{$lowestScore}}</span>
+        @else
+        <span>Lowest Score: not ready</span>
+        @endif
     @endif
 </div>

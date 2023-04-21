@@ -41,7 +41,7 @@ class ProcessSubjectResult extends Component
                                                                         ->where('class_id', $this->class_id)
                                                                         ->where('session_id', $current_session_id)
                                                                         ->where('term_id', $current_term_id)
-                                                                        ->update(['class_result_processed'=> 0]);
+                                                                        ->update(['class_result_processed'=> 1]);
 
         $this->emit('swal:notify', [
             'title' => 'Subject Processed',
@@ -79,6 +79,7 @@ class ProcessSubjectResult extends Component
                                             ->where('term_id', 1)
                                             ->where('student_id', $result->student_id)
                                             ->where('subject_id', $this->subject_id)
+                                            ->where('total_score', ">", 0)
                                             ->count();
                 if($checkFirstTermSubjectResult != 0) {
                     $studentPreviousSubjectResult = Result::where('session_id', $current_session_id)
@@ -118,6 +119,7 @@ class ProcessSubjectResult extends Component
                                             ->where('term_id', 1)
                                             ->where('student_id', $result->student_id)
                                             ->where('subject_id', $this->subject_id)
+                                            ->where('total_score', ">", 0)
                                             ->count();
                 if($checkFirstTermSubjectResult != 0) {
                     $studentPreviousSubjectResult1 = Result::where('session_id', $current_session_id)
@@ -131,6 +133,7 @@ class ProcessSubjectResult extends Component
                                             ->where('term_id', 1)
                                             ->where('student_id', $result->student_id)
                                             ->where('subject_id', $this->subject_id)
+                                            ->where('total_score', ">", 0)
                                             ->count();
                 if($checkSecondTermSubjectResult != 0) {
                     $studentPreviousSubjectResult2 = Result::where('session_id', $current_session_id)
@@ -357,6 +360,12 @@ class ProcessSubjectResult extends Component
                                 ->where('class_code', $class_code)
                                 ->where('term_id', $current_term_id)
                                 ->where('session_id', $current_session_id);
+        $zeroDoesNotExistInLowestScore = Result::where('subject_id', $this->subject_id)
+                                ->where('class_code', $class_code)
+                                ->where('term_id', $current_term_id)
+                                ->where('session_id', $current_session_id)
+                                ->where('cumulative_percentage', 0)
+                                ->count();
         if($resultObject->count() == 0) {
             $isPercentageCalculated = 0;
             $averageScore = 0;
@@ -369,6 +378,6 @@ class ProcessSubjectResult extends Component
             $lowestScore = $resultObject->first()->lowest_score;
             $highestScore = $resultObject->first()->highest_score;
         }
-        return view('livewire.teacher.process-subject-result', compact('isResultProcessed', 'isPercentageCalculated', 'averageScore', 'highestScore', 'lowestScore', 'isResultUploaded'));
+        return view('livewire.teacher.process-subject-result', compact('isResultProcessed', 'isPercentageCalculated', 'averageScore', 'highestScore', 'lowestScore', 'isResultUploaded', 'zeroDoesNotExistInLowestScore'));
     }
 }

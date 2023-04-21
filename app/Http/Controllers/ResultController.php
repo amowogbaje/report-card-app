@@ -27,8 +27,14 @@ class ResultController extends Controller
     }
 
     public function teacherspreadsheet($class_id, $subject_id) {
+        
         $subject = Subject::where('id', $subject_id)->first();
         $classLevel = ClassLevel::where('id', $class_id)->first();
+        $isResultProcessed = TeacherSubjectClass::where('subject_id', $subject_id)
+                                                ->where('class_id', $class_id)
+                                                ->where('term_id', active_term()->id)
+                                                ->where('session_id', active_session()->id)
+                                                ->first()->class_result_processed;
         if($subject->category == NULL || $subject->category == "") {
             $students = Student::where('class_id', $class_id)->where('status', 1)->get();
         }
@@ -37,7 +43,7 @@ class ResultController extends Controller
         }
         
         // return $subject;
-        return view('teacher-spreadsheet', compact('students', 'subject_id', 'class_id', 'subject', 'classLevel'));
+        return view('teacher-spreadsheet', compact('students', 'subject_id', 'class_id', 'subject', 'classLevel', 'isResultProcessed'));
     }
 
     public function submitScores(Request $request) {
@@ -51,7 +57,7 @@ class ResultController extends Controller
         {
             // return $first_term_scores;
             foreach($first_term_scores as $key => $firstTermTotalScore){
-                if(($firstTermTotalScore) != "") {
+                if((int) $firstTermTotalScore > 0) {
                     $resultExist = Result::where('subject_id', $request->subject_id)
                                     ->where('class_id', $request->class_id)
                                     ->where('session_id', $current_session_id)
@@ -87,7 +93,7 @@ class ResultController extends Controller
         {
             foreach($second_term_scores as $key => $secondTermTotalScore){
                 // return $score["'ca_1'"];
-                if(trim($secondTermTotalScore) != "") {
+                if((int) $secondTermTotalScore > 0) {
                     $resultExist = Result::where('subject_id', $request->subject_id)
                                     ->where('class_id', $request->class_id)
                                     ->where('session_id', $current_session_id)
@@ -228,6 +234,7 @@ class ResultController extends Controller
         $overallAttendance = $studentAssessment->overall_attendance;
         $principalComment = $studentAssessment->principal_comment;
         $classTeacherComment = $studentAssessment->class_teacher_comment;
+        $position_in_class = $studentAssessment->position_in_class;
         if($physicalAssessment != "") {
             $physicalAssessmentArray = json_decode(html_entity_decode($physicalAssessment), true);
         }
@@ -262,8 +269,8 @@ class ResultController extends Controller
                         ->get();
         
         
-        // return view('student-report-card-basic', compact('student', 'results', 'resultIsReady', 'skillAssessmentsArray', 'behaviourAssessmentsArray', 'physicalAssessmentArray', 'academicAssessmentsArray', 'current_term', 'current_session', 'noInClass', 'classAssessment', 'schoolInfo', 'classTeacherComment', 'principalComment', 'colorsArray'));
-        $pdf = PDF::loadView('student-report-card-basic', compact('student', 'results', 'resultIsReady', 'skillAssessmentsArray', 'behaviourAssessmentsArray', 'physicalAssessmentArray', 'academicAssessmentsArray', 'current_term', 'current_session', 'noInClass' ,'classAssessment', 'schoolInfo', 'studentAttendance', 'overallAttendance', 'classTeacherComment', 'principalComment', 'colorsArray'))
+        // return view('student-report-card-basic', compact('position_in_class', student', 'results', 'resultIsReady', 'skillAssessmentsArray', 'behaviourAssessmentsArray', 'physicalAssessmentArray', 'academicAssessmentsArray', 'current_term', 'current_session', 'noInClass', 'classAssessment', 'schoolInfo', 'classTeacherComment', 'principalComment', 'colorsArray'));
+        $pdf = PDF::loadView('student-report-card-basic', compact('position_in_class','student', 'results', 'resultIsReady', 'skillAssessmentsArray', 'behaviourAssessmentsArray', 'physicalAssessmentArray', 'academicAssessmentsArray', 'current_term', 'current_session', 'noInClass' ,'classAssessment', 'schoolInfo', 'studentAttendance', 'overallAttendance', 'classTeacherComment', 'principalComment', 'colorsArray'))
                     ->setPaper('a1', 'landscape');
         return $pdf->download($student->user->fullname. " Report Card.pdf");
     }
@@ -274,11 +281,17 @@ class ResultController extends Controller
             $result;
             DB::table('results')
                     ->where('class_id', $classlevel->id)
+                    ->where('class_code', NULL)
                     ->update([
                             'class_code' => $classlevel->code,
             ]);
+            // $result = DB::table('results')
+            //         ->where('class_id', $classlevel->id)
+            //         ->where('class_code', NULL)
+            //         ->get();
         }
         
+        // return $result;
         return "Class Code Updated";
     }
 

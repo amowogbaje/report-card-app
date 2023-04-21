@@ -109,7 +109,7 @@
                                                             alt="" srcset="">
                                                         @endif
                                                     </td>
-                                                    <th height="40" colspan="9">Name: <span
+                                                    <th height="40" colspan="10">Name: <span
                                                             class="text-underline text-uppercase py-3">{{$student->user->fullname}}</span>
                                                     </th>
 
@@ -124,6 +124,9 @@
                                                     <td>Average Score</td>
                                                     <td>Percentage</td>
                                                     <td>Attendance</td>
+                                                    @if($student->class_stage_id < 7)
+                                                        <td>Position In Class</td>
+                                                    @endif
                                                 </tr>
                                                 <tr class="py-3">
                                                     <td height="40">{{ucfirst($student->user->username)}}</td>
@@ -135,6 +138,10 @@
                                                     <td>{{$classAssessment->average_score}}</td>
                                                     <td>{{$academicAssessmentsArray['percentage']}}</td>
                                                     <td>{{$studentAttendance}} out of {{$overallAttendance}}</td>
+                                                   @if($student->class_stage_id < 7)
+                                                        <td>{{$position_in_class}}</td>
+                                                    @endif
+                                                    
                                                 </tr>
                                             </table>
                                         </tr>

@@ -73,7 +73,7 @@ Route::group(['prefix'=>'teacher', 'middleware' => ['auth', 'teacher', 'candoAct
     Route::get('/profile/{id}', [ProfileController::class, 'viewTeacherProfile'])->name('teacher.profile');
     Route::get('/profile/{id}/edit', [ProfileController::class, 'editTeacherProfile'])->name('teacher.profile-edit');
     // Route::post('/profile/edit-teacher', [ProfileController::class, 'editTeacherAction'])->name('teacher.profile-edit-action');
-    Route::get('/class/{class_id}/subject/{subject_id}/spreadsheet', [ResultController::class, 'teacherspreadsheet'])->name('teacher.spreadsheet')->middleware('subject.teacher');
+    Route::get('/class/{class_id}/subject/{subject_id}/spreadsheet', [ResultController::class, 'teacherspreadsheet'])->middleware('subject.teacher')->name('teacher.spreadsheet');
     Route::post('/submit/scores', [ResultController::class, 'submitScores'])->name('teacher.submit-scores');
     Route::get('/dashboard', [DashboardController::class, 'teacher'])->name('teacher.dashboard');
     Route::get('/subjects', [TeacherController::class, 'subjects'])->name('teacher.profile');

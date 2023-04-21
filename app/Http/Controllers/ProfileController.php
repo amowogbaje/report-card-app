@@ -53,6 +53,7 @@ class ProfileController extends Controller
         $behaviourAssessments = $studentAssessment->behavior_assessments;
         $skillAssessments = $studentAssessment->skill_assessments;
         $academicAssessments = $studentAssessment->academic_assessments;
+        $position_in_class = $studentAssessment->position_in_class;
         if($physicalAssessment != "") {
             // $checklist['physicalAssessmentsFilled'] = "checked";
             $physicalAssessmentArray = json_decode(html_entity_decode($physicalAssessment), true);
@@ -82,7 +83,7 @@ class ProfileController extends Controller
                         ->where('student_id', $studentId)
                         ->where('class_id', $student->class_id)
                         ->get();
-        return view('student-academic-report', compact('student', 'results', 'studentAssessment','classAssessment','academicAssessmentsArray', 'resultIsReady'));
+        return view('student-academic-report', compact('student', 'results', 'studentAssessment','classAssessment','academicAssessmentsArray', 'resultIsReady', 'position_in_class'));
     }
 
     public function viewTeacherProfile($teacherId){
