@@ -17,12 +17,12 @@ class StudentSkillAssessment extends Component
     protected $rules = [
         'hand_writing' => 'required|string',
         'fluency' => 'required|string',
-        'games_sport_and_gymnastics' => 'required|string',
-        'handling_of_tools' => 'required|string',
-        'labour_and_workshop' => 'required|string',
-        'drawing_and_painting' => 'required|string',
-        'craft' => 'required|string',
-        'musical_skill' => 'required|string',
+        // 'games_sport_and_gymnastics' => 'required|string',
+        // 'handling_of_tools' => 'required|string',
+        // 'labour_and_workshop' => 'required|string',
+        // 'drawing_and_painting' => 'required|string',
+        // 'craft' => 'required|string',
+        // 'musical_skill' => 'required|string',
     ];
 
     public function store() {
@@ -40,6 +40,7 @@ class StudentSkillAssessment extends Component
             $newAssessment->term_id = $current_term_id;
             $newAssessment->student_id = $this->student_id;
             $newAssessment->school_info_id = Auth::user()->school_info_id;
+            $newAssessment->class_id = Student::where('id', $this->student_id)->first()->class_id;
             $newAssessment->skill_assessments = json_encode($params);
             $newAssessment->save();
             // session()->flash('success',"Teacher has been Assigned to class!");
@@ -67,12 +68,12 @@ class StudentSkillAssessment extends Component
     public function mount($student_id) {
         $skillAssessments['hand_writing'] = 'Hand Writing';
         $skillAssessments['fluency'] = 'Fluency';
-        $skillAssessments['games_sport_and_gymnastics'] = 'Games Sport and Gymnastics Writing';
-        $skillAssessments['handling_of_tools'] = 'Handling of Tools';
-        $skillAssessments['labour_and_workshop'] = 'Labour and Workshop';
-        $skillAssessments['drawing_and_painting'] = 'Drawing and Painting';
-        $skillAssessments['craft'] = 'Craft';
-        $skillAssessments['musical_skill'] = 'Musical Skill';
+        // $skillAssessments['games_sport_and_gymnastics'] = 'Games Sport and Gymnastics Writing';
+        // $skillAssessments['handling_of_tools'] = 'Handling of Tools';
+        // $skillAssessments['labour_and_workshop'] = 'Labour and Workshop';
+        // $skillAssessments['drawing_and_painting'] = 'Drawing and Painting';
+        // $skillAssessments['craft'] = 'Craft';
+        // $skillAssessments['musical_skill'] = 'Musical Skill';
         $this->skillAssessments = $skillAssessments;
         $this->student_id = $student_id;
         $current_session_id = active_session()->id;
@@ -87,12 +88,13 @@ class StudentSkillAssessment extends Component
             if($skillAssessment != "") {
                 $skillAssessmentArray = json_decode(html_entity_decode($skillAssessment), true);
                 $this->hand_writing = $skillAssessmentArray['hand_writing'];
-                $this->games_sport_and_gymnastics = $skillAssessmentArray['games_sport_and_gymnastics'];
-                $this->handling_of_tools = $skillAssessmentArray['handling_of_tools'];
-                $this->labour_and_workshop = $skillAssessmentArray['labour_and_workshop'];
-                $this->drawing_and_painting = $skillAssessmentArray['drawing_and_painting'];
-                $this->craft = $skillAssessmentArray['craft'];
-                $this->musical_skill = $skillAssessmentArray['musical_skill'];
+                $this->fluency = $skillAssessmentArray['fluency'];
+                // $this->games_sport_and_gymnastics = $skillAssessmentArray['games_sport_and_gymnastics'];
+                // $this->handling_of_tools = $skillAssessmentArray['handling_of_tools'];
+                // $this->labour_and_workshop = $skillAssessmentArray['labour_and_workshop'];
+                // $this->drawing_and_painting = $skillAssessmentArray['drawing_and_painting'];
+                // $this->craft = $skillAssessmentArray['craft'];
+                // $this->musical_skill = $skillAssessmentArray['musical_skill'];
             }
             // $this->age = $assessment->first()->skill_assessments;
         }

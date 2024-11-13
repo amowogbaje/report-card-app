@@ -16,6 +16,7 @@ use App\Models\Result;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\Subject;
+use App\Models\SubjectTerm;
 
 use Auth;
 use DB;
@@ -60,33 +61,23 @@ class BootstrapStudents implements ShouldQueue
         $newAssessment->session_id = $current_session_id;
         $newAssessment->term_id = $current_term_id;
         $newAssessment->student_id = $student->id;
+        $newAssessment->class_id = $student->class_id;
         $newAssessment->school_info_id = Auth::user()->school_info_id;
         $percentage = "Not Ready"; $markObtained = "Not Ready"; $markObtainable = "Not Ready";
         $newAssessment->academic_assessments = json_encode(compact('percentage', 'markObtained', 'markObtainable'));
         $newAssessment->save();
         if($student->class_stage_id == 6) {
-            $subjects = Subject::where('class_stage_id', $student->class_stage_id)->get();
+            $subjects = SubjectTerm::where('class_stage_id', $student->class_stage_id)
+                                ->where('session_id', active_session()->id)
+                                ->where('term_id', active_term()->id)
+                                ->get();
             foreach($subjects as $subject) {
                 DB::table('results')->insert([
                     'session_id' => $current_session_id,
                     'term_id' => $current_term_id,
-                    'subject_id' => $subject->id,
+                    'subject_id' => $subject->subject_id,
                     'class_id' => $student->class_id,
-                    'student_id' => $student->id,
-                    'totalca' => 0,
-                    'total_score' => 0,
-                ]);
-            }
-        }
-        if($student->class_stage_id == 7) {
-            $subjects = Subject::where('class_stage_id', $student->class_stage_id)
-                                ->where('category', "")->get();
-            foreach($subjects as $subject) {
-                DB::table('results')->insert([
-                    'session_id' => $current_session_id,
-                    'term_id' => $current_term_id,
-                    'subject_id' => $subject->id,
-                    'class_id' => $student->class_id,
+                    'class_code'=>$student->class_code,
                     'student_id' => $student->id,
                     'totalca' => 0,
                     'total_score' => 0,
@@ -94,16 +85,16 @@ class BootstrapStudents implements ShouldQueue
             }
         }
         
-        $classCode = Classlevel::where('id', $student->class_id)->first()->code;
+        $classCode = ClassLevel::where('id', $student->class_id)->first()->code;
         
         $studentIDInThreeDigits = sprintf("%03d", $student->id);
         $classIDInThreeDigits = sprintf("%03d", $student->class_id);
         
         // Previously used to assign automatic matric no but the client said it should be manually inputed since there are pre-exisiting admission no for students already
 
-        $user = User::find($student->user_id);
-        $user->username = $schoolInfo->codename."/".$student->class_code."/".$student->class_matric_no;
-        $user->save();
+        //$user = User::find($student->user_id);
+        //$user->username = $schoolInfo->codename."/".$student->class_code."/".$student->class_matric_no;
+        //$user->save();
 
         DB::table('payment_codes')->insert([
             'session_id' => active_session()->id,

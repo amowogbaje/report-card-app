@@ -11,6 +11,7 @@ use App\Models\Teacher;
 use App\Models\SessionYear;
 use App\Models\Term;
 use App\Models\SchoolInfo;
+use App\Models\ClassAssessment;
 
 use Auth;
 
@@ -81,8 +82,21 @@ class Classlevels extends Component
         $class->class_stage_id = $this->class_stage_id;
         $schoolInfo = school_info();
         $class->type = $schoolInfo->type;
+        
         // $class->school_fee = $this->school_fee;
         $class->save();
+        
+        if($class) {
+            ClassAssessment::insert([
+                'highest_score' => 0,
+                'lowest_score' => 0,
+                'average_score' => 0,
+                'session_id' => active_session()->id,
+                'term_id' => active_term()->id,
+                'class_id' => $class->id
+            ]);
+        }
+        
         $this->emit('toast:success', [
             'text' => "Class Added!",
             'modalID' => "#add_class_modal"
@@ -155,7 +169,7 @@ class Classlevels extends Component
         $schoolInfo = school_info();
         $classlevels = ClassLevel::where('type', trim($schoolInfo->type))->orderBy('code')->get();
         $class_stages = ClassStage::where('groupname', trim($schoolInfo->type))->get();
-        
+        $this->emit('reload');
         return view('livewire.classlevels', compact('classlevels', 'teachers', 'class_stages'));
     }
 }

@@ -7,6 +7,8 @@ use Livewire\Component;
 use App\Models\SessionYear;
 use App\Models\Term;
 use App\Models\Student;
+use App\Models\TeacherSubjectClass;
+use DB;
 
 use App\Jobs\ActiveResultForStudent;
 
@@ -25,25 +27,31 @@ class ChangeSession extends Component
     public function mount() {
         $this->session_year_id = SessionYear::latest()->first()->id;
     }
+    
+    public function setPaymentStatusNull() {
+        Student::where('payment_complete', 1)->update(['payment_complete' => 0, 'payment_token_available' => 0]);
+        return "I am going to come";
+    }
 
     public function activateSession() {
         // alert("Hi");
         // $this->validate();
 
         // try {
+            
             SessionYear::query()->update(['active'=>false]);
             $sessionYearID= $this->session_year_id;
             $termID= $this->term_id;
             // session()->flash('success',"g ".$sessionYearID." ".$termID);
             $sessionYear = SessionYear::find($sessionYearID);
-            
+            $this->setPaymentStatusNull();
             $sessionYear->active = true;
             Term::query()->update(['active'=>false]);
             $term = Term::find($termID);
             $term->active = true;
             $sessionYear->save();
             $term->save();
-            // // Set flash field
+            // Set flash field
             $students = Student::where('status', 1)->get();
             ActiveResultForStudent::dispatch($students);
             $this->generateOtp();
@@ -64,15 +72,20 @@ class ChangeSession extends Component
     }
 
     public function closeSectionAndTerm() {
+        session([
+                'last_term_id' => active_term()->id,
+                'last_session_id' => active_session()->id,
+                ]);
         SessionYear::query()->update(['active'=>false]);
         Term::query()->update(['active'=>false]);
         return redirect('/setup');
 
     }
+    
 
     public function createNextSession() {
         SessionYear::query()->update(['active'=>false]);
-        $lastSession = Session::latest()->first();
+        $lastSession = SessionYear::latest()->first();
         $nextSession = $this->getNextSession($lastSession);
         SessionYear::create([
             'name' => $nextSession

@@ -6,9 +6,9 @@
         <a href="javascript::void()" wire:click = "download()" class="text-primary link-primary mx-3"><i class="fas fa-download"></i> Download</a>
         <a href="javascript::void()" data-toggle="modal" data-target="#add_teacher_modal" class="text-primary link-primary mx-3" > <i class="fas fa-plus"></i> Add Teacher</a>
     </h5>
-    <div class="card-body p-0">
+    <div class="card-body mb-5">
         <div class="table-responsive">
-            <table class="table">
+            <table class="table first">
                 <thead class="bg-light">
                     <tr class="border-0">
                         <th class="border-0">Face</th>
@@ -43,7 +43,56 @@
                             <td>{{$teacher->user->lastname}}</td>
                             <td>{{$teacher->user->phone}}</td>
                             <td>{{$teacher->user->email}}</td>
-                            <td><a href="{{url('/teacher/profile/'.$teacher->user_id)}}"><i class="fa fa-eye"></i></a></td>
+                            <td>
+                                <a href="{{url('/teacher/profile/'.$teacher->user_id)}}"><i class="fa fa-eye"></i></a>
+                                <a class="btn btn-danger mr-2" wire:click = "delete({{$teacher->id}})"><i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr> 
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <h5 class="card-header"> Deleted Teachers</h5>
+    <div class="card-body ">
+        <div class="table-responsive">
+            <table class="table first">
+                <thead class="bg-light">
+                    <tr class="border-0">
+                        <th class="border-0">Face</th>
+                        <th class="border-0">Firstname</th>
+                        <th class="border-0">Lastname</th>
+                        <th class="border-0">Phone</th>
+                        <th class="border-0">Email</th>
+                        <th class="border-0">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($inactive_teachers as $teacher)
+                        <tr>
+                            <td>
+                                @if(!empty($teacher->user->profile_pics))
+                                    <div class="m-r-10"><img src="{{url('uploads/'.$teacher->user->profile_pics)}}" alt="user" class="rounded-circle" width="45"></div>
+                                @else
+                                    @if($teacher->user->gender == 'male')
+
+                                        <div class="m-r-10"><img src="{{ URL::asset('assets/images/male-avatar.png') }}" alt="user" class="rounded" width="45"></div>
+                                    
+                                    @elseif($teacher->user->gender == 'female')
+
+                                        <div class="m-r-10"><img src="{{ URL::asset('assets/images/female-avatar.png') }}" alt="user" class="rounded" width="45"></div>
+                                    
+                                    @endif
+                                    
+                                @endif
+                                
+                            </td>
+                            <td>{{$teacher->user->firstname}}</td>
+                            <td>{{$teacher->user->lastname}}</td>
+                            <td>{{$teacher->user->phone}}</td>
+                            <td>{{$teacher->user->email}}</td>
+                            <!--<td><a href="{{url('/teacher/profile/'.$teacher->user_id)}}"><i class="fa fa-eye"></i></a></td>-->
+                            <td><a class="btn btn-success" wire:click = "restore({{$teacher->id}})"><i class="fa fa-recycle"></i></a></td>
                         </tr> 
                     @endforeach
                 </tbody>

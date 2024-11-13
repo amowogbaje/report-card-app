@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\User;
+use App\Models\Student;
+use App\Models\Result;
+use App\Models\TeacherSubjectClass;
 use Auth;
 
 class AdminController extends Controller
@@ -22,6 +25,11 @@ class AdminController extends Controller
 
     public function subjectAllocation() {
         return view('admin.subject-allocation');
+    }
+    
+    public function setPaymentStatusNull() {
+        Student::where('payment_complete', 1)->update(['payment_complete' => 0, 'payment_token_available' => 0]);
+        return "I am going to come";
     }
 
     public function teachers() 
@@ -116,5 +124,17 @@ class AdminController extends Controller
 
     public function schoolInfo() {
         return view('admin.admin-school-info');
+    }
+    
+    public function updateSubjectId($id, $changedId) {
+        TeacherSubjectClass::where('subject_id', $changedId)->update([
+            'subject_id' => $id
+            ]);
+        Result::where('subject_id', $changedId)->update([
+            'subject_id' => $id
+            ]);
+            
+        return "subject id adjusted";
+        
     }
 }

@@ -29,6 +29,14 @@ class AddSession extends Component
     }
 
     public function closeSession() {
+        session([
+                'last_term_id' => active_term()->id,
+                'last_session_id' => active_session()->id,
+                ]);
+        // $this->emit('toast:success', [
+        //     'text' => "Session added for TermID: ". active_term()->id."& SessionID: ".active_session()->id,
+        //     'modalID' => "#change_session_modal"
+        // ]);
         SessionYear::query()->update(['active'=>false]);
         Term::query()->update(['active'=>false]);
         return redirect('/admin/dashboard');

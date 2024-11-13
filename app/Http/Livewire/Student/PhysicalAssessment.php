@@ -35,6 +35,7 @@ class PhysicalAssessment extends Component
             $newAssessment->session_id = $current_session_id;
             $newAssessment->term_id = $current_term_id;
             $newAssessment->student_id = $this->student_id;
+            $newAssessment->class_id = Student::where('id', $this->student_id)->first()->class_id;
             $newAssessment->school_info_id = Auth::user()->school_info_id;
             $newAssessment->physical_assessments = json_encode($params);
             $newAssessment->save();

@@ -25,13 +25,13 @@ class StudentBehaviourAssessment extends Component
         'politeness' => 'required|string',
         'honesty' => 'required|string',
         'relationship_with_others' => 'required|string',
-        'self_control' => 'required|string',
-        'spirit_of_cooperation' => 'required|string',
+        // 'self_control' => 'required|string',
+        // 'spirit_of_cooperation' => 'required|string',
         'sense_of_responsibility' => 'required|string',
         'attentiveness_in_class' => 'required|string',
-        'initiative' => 'required|string',
+        // 'initiative' => 'required|string',
         'organisation_ability' => 'required|string',
-        'perseverance' => 'required|string',
+        // 'perseverance' => 'required|string',
     ];
 
     public function store() {
@@ -48,6 +48,7 @@ class StudentBehaviourAssessment extends Component
             $newAssessment->session_id = $current_session_id;
             $newAssessment->term_id = $current_term_id;
             $newAssessment->student_id = $this->student_id;
+            $newAssessment->class_id = Student::where('id', $this->student_id)->first()->class_id;
             $newAssessment->school_info_id = Auth::user()->school_info_id;
             $newAssessment->behavior_assessments = json_encode($params);
             $newAssessment->save();
@@ -82,13 +83,13 @@ class StudentBehaviourAssessment extends Component
         $behaviourAssessments['politeness'] = 'Politeness';
         $behaviourAssessments['honesty'] = 'Honesty';
         $behaviourAssessments['relationship_with_others'] = 'Relationship with Others';
-        $behaviourAssessments['self_control'] = 'Self Control';
-        $behaviourAssessments['spirit_of_cooperation'] = 'Spirit of Cooperation';
+        // $behaviourAssessments['self_control'] = 'Self Control';
+        // $behaviourAssessments['spirit_of_cooperation'] = 'Spirit of Cooperation';
         $behaviourAssessments['sense_of_responsibility'] = 'Sense of Responsibility';
         $behaviourAssessments['attentiveness_in_class'] = 'Attentiveness in Class';
-        $behaviourAssessments['initiative'] = 'Initiative';
+        // $behaviourAssessments['initiative'] = 'Initiative';
         $behaviourAssessments['organisation_ability'] = 'Organisation Ability';
-        $behaviourAssessments['perseverance'] = 'Perseverance';
+        // $behaviourAssessments['perseverance'] = 'Perseverance';
         $this->behaviourAssessments = $behaviourAssessments;
         $current_session_id = active_session()->id;
         $current_term_id = active_term()->id;
@@ -108,13 +109,13 @@ class StudentBehaviourAssessment extends Component
                 $this->politeness = $behaviourAssessmentArray['politeness'];
                 $this->honesty = $behaviourAssessmentArray['honesty'];
                 $this->relationship_with_others = $behaviourAssessmentArray['relationship_with_others'];
-                $this->self_control = $behaviourAssessmentArray['self_control'];
-                $this->spirit_of_cooperation = $behaviourAssessmentArray['spirit_of_cooperation'];
+                // $this->self_control = $behaviourAssessmentArray['self_control'];
+                // $this->spirit_of_cooperation = $behaviourAssessmentArray['spirit_of_cooperation'];
                 $this->sense_of_responsibility = $behaviourAssessmentArray['sense_of_responsibility'];
                 $this->attentiveness_in_class = $behaviourAssessmentArray['attentiveness_in_class'];
-                $this->initiative = $behaviourAssessmentArray['initiative'];
+                // $this->initiative = $behaviourAssessmentArray['initiative'];
                 $this->organisation_ability = $behaviourAssessmentArray['organisation_ability'];
-                $this->perseverance = $behaviourAssessmentArray['perseverance'];
+                // $this->perseverance = $behaviourAssessmentArray['perseverance'];
             }
             // $this->age = $assessment->first()->behaviour_assessments;
         }

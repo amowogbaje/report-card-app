@@ -37,7 +37,7 @@ class ProfileController extends Controller
                                 ->where('school_info_id', Auth::user()->school_info_id);
         $countAssessment = $assessment->count();
         if($assessment->count() == 0) {
-            return back()->with('error', 'Academic Report will not open because Physical Assessment has not filled');
+            return back()->with('error', 'Academic Report will not open because Physical Assessment has not been filled');
         }
 
         $studentAssessment = Assessment::where('session_id', $current_session_id)
@@ -83,6 +83,21 @@ class ProfileController extends Controller
                         ->where('student_id', $studentId)
                         ->where('class_id', $student->class_id)
                         ->get();
+                        
+        //test error
+    //     foreach ($results as $result) {
+    //     $classResultProcessed = $result->subjectTeacher($result->subject_id, $result->class_id);
+    //     $classResultProcessedList[] = [
+    //         'subject_id' => $result->subject_id,
+    //         'class_id' => $result->class_id,
+    //         'exam' => $result->exam,
+    //         'term_id' => $result->term_id,
+    //         'class_result_processed' => $classResultProcessed,
+    //     ];
+    // }
+
+    // return $classResultProcessedList;
+        // return $results;
         return view('student-academic-report', compact('student', 'results', 'studentAssessment','classAssessment','academicAssessmentsArray', 'resultIsReady', 'position_in_class'));
     }
 

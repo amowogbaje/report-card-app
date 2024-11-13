@@ -20,6 +20,11 @@
     <link rel="stylesheet" href="{{URL::asset('assets/vendor/fonts/flag-icon-css/flag-icon.min.css') }}">
     <link rel="stylesheet" href="{{URL::asset('assets/vendor/inputmask/css/inputmask.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="{{URL::asset('assets/vendor/datatables/css/dataTables.bootstrap4.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{URL::asset('assets/vendor/datatables/css/buttons.bootstrap4.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{URL::asset('assets/vendor/datatables/css/select.bootstrap4.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{URL::asset('assets/vendor/datatables/css/fixedHeader.bootstrap4.css') }}">
+    <!--<link rel="stylesheet" type="text/css" href="{{URL::asset('assets/vendor/bootstrap-select/css/bootstrap-select.css') }}">-->
     {{-- <script src="{{URL::asset('assets/vendor/easy-v-toast-master/dist/toast.min.css') }}"></script> --}}
     <script src="{{URL::asset('assets/vendor/easy-v-toast-master/dist/toast.with.css.js') }}"></script>
     <style>
@@ -27,6 +32,7 @@
         #datepicker{width:100%; margin:none;}
         #datepicker > span:hover{cursor: pointer;}
     </style>
+    @stack('css')
     
     @livewireStyles
     <title>{{config('app.name')}}</title>
@@ -91,7 +97,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12">
-                             Copyright © 2018 Concept. All rights reserved. Dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
+                             Copyright © 2023 Grace Filled College. All rights reserved. Dashboard by <a href="https://academicreportcard.gracefilledcollege.com">Grace Filled College</a>.
                         </div>
                         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
                             <div class="text-md-right footer-links d-none d-sm-block">
@@ -124,19 +130,27 @@
     <!-- main js -->
     <script src="{{URL::asset('assets/libs/js/main-js.js') }}"></script>
     <!-- chart chartist js -->
-    <script src="{{URL::asset('assets/vendor/charts/chartist-bundle/chartist.min.js') }}"></script>
+    <!--<script src="{{URL::asset('assets/vendor/charts/chartist-bundle/chartist.min.js') }}"></script>-->
     <!-- sparkline js -->
     <script src="{{URL::asset('assets/vendor/charts/sparkline/jquery.sparkline.js') }}"></script>
     <!-- morris js -->
     <script src="{{URL::asset('assets/vendor/charts/morris-bundle/raphael.min.js') }}"></script>
-    <script src="{{URL::asset('assets/vendor/charts/morris-bundle/morris.js') }}"></script>
+    <!--<script src="{{URL::asset('assets/vendor/charts/morris-bundle/morris.js') }}"></script>-->
     <!-- chart c3 js -->
-    <script src="{{URL::asset('assets/vendor/charts/c3charts/c3.min.js') }}"></script>
-    <script src="{{URL::asset('assets/vendor/charts/c3charts/d3-5.4.0.min.js') }}"></script>
-    <script src="{{URL::asset('assets/vendor/charts/c3charts/C3chartjs.js') }}"></script>
-    <script src="{{URL::asset('assets/libs/js/dashboard-ecommerce.js') }}"></script>
+    <!--<script src="{{URL::asset('assets/vendor/charts/c3charts/c3.min.js') }}"></script>-->
+    <!--<script src="{{URL::asset('assets/vendor/charts/c3charts/d3-5.4.0.min.js') }}"></script>-->
+    <!--<script src="{{URL::asset('assets/vendor/charts/c3charts/C3chartjs.js') }}"></script>-->
+    <!--<script src="{{URL::asset('assets/libs/js/dashboard-ecommerce.js') }}"></script>-->
     <script src="{{URL::asset('assets/vendor/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="{{URL::asset('assets/vendor/datatables/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+    <script src="{{URL::asset('assets/vendor/datatables/js/buttons.bootstrap4.min.js') }}"></script>
+    <script src="{{URL::asset('assets/vendor/datatables/js/data-table.js') }}" data-turbo-eval="true" data-turbolinks-eval="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.min.js"></script>
+    <!--<script src="{{URL::asset('assets/vendor/bootstrap-select/js/bootstrap-select.js') }}"></script>-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    
     @livewireScripts
 
     
@@ -189,14 +203,56 @@
             this.livewire.on('swal:alert', data => {
                 Swal.fire(data)
             })
+            this.livewire.on('reload', () => {
+                $('table.first').DataTable();
+            })
+            
         })
+        
+        
+        
+
+        
+        
 
         window.addEventListener('teacher-added', event => {
             alert('Save Event Fired: ');
         })
         
         </script>
-        @yield('extra-script')
+    <script>
+            document.getElementById('stamp_img_file').addEventListener('change', function (event) {
+                var file = event.target.files[0];
+                var reader = new FileReader();
+    
+                reader.onload = function (e) {
+                    document.getElementById('stamp_img_url_hidden').src = e.target.result;
+    
+                    // Wait for the image to load
+                    document.getElementById('stamp_img_url_hidden').onload = function () {
+                        extractColor();
+                    };
+                };
+    
+                reader.readAsDataURL(file);
+            });
+    
+            function extractColor() {
+                var image = document.getElementById('stamp_img_url_hidden');
+                var colorThief = new ColorThief();
+                var dominantColor = colorThief.getColor(image);
+                var hexColor = rgbToHex(dominantColor[0], dominantColor[1], dominantColor[2]);
+    
+                $('#school_colors').val(hexColor);
+                Livewire.emit('updateSchoolColor', hexColor);
+            }
+    
+            function rgbToHex(r, g, b) {
+                return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            }
+    </script>
+    @yield('extra-script')
+    @stack('js')
 </body>
  
 </html>

@@ -7,6 +7,7 @@ use Livewire\Component;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\PaymentCode;
+use App\Models\ClassStudent;
 
 use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
@@ -17,7 +18,7 @@ class StudentProfile extends Component
 {
     use WithFileUploads;
     // private Kudaping $kuda;
-    public $profileId, $student, $pics, $payment_verification_code;
+    public $profileId, $student, $pics, $payment_verification_code, $previousTermsAndSession;
 
 
     public function pay() {
@@ -46,36 +47,24 @@ class StudentProfile extends Component
                                     ->where('session_id', active_session()->id)
                                     ->where('term_id', active_term()->id);
         if($payVerification->count() != 0) {
-            if(!$payVerification->first()->used) {
-                if($payVerification->first()->student_id == $this->student->id) {
-                    $paymentVerification = PaymentCode::find($payVerification->first()->id);
-                    $paymentVerification->used = 1;
-                    $paymentVerification->save();
+            if($payVerification->first()->student_id == $this->student->id) {
+                $paymentVerification = PaymentCode::find($payVerification->first()->id);
+                $paymentVerification->used = 1;
+                $paymentVerification->save();
 
-                    $student = Student::find($this->student->id);
-                    $student->payment_complete = 1;
-                    $student->save();
+                $student = Student::find($this->student->id);
+                $student->payment_complete = 1;
+                $student->save();
 
 
-                    $this->emit('toast:success', [
-                        'text' => "Your Payment has now been confirmed",
-                        'modalID' => "#enter_acess_code_modal"
-                    ]);
-                }
-                else {
-                    $this->emit('swal:notify', [
-                        'title' => 'Wrong Access Code',
-                        // 'text' => "Kindly complete your payment to view your academic report or see the bursar to confirm your payment",
-                        'icon' => 'error',
-                        // 'footer' => '<a href='.route('student.payment-index').'>Click here to make payment</a>'
-                    ]);
-                }
-                
-
+                $this->emit('toast:success', [
+                    'text' => "Your Payment has now been confirmed",
+                    'modalID' => "#enter_acess_code_modal"
+                ]);
             }
             else {
                 $this->emit('swal:notify', [
-                    'title' => 'Access Code does not exist or has been used',
+                    'title' => 'Wrong Access Code',
                     // 'text' => "Kindly complete your payment to view your academic report or see the bursar to confirm your payment",
                     'icon' => 'error',
                     // 'footer' => '<a href='.route('student.payment-index').'>Click here to make payment</a>'
@@ -122,6 +111,10 @@ class StudentProfile extends Component
 
     public function mount() {
         $this->student = Student::where('user_id', $this->profileId)->first();
+        $this->previousTermsAndSession = ClassStudent::where('student_id', $this->student->id)
+                                                    ->where('term_id', '!=', active_term()->id)
+                                                    ->get();
+        // $this->
         // $this->kuda = new Kudaping();
     }
     public function render()

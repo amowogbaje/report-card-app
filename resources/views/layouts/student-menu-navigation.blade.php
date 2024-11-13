@@ -24,9 +24,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{url('/student/profile/'.Auth::user()->id)}}" ><i class="fas fa-fw fa-user"></i>Profile</a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link" href="{{url('/student/subject-offered/')}}" ><i class="fas fa-fw fa-user"></i>Subject Offered</a>
-                </li>
+                </li> --}}
                 <li class="nav-item">
                     <a class="nav-link" href="{{url('/change-password')}}" ><i class="fas fa-fw fa-unlock"></i>Change Password</a>
                 </li>

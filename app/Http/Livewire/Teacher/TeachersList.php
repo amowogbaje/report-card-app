@@ -29,7 +29,8 @@ class TeachersList extends Component
     protected $rules = [
         'firstname' => 'required|string',
         'lastname' => 'required|string',
-        'email' => 'required|email|unique:users',
+        // 'email' => 'required|email|unique:users',
+        'email' => 'required|email',
         'phone' => 'required|string',
         // 'phone' => 'required|string',
     ];
@@ -37,6 +38,7 @@ class TeachersList extends Component
     public function mount($number)
     {
         $this->number = $number;
+        $this->emit('reload');
     }
 
     public function resetFields(){
@@ -93,6 +95,28 @@ class TeachersList extends Component
         $this->mount($this->number);
         $this->render();
     }
+    
+    public function delete($id) {
+        $teacher = Teacher::find($id);
+        $teacher->status = 0;
+        $teacher->save();
+        $this->emit('toast:success', [
+                'text' => 'Teacher has been deleted successfully!',
+                'modalID' => "#upload_teacher_modal"
+            ]);
+        $this->cancel();
+    }
+    
+    public function restore($id) {
+        $teacher = Teacher::find($id);
+        $teacher->status = 1;
+        $teacher->save();
+        $this->emit('toast:success', [
+                'text' => 'Teacher has been undeleted successfully!',
+                'modalID' => "#upload_teacher_modal"
+            ]);
+        $this->cancel();
+    }
 
     public function download() {
         return Excel::download(new TeachersExport, 'teachers.xlsx');
@@ -135,8 +159,10 @@ class TeachersList extends Component
 
     public function render()
     {
+        $this->emit('reload');
         return view('livewire.teacher.teachers-list', [
-            'teachers' => Teacher::take($this->number)->get()
+            'teachers' => Teacher::where('status', 1)->take($this->number)->get(),
+            'inactive_teachers' => Teacher::where('status', 0)->take($this->number)->get()
         ]);
     }
 }

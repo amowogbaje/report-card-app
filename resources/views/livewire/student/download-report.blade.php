@@ -4,8 +4,8 @@
                 <a class="btn btn-primary" href="{{url('student/'.$student->id.'/download-result')}}">Download Report Card</a>
             </h1>
         @else
-            <h1 class="h3 mb-2 text-gray-800">{{$student->user->full_name}} 
-                <a wire:click = "check" class="btn btn-primary" data-toggle="modal" data-target="#show_checklist" href="{{url('student/'.$student->id.'/download-result')}}">Download Report Card</a>
+            <h1 class="h3 mb-2 text-gray-800">{{$student->user->full_name}} {{$student->class->shortname}}
+                <a wire:click = "check" class="btn btn-primary" data-toggle="modal" data-target="#show_checklist" href="#">Download Report Card</a>
             </h1>
             {{-- Instead do a checklist --}}
             
@@ -24,9 +24,9 @@
                         <form>
                             
                             <div class="form-group mb-2">
-                                <label class="custom-control custom-checkbox">
-                                    <input type="checkbox" {{$checklist['physicalAssessmentsFilled']}} ><span>Physical Assessment(by Student)</span>
-                                </label>
+                                <!--<label class="custom-control custom-checkbox">-->
+                                <!--    <input type="checkbox" {{$checklist['physicalAssessmentsFilled']}} ><span>Physical Assessment(by Student)</span>-->
+                                <!--</label>-->
                                 <label class="custom-control custom-checkbox">
                                     <input type="checkbox" {{$checklist['academicAssessmentsFilled']}} ><span>Academic Assessment(by Teacher)</span>
                                 </label>
@@ -42,6 +42,11 @@
                                 <label class="custom-control custom-checkbox">
                                     <input type="checkbox" {{$checklist['principalCommentFilled']}} ><span>Comment on Student(by Principal)</span>
                                 </label>
+                                @if(Auth::user()->role != 'admin')
+                                <label class="custom-control custom-checkbox">
+                                    <input type="checkbox" {{$checklist['student_payment_complete']}} ><span>Student Payment Completed</span>
+                                </label>
+                                @endif
                             </div>
                         </form>
                         

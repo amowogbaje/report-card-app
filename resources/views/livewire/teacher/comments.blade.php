@@ -13,6 +13,11 @@
             <textarea class="form-control @error('class_teacher_comment') is-invalid @enderror" id="" cols="30" rows="10" wire:model.defer="class_teacher_comment"></textarea>
             @error('class_teacher_comment') <span class="text-danger">{{ $message }}</span>@enderror
         </div>
+        <div class="form-group mb-2">
+                @if(!empty($class_teacher_signature))
+                    <img src="{{url('uploads/'.$class_teacher_signature)}}" alt="Signature" class="rounded" width="110">
+                @endif
+        </div>
     </div>
     <div class="card-footer">
         <button wire:click.prevent="store()" class="btn btn-success">Save changes</button>

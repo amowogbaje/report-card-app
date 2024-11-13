@@ -12,6 +12,9 @@ use Illuminate\Queue\SerializesModels;
 use DB;
 use App\Models\Subject;
 use App\Models\Student;
+use App\Models\ClassLevel;
+use App\Models\ClassAssessment;
+use App\Jobs\BootstrapStudentForTerm;
 
 class ActiveResultForStudent implements ShouldQueue
 {
@@ -42,30 +45,19 @@ class ActiveResultForStudent implements ShouldQueue
         $students = $this->students;
         
         foreach ($students as $student) {
-            $subjects = Subject::where('class_stage_id', $student->class_stage_id)
-                                    ->where('category', null)->get();
-                foreach($subjects as $subject) {
-                    $subjectAlreadyRegistered = DB::table('results')->where([
-                        'session_id' => $current_session_id,
-                        'term_id' => $current_term_id,
-                        'subject_id' => $subject->id,
-                        'class_id' => $student->class_id,
-                        'student_id' => $student->id,
-                    ])->count();
-                    
-                    if($subjectAlreadyRegistered !=0) {
-                        DB::table('results')->insert([
-                            'session_id' => $current_session_id,
-                            'term_id' => $current_term_id,
-                            'subject_id' => $subject->id,
-                            'class_id' => $student->class_id,
-                            'student_id' => $student->id,
-                            'totalca' => 0,
-                            'total_score' => 0,
-                        ]);
-                    }
-                    
-                }
+            BootstrapStudentForTerm::dispatch($student);
+           
+        }
+        $classlevels = ClassLevel::all();
+        foreach ($classlevels as $classlevel) {
+            ClassAssessment::insert([
+                'highest_score' => 0,
+                'lowest_score' => 0,
+                'average_score' => 0,
+                'session_id' => $current_session_id,
+                'term_id' => $current_term_id,
+                'class_id' => $classlevel->id
+            ]);
         }
     }
 }

@@ -22,8 +22,8 @@ class StudentProfileEdit extends Component
             $user->lastname = $this->lastname;
             $user->othernames = $this->othernames;
             $user->email = $this->email;
-            $user->phone = $this->phone;
-            // $user->gender = $this->gender;
+            // $user->phone = $this->phone;
+            $user->gender = $this->gender;
             $user->address = $this->guardian_address;
             $user->lga_origin = $this->lga_origin;
             $user->state_origin = $this->state_origin;
@@ -36,6 +36,8 @@ class StudentProfileEdit extends Component
                 $student->guardian_phone = $this->guardian_phone;
                 $student->student_phone = $this->phone;
                 $student->class_id = $this->class_id;
+                $class_code = ClassLevel::where('id', $this->class_id)->first()->code;
+                $student->class_code = $class_code;
                 $student->category = $this->category;
                 // $student->guardian_name = $this->guardian_name;
                 $student->guardian_address = $this->guardian_address;
@@ -47,7 +49,7 @@ class StudentProfileEdit extends Component
             }
     }
     public function mount() {
-        $this->classlevels = ClassLevel::all();
+        $this->classlevels = ClassLevel::orderBy('code')->get();
         $this->student = Student::where('user_id', $this->profileId)->first();
         $this->class_id = $this->student->class_id;
         $this->firstname = $this->student->user->firstname;
@@ -56,7 +58,7 @@ class StudentProfileEdit extends Component
         $this->email = $this->student->user->email;
         $this->gender = $this->student->user->gender;
         $this->guardian_phone = $this->student->guardian_phone;
-        $this->phone = $this->student->user->phone;
+        $this->phone = $this->student->student_phone;
         $this->guardian_address = $this->student->guardian_address;
         $this->category = $this->student->category;
         $this->citizenship = $this->student->user->citizenship;

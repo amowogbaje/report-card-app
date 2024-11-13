@@ -22,6 +22,9 @@
                     <a class="nav-link" href="{{url('admin/subjects')}}" ><i class="fas fa-fw fa-book"></i>Subjects</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{url('admin/results')}}" ><i class="fas fa-fw fa-book"></i>Result</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{url('admin/teachers')}}" ><i class="fas fa-fw fa-book"></i>Teachers</a>
                 </li>
                 <li class="nav-item">
@@ -30,6 +33,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{url('admin/subject-allocation')}}" ><i class="fas fa-fw fa-book"></i>Subject Allocation</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('comments-missing')}}" ><i class="fas fa-fw fa-book"></i>Missing Comments</a>
+                </li>
+                {{-- <li class="nav-item">
+                    <a class="nav-link" href="{{url('admin/principal-broadsheet')}}" ><i class="fas fa-fw fa-book"></i>Principal Broadsheet</a>
+                </li> --}}
                 <li class="nav-item">
                     <a class="nav-link" href="{{url('admin/transactions')}}" ><i class="fas fa-fw fa-dollar-sign"></i>Transaction</a>
                 </li>

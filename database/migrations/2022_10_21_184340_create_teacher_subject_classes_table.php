@@ -17,6 +17,7 @@ class CreateTeacherSubjectClassesTable extends Migration
             $table->id();
             $table->integer('teacher_id');
             $table->integer('subject_id');
+            $table->integer('class_code');
             $table->integer('class_id');
             $table->integer('session_id');
             $table->integer('term_id');

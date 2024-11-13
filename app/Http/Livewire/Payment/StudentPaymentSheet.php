@@ -6,6 +6,7 @@ use Livewire\Component;
 
 use App\Models\Student;
 use App\Models\ClassLevel;
+use App\Models\PaymentCode;
 use DB;
 
 class StudentPaymentSheet extends Component
@@ -26,10 +27,17 @@ class StudentPaymentSheet extends Component
         $student = Student::find($studentId);
         $student->payment_token_available = 1;
         $student->save();
+        $payVerification = PaymentCode::where('student_id', $studentId)
+                                    ->where('session_id', active_session()->id)
+                                    ->where('term_id', active_term()->id);
+        $paymentVerification = PaymentCode::find($payVerification->first()->id);
+        $paymentVerification->used = 1;
+        $paymentVerification->save();
         $this->emit('toast:success', [
             'text' => $student->user->firstname." ".$student->user->lastname." payment status confirmed",
             // 'modalID' => "#add_paymsent_detail_modal"
         ]);
+        
         $this->mount();
         $this->render();
     }
@@ -58,6 +66,12 @@ class StudentPaymentSheet extends Component
         $student->payment_complete = 0;
         $student->payment_token_available = 0;
         $student->save();
+        $payVerification = PaymentCode::where('student_id', $studentId)
+                                    ->where('session_id', active_session()->id)
+                                    ->where('term_id', active_term()->id);
+        $paymentVerification = PaymentCode::find($payVerification->first()->id);
+        $paymentVerification->used = 0;
+        $paymentVerification->save();
         $this->emit('toast:failure', [
             'text' => $student->user->firstname." ".$student->user->lastname." payment status unconfirmed",
             // 'modalID' => "#add_payment_detail_modal"

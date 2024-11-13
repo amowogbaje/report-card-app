@@ -15,12 +15,20 @@ class Subject extends Model
     public  function class_stage() {
         return $this->belongsTo(ClassStage::class);
     }
+    public function session_year() {
+        return $this->belongsTo(SessionYear::class);
+    }
+    public function term() {
+        return $this->belongsTo(Term::class);
+    }
 
     public function classlevels($classStageId) {
         return ClassLevel::where('class_stage_id', $classStageId)->get();
 
         // subject ()
     }
+    
+    
 
     public function noOfClass($classStageId) {
         return ClassLevel::where('class_stage_id', $classStageId)->count(); 

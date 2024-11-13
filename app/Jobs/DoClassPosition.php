@@ -24,7 +24,7 @@ class DoClassPosition implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $student;
+    protected $class_id;
 
     /**
      * Create a new job instance.
@@ -62,7 +62,7 @@ class DoClassPosition implements ShouldQueue
             if($academic_assessments != "") {
                 $academicAssessmentsArray = json_decode(html_entity_decode($academic_assessments), true);
             }
-            $allPercentages[] = $academicAssessmentsArray['percentage'];
+            $allPercentages[] = floatval($academicAssessmentsArray['percentage']);
             // $assessment->update(['academic_assessments' => $academicAssessment]);
             }
         }
@@ -77,7 +77,7 @@ class DoClassPosition implements ShouldQueue
             if($academic_assessments != "") {
                 $academicAssessmentsArray = json_decode(html_entity_decode($academic_assessments), true);
             }
-            $position_in_class = $this->calcPosition($allPercentages, $academicAssessmentsArray['percentage']);
+            $position_in_class = $this->calcPosition($allPercentages, floatval($academicAssessmentsArray['percentage']));
             $assessment->update(['position_in_class' => $position_in_class]);
             }
         }
@@ -85,7 +85,7 @@ class DoClassPosition implements ShouldQueue
     }
     
     public function calcPosition(array $scores, $studentScore) {
-        $position = "1st";
+        $position = "NA";
         rsort($scores);
         $scorePosition = [];
         
@@ -99,7 +99,7 @@ class DoClassPosition implements ShouldQueue
                 elseif(substr($pos, strlen($pos)-1) == 3) { $position = $pos ."<sup>rd</sup>";}
                 else {$position = $pos."<sup>th<sup>";}
             }
-            else if(strlen($pos) == 2) {
+            else if(strlen($pos) >= 2) {
                 if(substr($pos, strlen($pos)-1)  == 1 && substr($pos,0,1) !=1) { $position = $pos ."<sup>st</sup>";}
                 elseif(substr($pos, strlen($pos)-1) == 2 && substr($pos,0,1) !=1) { $position = $pos ."<sup>nd</sup>";}
                 elseif(substr($pos, strlen($pos)-1) == 3 && substr($pos,0,1) !=1) { $position = $pos ."<sup>rd</sup>";}

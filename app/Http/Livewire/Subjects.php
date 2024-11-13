@@ -11,6 +11,7 @@ use App\Models\ClassStage;
 use App\Models\TeacherSubjectClass;
 use App\Models\SessionYear;
 use App\Models\Term;
+use App\Models\SubjectTerm;
 use App\Models\SchoolInfo;
 
 use Auth;
@@ -31,11 +32,19 @@ class Subjects extends Component
     ];
 
     public function mount($number) {
-        $this->noOfJuniorSubjects = Subject::where('class_stage_id', 6)->count();
-        $this->noOfSeniorSubjects = Subject::where('class_stage_id', 7)->count();
+        
+        $this->noOfJuniorSubjects = SubjectTerm::where('class_stage_id', 6)
+                                    ->where('session_id', active_session()->id)
+                                    ->where('term_id', active_term()->id)
+                                    ->count();
+        $this->noOfSeniorSubjects = SubjectTerm::where('class_stage_id', 7)
+                                    ->where('session_id', active_session()->id)
+                                    ->where('term_id', active_term()->id)
+                                    ->count();
         $this->number = $number;
         $this->classlevels = ClassLevel::orderBy('code')->get();
         $this->listOfSubjects = "English Language, Mathematics, Biology, Economics, Civics";
+        // $this->emit('reload');
     }
 
     // public function setClass_stage_id($value) 
@@ -74,12 +83,16 @@ class Subjects extends Component
         $subjectExist = DB::table('subjects')
                             ->where('name', trim($this->name))
                             ->where('class_stage_id', $this->class_stage_id)
+                            ->where('session_id', active_session()->id)
+                            ->where('term_id', active_term()->id)
                             ->count();
         if($subjectExist == 0) {
             $subject = new Subject;
             $subject->name = trim($this->name);
             $subject->class_stage_id = $this->class_stage_id;
             $subject->category = $this->category;
+            $subject->session_id = active_session()->id;
+            $subject->term_id = active_term()->id;
             $subject->save();
             $this->emit('toast:success', [
                 'text' => "Subject Added!",
@@ -90,6 +103,38 @@ class Subjects extends Component
             $this->emit('toast:failure', [
                 'text' => "$this->name has already been Added!",
                 'modalID' => "#add_many_subject_modal"
+            ]);
+        }
+        $this->cancel();
+        // session()->flash('success',"Subject Added!");
+        // return redirect('/dashboard');
+    }
+    public function add_subject_to_list() {
+        $this->validate([
+            'subject_id' => 'required',
+        ]);
+        $subjectExist = DB::table('subject_terms')
+                            ->where('subject_id', trim($this->subject_id))
+                            ->where('session_id', active_session()->id)
+                            ->where('term_id', active_term()->id)
+                            ->count();
+        $subject = Subject::where('id', $this->subject_id)->first();
+        if($subjectExist == 0) {
+            $subjectTerm = new SubjectTerm;
+            $subjectTerm->class_stage_id = $subject->class_stage_id;
+            $subjectTerm->subject_id = $this->subject_id;
+            $subjectTerm->session_id = active_session()->id;
+            $subjectTerm->term_id = active_term()->id;
+            $subjectTerm->save();
+            $this->emit('toast:success', [
+                'text' => "Subject Added for the term!",
+                'modalID' => "#add_subject_term_modal"
+            ]);
+        }
+        else {
+            $this->emit('toast:failure', [
+                'text' => "$subject->name has already been Added for the term!",
+                'modalID' => "#add_subject_term_modal"
             ]);
         }
         $this->cancel();
@@ -109,12 +154,16 @@ class Subjects extends Component
             $subjectExist = DB::table('subjects')
                             ->where('name', trim($subjectName))
                             ->where('class_stage_id', $this->class_stage_id)
+                            ->where('session_id', active_session()->id)
+                            ->where('term_id', active_term()->id)
                             ->count();
             if($subjectExist == 0) {
                 DB::table('subjects')->insert([
                     'name' => trim($subjectName),
                     'class_stage_id' => $this->class_stage_id,
                     'category' => $this->category,
+                    'session_id' => active_session()->id,
+                    'term_id' => active_term()->id
                 ]);
                 $this->emit('toast:success', [
                     'text' => "$subjectName successfully Added!",
@@ -142,6 +191,7 @@ class Subjects extends Component
         // $teacherSubjectClass = new TeacherSubjectClass;
         $current_session_id = active_session()->id;
         $current_term_id = active_term()->id;
+        $class_code = ClassLevel::where('id', $this->class_id)->first()->code;
         $noOfPeriodsTeacherHad = TeacherSubjectClass::where('term_id', $current_term_id)
                                         ->where('session_id', $current_session_id)
                                         ->where('teacher_id', $this->teacher_id)
@@ -163,6 +213,7 @@ class Subjects extends Component
                 $teacherSubjectClass = new TeacherSubjectClass;
                 $teacherSubjectClass->teacher_id = $this->teacher_id;
                 $teacherSubjectClass->class_id = $this->class_id;
+                $teacherSubjectClass->class_code = $class_code;
                 $teacherSubjectClass->term_id = $current_term_id;
                 $teacherSubjectClass->session_id = $current_session_id;
                 $teacherSubjectClass->subject_id = $this->subject_id;
@@ -295,11 +346,17 @@ class Subjects extends Component
 
     public function render()
     {
-        $teachers = Teacher::all();
+        
+        $teachers = Teacher::where('status', 1)->get();
         $classlevels = $this->classlevels;
         $schoolInfo = SchoolInfo::where('id', Auth::user()->school_info_id)->first();
         $class_stages = ClassStage::where('groupname', $schoolInfo->type)->get();
-        $subjects = Subject::take($this->number)->orderBy('id', 'asc')->get();
-        return view('livewire.subjects', compact('subjects', 'teachers', 'classlevels', 'class_stages'));
+        $subjects = Subject::orderBy('name', 'asc')->get();
+        $subject_for_term = SubjectTerm::where('session_id', active_session()->id)
+                            ->where('term_id', active_term()->id)
+                            ->orderBy('id', 'asc')
+                            ->get();
+        $this->emit('reload');
+        return view('livewire.subjects', compact('subjects', 'teachers', 'classlevels', 'class_stages', 'subject_for_term'));
     }
 }

@@ -18,7 +18,7 @@ use Livewire\WithFileUploads;
 class TeacherProfile extends Component
 {
     use WithFileUploads;
-    public $profileId, $pics;
+    public $profileId, $pics, $signature_url, $signature;
 
     public function assignClass() {
         session()->flash('error','Something goes wrong while creating category!!');
@@ -27,17 +27,35 @@ class TeacherProfile extends Component
         // $param = $this->validate([
         //     'pics' => 'image|mimes:png,jpg|max:102400'
         // ]);
-        sleep(3);
+        sleep(10);
         $user = User::where('id',$this->profileId)->first();
         $updateUserInfo = User::find($this->profileId);
-        $oldfile = $user->profile_pics;
+        // $oldfile = $user->profile_pics;
         $fileName = $this->pics->store('profile-pics/teachers', 'public_uploads');
         $updateUserInfo->profile_pics = $fileName;
         $updateUserInfo->save();
         // unlink($oldfile);
         // Storage::disk('public_uploads')->delete($oldfile);
         $this->emit('toast:success', [
-            'text' => "Your Profil has been updated: ",
+            'text' => "Your Profile has been updated: ",
+            'modalID' => "#behaviour_assessment_modal"
+        ]);
+        $this->mount();
+        $this->render();
+    }
+    
+    public function uploadSignature() {
+        sleep(10);
+        // $user = User::where('id',$this->signature_url)->first();
+        $updateUserInfo = User::find($this->profileId);
+        // $oldfile = $user->signature_url;
+        $fileName = $this->signature->store('signatures', 'public_uploads');
+        $updateUserInfo->signature_url = $fileName;
+        $updateUserInfo->save();
+        // unlink($oldfile);
+        // Storage::disk('public_uploads')->delete($oldfile);
+        $this->emit('toast:success', [
+            'text' => "Your Signature has been uploaded: ",
             'modalID' => "#behaviour_assessment_modal"
         ]);
         $this->mount();

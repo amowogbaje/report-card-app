@@ -23,6 +23,7 @@
             <div class="mt-3">
               <h4>{{$student->user->full_name}}</h4>
               <p class="text-primary mb-1">{{$student->class->shortname}} Student</p>
+              <p class="text-primary mb-1">{{$student->user->username}}</p>
               <p class="text-muted font-size-sm">{{$student->user->address}}</p>
               @if(Auth::user()->role == 'student')
                 @if($student->payment_complete)
@@ -80,6 +81,11 @@
             <span class="text-primary">{{$student->user->lga_origin}}</span>
           </li>
           @endif
+          @if($student->user->dob != "")
+          <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+            @livewire('student.physical-assessment', ['student_id' => $student->id])
+          </li>
+          @endif
         </ul>
       </div>
       
@@ -111,7 +117,7 @@
               <h6 class="mb-0">Guardian Phone</h6>
             </div>
             <div class="col-sm-9 text-primary">
-              {{$student->user->phone}}
+              {{$student->guardian_phone}}
             </div>
           </div>
           <hr>
@@ -146,24 +152,31 @@
           <hr>
           <div class="row">
             <div class="col-sm-12">
-              <a class="btn btn-info mx-2" target="_blank" href="{{url('/student/profile/'.$student->user_id.'/edit')}}">Edit</a>
-              @if(Auth::user()->role == "admin")
-              <a class="btn btn-info mx-2" target="_blank" href="{{url('admin/change-password/'.$student->user_id)}}"><i class="fas fa-fw fa-unlock"></i>Change Password</a>
-              @endif
+                @if(Auth::user()->role != "student")
+                <a class="btn btn-info mx-2" target="_blank" href="{{url('/student/profile/'.$student->user_id.'/edit')}}">Edit</a>
+                @endif
+                @if(Auth::user()->role == "admin")
+                <a class="btn btn-info mx-2" target="_blank" href="{{url('admin/change-password/'.$student->user_id)}}"><i class="fas fa-fw fa-unlock"></i>Change Password</a>
+                @endif
             </div>
           </div>
         </div>
       </div>
 
-      {{-- <div class="row gutters-sm">
+      <div class="row gutters-sm">
         <div class="col-sm-12 mb-3">
             <div class="card mt-0">
+                <h3 class="px-2 py-1">Previous Performance</h3>
                 <ul class="list-group list-group-flush">
+                    @foreach($previousTermsAndSession as $prevTerm)
                     <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                      <h6 class="mb-0">No of Subjects Offered</h6>
-                      <span class="text-primary">13</span>
+                      <h6 class="mb-0">{{$prevTerm->sessionYear->name}} <br>{{$prevTerm->termYear->name}} Term</h6>
+                      <span class="text-primary">{{ json_decode(html_entity_decode($student->previousassessment($prevTerm->session_id, $prevTerm->term_id, $student->id)->academic_assessments), true)['percentage']}}</span>
+                      @livewire('student.download-previous-report', ['student_id' => $student->id, 'given_session_id' => $prevTerm->session_id, 'given_term_id' => $prevTerm->term_id])
                     </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                    @endforeach
+                    
+                    {{-- <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                       <h6 class="mb-0">Highest Score So far</h6>
                       <span class="text-primary">80% in Mathematics</span>
                     </li>
@@ -178,12 +191,12 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                       <h6 class="mb-0">Last Term Performance</h6>
                       <span class="text-primary">89.91%</span>
-                    </li>
+                    </li> ---}}
                 </ul>
             </div>
             
         </div>
-      </div> --}}
+      </div>
 
 
 

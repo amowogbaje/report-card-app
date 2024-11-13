@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Teacher;
 use App\Models\User;
+use App\Models\Student;
 use App\Models\ClassTeacher;
 
 class ClassLevel extends Model
@@ -32,6 +33,10 @@ class ClassLevel extends Model
 
     public  function class_stage() {
         return $this->belongsTo(ClassStage::class);
+    }
+    
+    public function population() {
+        return Student::where('class_id', $this->id)->count();
     }
 
     

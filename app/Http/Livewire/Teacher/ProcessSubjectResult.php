@@ -10,6 +10,7 @@ use App\Models\Result;
 use App\Models\Subject;
 use App\Models\TeacherSubjectClass;
 use App\Models\ClassLevel;
+use Illuminate\Support\Facades\Log;
 
 
 class ProcessSubjectResult extends Component
@@ -33,7 +34,7 @@ class ProcessSubjectResult extends Component
                                 ->where('term_id', $current_term_id);
         $highestScoreInSubject = $resultObject->max('cumulative_percentage');
         $updateWithHighestScore = $resultObject->update(['highest_score' => $highestScoreInSubject]);
-        $lowestScoreInSubject = $resultObject->min('cumulative_percentage');
+        $lowestScoreInSubject = $resultObject->where('cumulative_percentage', '>', 0)->min('cumulative_percentage');
         $updateWithLowestScore = $resultObject->update(['lowest_score' => $lowestScoreInSubject]);
         $averageScoreInSubject = $resultObject->avg('cumulative_percentage');
         $updateWithAverageScore = $resultObject->update(['average_score' => round($averageScoreInSubject)]);
@@ -43,12 +44,12 @@ class ProcessSubjectResult extends Component
                                                                         ->where('term_id', $current_term_id)
                                                                         ->update(['class_result_processed'=> 1]);
 
-        $this->emit('swal:notify', [
-            'title' => 'Subject Processed',
+        // $this->emit('swal:notify', [
+        //    'title' => 'Subject Processed',
             // 'text' => "....",
-        ]);
+        //]);
 
-        $this->render();
+        //$this->render();
     }
 
     public function computeSubjectPercentage() {
@@ -130,7 +131,7 @@ class ProcessSubjectResult extends Component
                 }
 
                 $checkSecondTermSubjectResult = Result::where('session_id', $current_session_id)
-                                            ->where('term_id', 1)
+                                            ->where('term_id', 2)
                                             ->where('student_id', $result->student_id)
                                             ->where('subject_id', $this->subject_id)
                                             ->where('total_score', ">", 0)
@@ -149,15 +150,31 @@ class ProcessSubjectResult extends Component
                                             ->where('student_id', $result->student_id)
                                             ->where('subject_id', $this->subject_id)
                                             ->first()->total_score;
+                                            
+                $sumScores = 0;
+                $noOftermPresent = 0;
+                
                 if($checkFirstTermSubjectResult != 0) {
-                    $cumulativePercentage = ((int) $studentPreviousSubjectResult1 + (int) $studentPreviousSubjectResult2 + (int) $studentCurrentSubjectResult)/3;
+                    $sumScores = (int) $studentPreviousSubjectResult1;
+                    $noOftermPresent++;
                 }
-                if($checkFirstTermSubjectResult == 0 && $checkSecondTermSubjectResult != 0) {
-                    $cumulativePercentage = ((int) $studentPreviousSubjectResult2 + (int) $studentCurrentSubjectResult)/2;
+                
+                if($checkSecondTermSubjectResult != 0) {
+                    $sumScores = $sumScores + (int) $studentPreviousSubjectResult2;
+                    $noOftermPresent++;
+                    
                 }
-                if($checkFirstTermSubjectResult == 0 && $checkSecondTermSubjectResult == 0) {
-                    $cumulativePercentage = $studentCurrentSubjectResult;
+                if((int) $studentCurrentSubjectResult != 0) {
+                    $sumScores = $sumScores + (int) $studentCurrentSubjectResult;
+                    $noOftermPresent++;
                 }
+                elseif((int) $studentCurrentSubjectResult == 0) {
+                    if($noOftermPresent == 0) {
+                        $noOftermPresent = 1;
+                    }
+                }
+                $cumulativePercentage = $sumScores/$noOftermPresent;
+                
                 $studentSubjectResult = Result::where('session_id', $current_session_id)
                                             ->where('term_id', $current_term_id)
                                             ->where('student_id', $result->student_id)
@@ -171,12 +188,12 @@ class ProcessSubjectResult extends Component
             }
         }
 
-        $this->emit('swal:notify', [
-            'title' => 'Percentage Computed',
-            'text' => "....",
-        ]);
+        // $this->emit('swal:notify', [
+        //    'title' => 'Percentage Computed',
+        //    'text' => "....",
+        // ]);
 
-        $this->render();
+        // $this->render();
 
     }
     
@@ -185,11 +202,13 @@ class ProcessSubjectResult extends Component
         $this->process();
         $this->gradeSubjectScores();
         $this->distributeSubjectPosition();
+        // sleep(7);
+        return redirect(request()->header('Referer'));
         
     }
 
     public function calcPosition(array $scores, $studentScore) {
-        $position = "1st";
+        $position = "NA";
         rsort($scores);
         $scorePosition = [];
         
@@ -245,13 +264,8 @@ class ProcessSubjectResult extends Component
                     ->where('student_id', $result->student_id)
                     ->update(["position"=>$this->calcPosition($allScores, $result->cumulative_percentage)]);
         }
-        
-        $this->emit('swal:notify', [
-            'title' => 'Position Distributed',
-            'text' => "....",
-        ]);
 
-        return redirect(request()->header('Referer'));
+        
     }
 
     public function getGradeForSenior($scores) {
@@ -261,8 +275,8 @@ class ProcessSubjectResult extends Component
         if($scores >= 45 && $scores <= 49) {$grade = "D7";}
         if($scores >= 50 && $scores <= 54) {$grade = "C6";}
         if($scores >= 55 && $scores <= 59) {$grade = "C5";}
-        if($scores >= 60 && $scores <= 65) {$grade = "C4";}
-        if($scores >= 66 && $scores <= 69) {$grade = "B3";}
+        if($scores >= 60 && $scores <= 64) {$grade = "C4";}
+        if($scores >= 65 && $scores <= 69) {$grade = "B3";}
         if($scores >= 70 && $scores <= 74) {$grade = "B2";}
         if($scores >= 75 && $scores <= 100) {$grade = "A1";}
 
@@ -272,8 +286,8 @@ class ProcessSubjectResult extends Component
     public function getGradeForJunior($scores) {
         $grade = "";
         if($scores < 40) {$grade = "F";}
-        if($scores >= 40 && $scores <= 44) {$grade = "E";}
-        if($scores >= 45 && $scores <= 49) {$grade = "D";}
+        if($scores >= 40 && $scores <= 49) {$grade = "P";}
+        // if($scores >= 45 && $scores <= 49) {$grade = "D";}
         if($scores >= 50 && $scores <= 59) {$grade = "C";}
         if($scores >= 60 && $scores <= 69) {$grade = "B";}
         if($scores >= 70 && $scores <= 100) {$grade = "A";}
@@ -283,60 +297,42 @@ class ProcessSubjectResult extends Component
     public function gradeSubjectScores() {
         $current_session_id = active_session()->id;
         $current_term_id = active_term()->id;
-        $class_code = ClassLevel::where('id', $this->class_id)->first()->code;
-        $result = Result::where('subject_id', $this->subject_id)
-                                ->where('class_code', $class_code)
-                                ->where('session_id', $current_session_id)
-                                ->where('term_id', $current_term_id)
-                                ->get();
-        if($current_term_id <=2) {
-            foreach ($result as $student) {
-                if($student->classlevel->class_stage_id < 7) {
-                    Result::where('subject_id', $this->subject_id)
-                            ->where('class_code', $class_code)
-                            ->where('session_id', $current_session_id)
-                            ->where('term_id', $current_term_id)
-                            ->where('student_id', $student->student_id)
-                            ->update(["grade"=>$this->getGradeForJunior($student->cumulative_percentage)]);
-                }
-                elseif($student->classlevel->class_stage_id == 7) {
-                    Result::where('subject_id', $this->subject_id)
-                            ->where('class_code', $class_code)
-                            ->where('session_id', $current_session_id)
-                            ->where('term_id', $current_term_id)
-                            ->where('student_id', $student->student_id)
-                            ->update(["grade"=>$this->getGradeForSenior($student->cumulative_percentage)]);
-                }
-                
-            }
-        }
-        elseif($current_term_id ==3) {
-            foreach ($result as $student) {
-                if($student->classlevel->class_stage_id < 7) {
-                    Result::where('subject_id', $this->subject_id)
-                            ->where('class_code', $class_code)
-                            ->where('session_id', $current_session_id)
-                            ->where('term_id', $current_term_id)
-                            ->where('student_id', $student->student_id)
-                            ->update(["grade"=>$this->getGradeForJunior($student->cumulative_percentage)]);
-                }
-                elseif($student->classlevel->class_stage_id == 7) {
-                    Result::where('subject_id', $this->subject_id)
-                            ->where('class_code', $class_code)
-                            ->where('session_id', $current_session_id)
-                            ->where('term_id', $current_term_id)
-                            ->where('student_id', $student->student_id)
-                            ->update(["grade"=>$this->getGradeForSenior($student->cumulative_percentage)]);
-                }
-                    
-            }
-        }
-        $this->emit('swal:notify', [
-            'title' => 'Grading Completed',
-            'text' => "....",
-        ]);
         
+        $classLevel = ClassLevel::find($this->class_id);
+        if (!$classLevel) {
+            Log::error('Class not found for class_id: ' . $this->class_id);
+            return;
+        }
+    
+        $class_code = $classLevel->code;
+        $results = Result::where('subject_id', $this->subject_id)
+                            ->where('class_code', $class_code)
+                            ->where('session_id', $current_session_id)
+                            ->where('term_id', $current_term_id)
+                            ->get();
+    
+        Log::info('Number of results to grade: ' . $results->count());
+    
+        foreach ($results as $student) {
+            $grade = null;
+            if ($student->classlevel->class_stage_id < 7) {
+                $grade = $this->getGradeForJunior($student->cumulative_percentage);
+            } elseif ($student->classlevel->class_stage_id == 7) {
+                $grade = $this->getGradeForSenior($student->cumulative_percentage);
+            }
+    
+            if ($grade !== null) {
+                $student->update(["grade" => $grade]);
+            }
+        }
+    
+        // Uncomment this if using Livewire or similar for frontend notifications
+        // $this->emit('swal:notify', [
+        //     'title' => 'Grading Completed',
+        //     'text' => "....",
+        // ]);
     }
+
 
     
 
@@ -360,7 +356,7 @@ class ProcessSubjectResult extends Component
                                 ->where('class_code', $class_code)
                                 ->where('term_id', $current_term_id)
                                 ->where('session_id', $current_session_id);
-        $zeroDoesNotExistInLowestScore = Result::where('subject_id', $this->subject_id)
+        $zeroExistInLowestScore = Result::where('subject_id', $this->subject_id)
                                 ->where('class_code', $class_code)
                                 ->where('term_id', $current_term_id)
                                 ->where('session_id', $current_session_id)
@@ -378,6 +374,6 @@ class ProcessSubjectResult extends Component
             $lowestScore = $resultObject->first()->lowest_score;
             $highestScore = $resultObject->first()->highest_score;
         }
-        return view('livewire.teacher.process-subject-result', compact('isResultProcessed', 'isPercentageCalculated', 'averageScore', 'highestScore', 'lowestScore', 'isResultUploaded', 'zeroDoesNotExistInLowestScore'));
+        return view('livewire.teacher.process-subject-result', compact('isResultProcessed', 'isPercentageCalculated', 'averageScore', 'highestScore', 'lowestScore', 'isResultUploaded', 'zeroExistInLowestScore'));
     }
 }

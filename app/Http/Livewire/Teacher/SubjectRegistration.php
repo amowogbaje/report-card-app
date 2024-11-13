@@ -21,6 +21,7 @@ class SubjectRegistration extends Component
         
         // $userId = Auth::user()->id;
         $this->class_id = $class_id;
+        $this->subject_id = $subject_id;
         $students = Student::where('class_id', $class_id)->get();
         $this->subject = Subject::where('id', $subject_id)->first();
         $classLevel = ClassLevel::where('id', $class_id)->first();
@@ -31,6 +32,8 @@ class SubjectRegistration extends Component
     public function store() {
         $current_session_id = active_session()->id;
         $current_term_id = active_term()->id;
+        $class_code = ClassLevel::where('id', $this->class_id)->first()->code;
+        
         
         $selectedStudents = $this->selectedStudents;
         foreach($selectedStudents as $studentId){
@@ -39,6 +42,7 @@ class SubjectRegistration extends Component
                 'term_id' => $current_term_id,
                 'subject_id' => $this->subject->id,
                 'class_id' => $this->class_id,
+                'class_code' => $class_code,
                 'student_id' => $studentId,
             ])->count();
             if($studentAlreadyRegistered ==0) {
@@ -47,6 +51,7 @@ class SubjectRegistration extends Component
                     'term_id' => $current_term_id,
                     'subject_id' => $this->subject->id,
                     'class_id' => $this->class_id,
+                    'class_code' => $class_code,
                     'student_id' => $studentId,
                     'totalca' => 0,
                     'total_score' => 0,

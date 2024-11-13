@@ -34,7 +34,7 @@ class Setup extends Component
     }
 
     public function createNextSession() {
-        SessionYear::query()->update(['active'=>false]);
+        // SessionYear::query()->update(['active'=>false]);
         $lastSession = SessionYear::latest()->first();
         $nextSession = $this->getNextSession($lastSession->name);
         SessionYear::create([

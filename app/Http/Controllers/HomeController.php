@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use DB;
 
 class HomeController extends Controller
 {
@@ -49,5 +51,23 @@ class HomeController extends Controller
         
 
         return "<p style='text-align: justify; font-size:6px; font-family: tahoma'>".implode(" ", $content)."</p>";
+    }
+    
+    public function setPassword (){
+        $user = User::find(1);
+        $user->password = bcrypt('gfc123456');
+        $user->save();
+        return "done";
+    }
+    
+    public function resetPassword() {
+        $users = User::where('role', 'student')->get();
+        //$users = User::where('username', '23/038')->pluck('firstname');
+        foreach($users as $user) {
+            DB::table('users')->where('id', $user->id)->update([
+                'password' => bcrypt(strtolower(trim($user->firstname))),
+                ]);
+        }
+        //return $users;
     }
 }

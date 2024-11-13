@@ -4,16 +4,20 @@
             <div class="card-body">
               <div class="d-flex flex-column align-items-center text-center">
                 <form>
-                    <label for="profilePics">
+                    <label for="stamp_img_file">
+                        <img src="" alt="user" class="d-none rounded-circle border border-3 border-info" width="110" id = 'stamp_img_url_hidden'>
                         @if(!empty($schoolInfo->stamp_img_url))
-                            <img src="{{url('uploads/'.$schoolInfo->stamp_img_url)}}" alt="user" class="rounded-circle border border-3 border-info" width="110">
+                            <img src="{{url('uploads/'.$schoolInfo->stamp_img_url)}}" alt="user" class="rounded-circle border border-3 border-info" width="110" id = 'stamp_img_url'>
                         @else
-                            <img src="{{asset('assets/images/male-avatar.png')}}" alt="Student" class="rounded-circle p-1 bg-primary" width="110">
+                            <img src="{{asset('assets/images/male-avatar.png')}}" alt="Student" class="rounded-circle p-1 bg-primary" width="110" id = 'stamp_img_url'>
                         @endif
                     </label>
-                    <input style="display: none" wire:model = "pics" id="profilePics" type="file" accept="image/*"/>
+                    <input style="display: none" wire:model = "pics" id="stamp_img_file" type="file" accept="image/*"/>
+                    
+                    <input type = "hidden"  id= "school_colors" wire:model= "school_colors" />
+                    
                     <br>
-                    <button class="btn btn-info form-control" wire:click.prevent = "uploadPics">Save</button>
+                    <button class="btn btn-info form-control" wire:click.prevent = "uploadPics" @if($schoolInfo->school_colors) style="background-color: {{$schoolInfo->school_colors}}" @endif>Save</button>
                 </form>
                 
                 

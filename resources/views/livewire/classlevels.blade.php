@@ -1,8 +1,8 @@
 <div class="card">
     <h5 class="card-header">List of Classes <a href="#" wire:click="add()"  data-toggle="modal" data-target="#add_class_modal"><i class="fs-2 fa fa-plus"></i></a></h5>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table">
+    <div class="card-body">
+        <div class="table-responsive first">
+            <table class="table first">
                 <thead class="bg-light">
                     <tr class="border-0">
                         {{-- <th class="border-0">Name</th> --}}
@@ -10,6 +10,7 @@
                         <th class="border-0">Alias</th>
                         <th class="border-0">Code</th>
                         <th class="border-0">Teacher</th>
+                        <th class="border-0">Population</th>
                         <th class="border-0">Action</th>
                     </tr>
                 </thead>
@@ -29,7 +30,7 @@
                                 <td>Not Yet Assigned</td>
                             @endif
                             {{-- <td>{{($classlevel->teacherfullname)}}</td> --}}
-                            
+                            <td>{{$classlevel->population()}}</td>
                             
                             <td>
                                 <a href="#" title="Assign a Teacher" onclick="pickClassId({{$classlevel->id}})" data-toggle="modal" data-target="#assign_teacher_to_class_modal"><i class="fas fa-user-plus"></i></a>

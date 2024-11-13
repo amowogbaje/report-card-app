@@ -18,6 +18,8 @@ class CreateSubjectsTable extends Migration
             $table->string('name');
             $table->tinyInteger('status')->default(1);
             $table->integer('class_stage_id')->default(0); //zero(0) signifies general 
+            $table->integer('session_id');
+            $table->integer('term_id');
             $table->enum('category', [null, 'art', 'science', 'commercial'])->nullable();
             $table->timestamps();
         });

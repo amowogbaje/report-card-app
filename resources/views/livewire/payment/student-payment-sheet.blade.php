@@ -4,7 +4,7 @@
             <div class="card">
                 <h5 class="card-header text-center">
                     <span>Payment Sheet for All Students</span>
-                    {{-- <a class="btn btn-secondary" href="#" wire:click = "generateOtp">Generate Token For All Students</a> --}}
+                    <a class="btn btn-secondary" href="#" wire:click = "generateOtp">Generate Token For All Students</a>
                 </h5>
                 
             </div>
@@ -16,8 +16,8 @@
         <div class="col-sm-12 mx-auto">
             <div class="card">
                 <h5 class="card-header text-center">{{$classes[$key]}} {{count($classStudents)}}</h5>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
+                <div class="card-body">
+                    <div class="table-responsive first">
                         <table class="table">
                             <thead class="bg-light">
                                 <tr class="border-0">

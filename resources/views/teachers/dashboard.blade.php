@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="page-header">
-                <h2 class="pageheader-title">Examify App</h2>
+                <h2 class="pageheader-title">{{config('app.name')}}</h2>
                 <div class="page-breadcrumb">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
@@ -48,9 +48,11 @@
                                 <div class="h6 my-1 text-center font-weight-bold text-gray-800">
                                     <a class="btn btn-outline border-primary text-primary link-info" href="{{url('/teacher/class/'.$subjectAndClass->class->id.'/subject/'.$subjectAndClass->subject->id.'/spreadsheet')}}">Fill Score Sheet</a>
                                 </div>
+                                @if(get_current_term()->id == active_term()->id)
                                 <div class="h6 my-1 text-center font-weight-bold text-gray-800">
                                     <a class="btn btn-outline border-secondary text-secondary link-info" href="{{url('teacher/subject-registration/class/'.$subjectAndClass->class->id.''.'/subject/'.$subjectAndClass->subject->id)}}">Register Students</a>
                                 </div>
+                                @endif
                                 {{-- <div class="h6 mb-0 font-weight-bold text-gray-800">
                                     <span>{{$noOfSubjects}}</span>
                                 </div> --}}

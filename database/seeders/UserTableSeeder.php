@@ -17,16 +17,16 @@ class UserTableSeeder extends Seeder
     {
         \DB::table('users')->insert([
 
-            'firstname' => 'Gideon',
-            'lastname' => 'Amowogbaje',
-            'othernames' => 'Ifedayo',
-            'username' => 'amowogbajegideon@gmail.com',
+            'firstname' => 'Joshua',
+            'lastname' => 'Awopeju',
+            'othernames' => 'Ifeday..o',
+            'username' => 'gracefilledcollege',
             'role' => 'admin',
             'phone' => '08174007780',
             'school_info_id' => 1,
             'gender' => 'male',
-            'password' => bcrypt('gideon'),
-            'email' => 'amowogbajegideon@gmail.com',
+            'password' => bcrypt('gfc123456'),
+            'email' => 'info@gracefilledcollege.com',
         ]);
 
         \DB::table('users')->insert([

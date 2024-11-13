@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\SessionYear;
 use App\Models\Subject;
+use App\Models\ClassLevel;
+use App\Models\SubjectTerm;
 use App\Models\TeacherSubjectClass;
 
 use Auth;
@@ -23,7 +25,7 @@ class CanDoActivities
     public function handle(Request $request, Closure $next)
     {
         $checkActiveSession = SessionYear::where('active', 1)->count();
-        $subjects = Subject::all();
+        $noOfSubjectsPerClass = (SubjectTerm::where('session_id', active_session()->id)->where('term_id', active_term()->id)->count());
         
         if($checkActiveSession == 0) {
             $isAnySessionActive = 0;
@@ -50,11 +52,7 @@ class CanDoActivities
             if(Auth::user()->role != 'admin') {
                 return $next($request);
             }
-            $noOfSubjectsPerClass = 0;
-            foreach($subjects as $subject) {
-                $noOfSubjectsPerClass+= $subject->noOfClass($subject->class_stage_id);
-            }
-            $noOfSubjectsPerClass = $noOfSubjectsPerClass - 150;
+           
             $noOfSubjectClassesAssigned = TeacherSubjectClass::where('session_id', active_session()->id)->where('term_id', active_term()->id)->count();
             
             if($noOfSubjectsPerClass <= $noOfSubjectClassesAssigned) {

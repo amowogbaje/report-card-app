@@ -12,10 +12,12 @@ use App\Models\SessionYear;
 use App\Models\Term;
 use App\Models\SchoolInfo;
 use App\Models\ClassStage;
+use App\Models\Assessment;
 use Auth;
 use DB;
 
 use App\Jobs\BootstrapStudents;
+use App\Jobs\UndoStudentBootstrap;
 
 use App\Exports\StudentExport;
 use App\Exports\StudentTemplateExport;
@@ -33,18 +35,20 @@ class StudentList extends Component
     use WithFileUploads;
     public $number, $file, $class_teacher_id=null;
 
-    public $firstname, $lastname, $class_stage_id, $class_id, $email, $phone, $guardian_name, $classStageIsSecondary = false, $guardian_phone, $student_phone, $guardian_address,  $gender = 'male', $category;
-    // public $admission_no
+    public $firstname, $lastname, $class_stage_id, $class_id, $email, $phone, $othernames, $admission_no, $guardian_name, $classStageIsSecondary = false, $guardian_phone, $student_phone, $guardian_address,  $gender = 'male', $category;
+    public $percentage, $studentDetails, $studentFullName, $principal_comment;
+
 
     protected $rules = [
         'firstname' => 'required|string',
         'lastname' => 'required|string',
-        'email' => 'required|email|unique:users',
+        // 'email' => 'required|email|unique:users',
+        'email' => 'required|email',
         'class_id' => 'required|integer',
         'class_stage_id' => 'required|integer',
         'phone' => 'required|string',
         'gender' => 'required|string',
-        // 'admission_no' => 'required|string',
+        'admission_no' => 'required|string',
         // 'guardian_phone' => 'required|string',
         'guardian_name' => 'required|string',
     ];
@@ -52,7 +56,10 @@ class StudentList extends Component
     public function resetFields(){
         $this->firstname = '';
         $this->lastname = '';
+        $this->othernames = '';
+        $this->email = '';
         $this->phone = '';
+        $this->admission_no = '';
         $this->guardian_name = '';
         $this->guardian_phone = '';
         $this->guardian_address = '';
@@ -65,13 +72,14 @@ class StudentList extends Component
             $schoolInfo = school_info();
             $user->firstname = $this->firstname;
             $user->lastname = $this->lastname;
+            $user->othernames = $this->othernames;
             $user->email = $this->email;
-            $user->phone = $this->phone;
-            $user->username = "not yet assigned";
+            // $user->phone = $this->phone;
+            //$user->username = "not yet assigned";
             $user->school_info_id = $schoolInfo->id;
             $user->gender = strtolower($this->gender);
             $user->address = $this->guardian_address;
-            // $user->username = $this->admission_no;
+            $user->username = $this->admission_no;
             $user->role = "student";
             $user->password = bcrypt(strtolower($this->firstname));
             $user->save();
@@ -80,7 +88,7 @@ class StudentList extends Component
             if($user) {
                 $student->user_id = $user->id;
                 $student->guardian_phone = $this->phone;
-                $student->class_code = Classlevel::where('id', $this->class_id)->first()->code;
+                $student->class_code = ClassLevel::where('id', $this->class_id)->first()->code;
                 $firstStudentCheck = Student::where('class_code', $student->class_code)->count();
                 if($firstStudentCheck == 0) {
                     $StudentMatricNo = "001";
@@ -93,7 +101,7 @@ class StudentList extends Component
                 }
                 
                 $student->class_matric_no = $StudentMatricNo;
-                // $student->student_phone = $this->student_phone;
+                $student->student_phone = $this->student_phone;
                 if($this->class_teacher_id == null) {
                     $student->class_id = $this->class_id;
                 }
@@ -167,6 +175,27 @@ class StudentList extends Component
         $this->cancel();
         
     }
+    
+    public function comment($id) {
+        $this->studentDetails = Student::where('id', $id)->first();
+        $this->percentage = json_decode(html_entity_decode($this->studentDetails->assessment->academic_assessments), true)['percentage'];
+        $this->studentFullName = $this->studentDetails->user->fullname;
+        $this->principal_comment = $this->studentDetails->assessment->principal_comment;
+    }
+    
+    public function storeComment() {
+        $params = $this->validate(['principal_comment' => 'required|string']);
+        $storeComment = Assessment::where('student_id', $this->studentDetails->id)->update(['principal_comment' => $this->principal_comment]);
+        $this->emit('toast:success', [
+                    'text' => 'Comment Added Successfully!!',
+                    'modalID' => "#add_comment_modal"
+                ]);
+        $this->mount();
+        $this->render();
+        
+    }
+    
+    
     public function correctNameArrangement($name) {
         $nameArray = explode(' ', $name);
         return $nameArray;
@@ -186,8 +215,11 @@ class StudentList extends Component
         $this->number = $number;
         $this->class_teacher_id = $class_teacher_id;
         $this->gender = 'male';
-        $this->classlevels = ClassLevel::all();
+        $this->classlevels = [];
+        // $this->emit('reload');
     }
+    
+    
     
 
     public function downloadStudentList($class_id = null) {
@@ -246,7 +278,7 @@ class StudentList extends Component
         $schoolInfo = school_info();
         $class_stages = ClassStage::where('groupname', $schoolInfo->type)->get();
         if($this->class_teacher_id == null) {
-            $students = Student::take($this->number)->get();
+            $students = Student::take($this->number)->orderBy('class_code', 'asc')->orderBy('class_id','asc')->get();
         }
         else {
             $classLevelObject = ClassLevel::where('id', $class_teacher_id)->first();
@@ -254,6 +286,7 @@ class StudentList extends Component
         }
         
         $classlevels = $this->classlevels;
+        $this->emit('reload');
         
         return view('livewire.student.student-list', compact('students', 'classlevels', 'class_teacher_id', 'classLevelObject', 'class_stages'));
     }
@@ -261,13 +294,21 @@ class StudentList extends Component
     public function delete($studentId) {
         $student = Student::find($studentId);
         $student->status = 0;
-        $student->save();
+        $studentDeativated = $student->save();
+        if($studentDeativated) {
+            UndoStudentBootstrap::dispatch($student);
+        }
+        
         $this->cancel();
     }
     public function restore($studentId) {
         $student = Student::find($studentId);
         $student->status = 1;
         $student->save();
+        $studentReativated = $student->save();
+        if($studentReativated) {
+            BootstrapStudents::dispatch($student);
+        }
         $this->cancel();
     }
 }

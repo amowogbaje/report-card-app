@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="page-header">
-                <h2 class="pageheader-title">Examify App</h2>
+                <h2 class="pageheader-title">{{config('app.name')}}</h2>
                 <div class="page-breadcrumb">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
@@ -88,21 +88,25 @@
                                         <td><a href="#">{{$student->user->full_name}}</a> </td>
                                         @if(active_term()->id >= 2)
                                             @if($student->prevSubjectResult($subject_id, $student->id, 1)->count() == 0)
-                                                <td><input type="text" class="form-control" name="first_term_scores[{{$student->id}}]"></td>
+                                                <td><input type="number" class="form-control" name="first_term_scores[{{$student->id}}]"></td>
                                             @else
-                                                <td><input type="text" class="form-control" name="first_term_scores[{{$student->id}}]" value="{{$student->prevSubjectResult($subject_id, $student->id, 1)->first()->total_score}}"></td>
+                                                <td><input type="number" class="form-control" name="first_term_scores[{{$student->id}}]" value="{{$student->prevSubjectResult($subject_id, $student->id, 1)->first()->total_score}}"></td>
                                             @endif
-                                        {{-- <td><input type="text" class="form-control" name="scores[{{$student->id}}]['firstterm']" value="{{$student->subjectResult($subject_id, $student->id)->first()->ca_1}}"></td> --}}
+                                        {{-- <td><input type="number" class="form-control" name="scores[{{$student->id}}]['firstterm']" value="{{$student->subjectResult($subject_id, $student->id)->first()->ca_1}}"></td> --}}
                                         @endif
                                         @if(active_term()->id == 3)
-                                        <td><input type="text" class="form-control" name="second_term_scores[{{$student->id}}]"></td>
-                                        {{-- <td><input type="text" class="form-control" name="scores[{{$student->id}}]['firstterm']" value="{{$student->subjectResult($subject_id, $student->id)->first()->ca_1}}"></td> --}}
+                                            @if($student->prevSubjectResult($subject_id, $student->id, 2)->count() == 0)
+                                                <td><input type="number" class="form-control" name="second_term_scores[{{$student->id}}]"></td>
+                                            @else
+                                                <td><input type="number" class="form-control" name="second_term_scores[{{$student->id}}]" value="{{$student->prevSubjectResult($subject_id, $student->id, 2)->first()->total_score}}"></td>
+                                            @endif
+                                        <!--<td><input type="text" class="form-control" name="second_term_scores[{{$student->id}}]"></td>-->
                                         @endif
-                                        <td><input type="text" class="form-control" name="scores[{{$student->id}}]['ca_1']" value="{{$student->subjectResult($subject_id, $student->id)->first()->ca_1}}"></td>
-                                        <td><input type="text" class="form-control" name="scores[{{$student->id}}]['ca_2']" value="{{$student->subjectResult($subject_id, $student->id)->first()->ca_2}}"></td>
-                                        <td><input type="text" class="form-control" name="scores[{{$student->id}}]['ca_3']" value="{{$student->subjectResult($subject_id, $student->id)->first()->ca_3}}"></td>
+                                        <td><input type="number" class="form-control" name="scores[{{$student->id}}]['ca_1']" min=0 max=10 value="{{$student->subjectResult($subject_id, $student->id)->first()->ca_1}}"></td>
+                                        <td><input type="number" class="form-control" name="scores[{{$student->id}}]['ca_2']" min=0 max=10  value="{{$student->subjectResult($subject_id, $student->id)->first()->ca_2}}"></td>
+                                        <td><input type="number" class="form-control" name="scores[{{$student->id}}]['ca_3']" min=0 max=10 value="{{$student->subjectResult($subject_id, $student->id)->first()->ca_3}}"></td>
                                         <td>{{$student->subjectResult($subject_id, $student->id)->first()->totalca}}</td>
-                                        <td><input type="text" class="form-control" name="scores[{{$student->id}}]['exam']" value="{{$student->subjectResult($subject_id, $student->id)->first()->exam}}"></td>
+                                        <td><input type="number" class="form-control" name="scores[{{$student->id}}]['exam']" min=0 max=70 value="{{$student->subjectResult($subject_id, $student->id)->first()->exam}}"></td>
                                         @if($isResultProcessed)
                                         <td>{{$student->subjectResult($subject_id, $student->id)->first()->total_score}}</td>
                                         <td>{{$student->subjectResult($subject_id, $student->id)->first()->cumulative_percentage}}</td>
@@ -116,11 +120,11 @@
                                         @endif
                                     {{-- @else 
                                         <td><a href="teacher-students-profile.html">{{$student->user->full_name}}</a> </td>
-                                        <td><input type="text" class="form-control" name="scores[{{$student->id}}]['ca_1']" value="0"></td>
-                                        <td><input type="text" class="form-control" name="scores[{{$student->id}}]['ca_2']" value="0"></td>
-                                        <td><input type="text" class="form-control" name="scores[{{$student->id}}]['ca_3']" value="0"></td>
+                                        <td><input type="text" class="form-control" min=0 max=10 name="scores[{{$student->id}}]['ca_1']" value="0"></td>
+                                        <td><input type="text" class="form-control" min=0 max=10 name="scores[{{$student->id}}]['ca_2']" value="0"></td>
+                                        <td><input type="text" class="form-control" min=0 max=10 name="scores[{{$student->id}}]['ca_3']" value="0"></td>
                                         <td>0</td>
-                                        <td><input type="text" class="form-control" name="scores[{{$student->id}}]['exam']" value="0"></td>
+                                        <td><input type="text" class="form-control" min=0 max=70 name="scores[{{$student->id}}]['exam']" value="0"></td>
                                         <td>0</td> --}}
                                     @endif
 
@@ -128,7 +132,7 @@
                             @endforeach
                                 <tr>
                                     {{ csrf_field() }}
-                                    <td><button type="submit" class="btn btn-primary">Save Changes</button></td>
+                                    <td><button type="submit" class="btn btn-primary">Submit Scores</button></td>
                                 </tr>
                             </form>
                             

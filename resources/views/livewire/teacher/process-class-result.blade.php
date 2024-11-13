@@ -1,7 +1,7 @@
 <div>
     @if($noOfResults !=0) 
         @if($allSubjectsInClassIsProcessed)
-        <button class="btn btn-primary mx-3" wire:click="process">Process Class Result </button>
+        <button class="btn btn-primary mx-3" wire:click="process"><div wire:loading><span class="dashboard-spinner spinner-xs"></span></div>Process Class Result </button>
         @elseif(!$allSubjectsInClassIsProcessed) 
         <button data-toggle="modal" data-target="#show_subject_teacher_remaining" class="btn btn-primary mx-3">Waiting for all subjects to be processed</button>
         @endif
@@ -22,7 +22,16 @@
                         <div class="form-group mb-2">
                             <ul class="list-unstyled arrow">
                                 @foreach ($subjectTeachersRemaining as $subjectTeacher)
-                                    <li style="border-bottom: solid #eee thin;">{{$subjectTeacher->subject->name}} - <span class="text-primary">{{$subjectTeacher->user($subjectTeacher->teacher->user_id)->lastname}} {{$subjectTeacher->user($subjectTeacher->teacher->user_id)->firstname}}</span>  </li>
+                                    <li style="border-bottom: solid #eee thin;">
+                                        {{$subjectTeacher->subject->name}} - 
+                                        <span class="text-primary">
+                                            {{$subjectTeacher->user($subjectTeacher->teacher->user_id)->lastname}} 
+                                             {{$subjectTeacher->user($subjectTeacher->teacher->user_id)->firstname}}
+                                        </span>  - 
+                                        <span class="text-secondary">
+                                            {{$subjectTeacher->class->shortname}}
+                                        </span>  
+                                    </li>
                                 @endforeach
                             </ul>
                             

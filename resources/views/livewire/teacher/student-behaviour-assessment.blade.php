@@ -3,7 +3,7 @@
         <div class="table-responsive">
             <table class="table">
                 <thead class="text-left">
-                    <th>Skill</th>
+                    <th>Behaviour</th>
                     <th>5</th>
                     <th>4</th>
                     <th>3</th>

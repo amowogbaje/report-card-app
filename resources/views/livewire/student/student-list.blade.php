@@ -9,7 +9,7 @@
         @if($class_teacher_id != null)
             <a href="javascript::void()" wire:click = "downloadTemplate()" class="text-primary link-primary mx-3"><i class="fas fa-download"></i> Download Template</a>
             <a href="javascript::void()" data-toggle="modal" data-target="#upload_student_modal" class="text-primary link-primary mx-3" ><i class="fas fa-cloud"></i> Upload</a>
-            <a href="javascript::void()" wire:click = "normalizeNames()" class="text-primary link-primary mx-3"><i class="fas fa-user"></i> Normalize Names</a>
+            {{-- <a href="javascript::void()" wire:click = "normalizeNames()" class="text-primary link-primary mx-3"><i class="fas fa-user"></i> Normalize Names</a> --}}
             {{ count($students)}} Students
             <!--<a href="javascript::void()" wire:click = "givepassword()" class="text-primary link-primary mx-3"><i class="fas fa-user"></i> Give Password</a>-->
             
@@ -18,9 +18,9 @@
         
         <a href="javascript::void()" data-toggle="modal" data-target="#add_student_modal" class="text-primary link-primary mx-3" > <i class="fas fa-plus"></i> Add Student</a>
     </h5>
-    <div class="card-body p-0">
+    <div class="card-body">
         <div class="table-responsive">
-            <table class="table">
+            <table class="table first">
                 <thead class="bg-light">
                     <tr class="border-0">
                         <th class="border-0">Face</th>
@@ -29,6 +29,8 @@
                         <th class="border-0">Registration No</th>
                         <th class="border-0">Guardian Phone</th>
                         <th class="border-0">Class</th>
+                        {{-- <th>Percentage</th>
+                        <th>Position In Class</th> --}}
                         <th class="border-0">Status</th>
                         <th class="border-0">Action</th>
                     </tr>
@@ -58,6 +60,8 @@
                             <td>{{$student->user->username}}</td>
                             <td>{{$student->guardian_phone}}</td>
                             <td>{{$student->class->shortname}}</td>
+                            {{-- <td>{{ json_decode(html_entity_decode($student->assessment($student->id)->academic_assessments), true)['percentage']}}</td>
+                            <td>{!! $student->assessment($student->id)->position_in_class !!}</td> --}}
                             <td>
                                 @if($student->status == 1) 
                                     Active
@@ -66,11 +70,25 @@
                                 @endif
                             </td>
                             <td>
+                                @if(Auth::user()->role == "teacher")
+                                <a href="{{url('/student/'.$student->id.'/academic-report')}}" class="btn btn-primary">Academic Report</a>
+                                
+                                {{-- @elseif(Auth::user()->role == "admin")
+                                    @if(json_decode(html_entity_decode($student->assessment($student->id)->academic_assessments), true)['percentage'] != 'Not Ready')
+                                        @if($student->assessment($student->id)->principal_comment == "")
+                                        <a wire:click="comment({{$student->id}})" href="javascript::void()" data-toggle="modal" data-target="#add_comment_modal" class="text-primary link-primary mx-3"><span class="fa fa-comment"></span>Add Comment</a>
+                                        @else
+                                        <a wire:click="comment({{$student->id}})" href="javascript::void()" data-toggle="modal" data-target="#add_comment_modal" class="text-success link-primary mx-3"><span class="fa fa-check"></span></a>
+                                        @endif
+                                    @endif --}}
+                                @endif
                                 <a href="{{url('/student/profile/'.$student->user_id)}}"><i class="fa fa-eye"></i></a>
-                                @if($student->status == 1)
-                                <a class="text-danger" wire:click="delete({{$student->id}})"><i class="fa fa-trash"></i></a>
-                                @elseif($student->status == 0)
-                                <a class="text-success" wire:click="restore({{$student->id}})"><i class="fa fa-recycle"></i></a>
+                                @if(Auth::user()->role == 'admin')
+                                    @if($student->status == 1)
+                                    <a class="text-danger" wire:click="delete({{$student->id}})"><i class="fa fa-trash"></i></a>
+                                    @elseif($student->status == 0)
+                                    <a class="text-success" wire:click="restore({{$student->id}})"><i class="fa fa-recycle"></i></a>
+                                    @endif 
                                 @endif
                             </td>
                         </tr> 
@@ -109,6 +127,43 @@
             </div>
         </div>
     </div>
+    <div wire:ignore.self class="modal fade" id="add_comment_modal" tabindex="-1" role="dialog" aria-labelledby="addCommentModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Comment</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                            <div class="form-group mb-2">
+                                <input type="text" class="form-control" id="studentFullName" wire:model.defer="studentFullName" disabled>
+                                @error('studentFullName') <span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                            <div class="form-group mb-2">
+                                <input type="text" class="form-control" id="percentage"  wire:model.defer="percentage" disabled>
+                                @error('percentage') <span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="">Principal's Comment</label>
+                                <textarea class="form-control @error('principal_comment') is-invalid @enderror" id="" cols="30" rows="10" wire:model.defer="principal_comment"></textarea>
+                                @error('principal_comment') <span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                            
+                        
+                        
+                    </form>
+                    
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-secondary" data-dismiss="modal">Close</a>
+                    <button wire:click.prevent="storeComment()" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div wire:ignore.self class="modal fade" id="add_student_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -128,6 +183,10 @@
                             <div class="form-group mb-2">
                                 <input type="text" class="form-control @error('lastname') is-invalid @enderror" id="lastName" placeholder="Enter Last Name" wire:model.defer="lastname">
                                 @error('lastname') <span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                            <div class="form-group mb-2">
+                                <input type="text" class="form-control @error('othernames') is-invalid @enderror" id="othernames" placeholder="Enter Other Names" wire:model.defer="othernames">
+                                @error('othernames') <span class="text-danger">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group mb-2">
                                 <select wire:change = "chooseClassStage" class="form-control @error('class_stage_id') is-invalid @enderror" id="class_stage" wire:model.defer="class_stage_id">
@@ -168,10 +227,10 @@
                                 <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" placeholder="Enter Email" wire:model.defer="email">
                                 @error('email') <span class="text-danger">{{ $message }}</span>@enderror
                             </div>
-                            <!--<div class="form-group mb-2">-->
-                            <!--    <input type="text" class="form-control @error('admission_no') is-invalid @enderror" id="email" placeholder="Enter Admission No" wire:model.defer="admission_no">-->
-                            <!--    @error('admission_no') <span class="text-danger">{{ $message }}</span>@enderror-->
-                            <!--</div>-->
+                            <div class="form-group mb-2">
+                                <input type="text" class="form-control @error('admission_no') is-invalid @enderror" id="admission_no" placeholder="Enter Admission No" wire:model.defer="admission_no">
+                                @error('admission_no') <span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
                             <div class="form-group mb-2">
                                 <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" placeholder="Enter Guardian Phone Number" wire:model.defer="phone">
                                 @error('phone') <span class="text-danger">{{ $message }}</span>@enderror

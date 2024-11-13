@@ -25,15 +25,22 @@ class IsSubjectTeacher
     {
         $class_id = $request->route('class_id');
         $subject_id = $request->route('subject_id');
-        $teacher_id = Teacher::where('user_id', Auth::user()->id)->first()->id;
-        $teacherSubjectClass = TeacherSubjectClass::where('class_id', $class_id)->where('term_id', active_term()->id)
-                        ->where('session_id', active_session()->id)
-                         ->where('subject_id', $subject_id)
-                         ->where('teacher_id', $teacher_id)
-                         ->count();
-        if($teacherSubjectClass != 0) {
+        if( Auth::user()->role == 'admin') {
             return $next($request);
         }
+        
+        elseif( Auth::user()->role == 'teacher') {
+            $teacher_id = Teacher::where('user_id', Auth::user()->id)->first()->id;
+            $teacherSubjectClass = TeacherSubjectClass::where('class_id', $class_id)->where('term_id', active_term()->id)
+                            ->where('session_id', active_session()->id)
+                             ->where('subject_id', $subject_id)
+                             ->where('teacher_id', $teacher_id)
+                             ->count();
+            if($teacherSubjectClass != 0) {
+                return $next($request);
+            }
+        }
+        
         else{
             return redirect('/403');
         }

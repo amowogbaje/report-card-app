@@ -21,12 +21,13 @@ class CreateUsersTable extends Migration
             // $table->tinyInteger('active')->default(1);
             $table->integer('school_info_id')->nullable();
             $table->string('othernames')->nullable();
-            $table->string('email')->unique();
+            // $table->string('email')->unique();
             $table->string('phone')->unique()->nullable();
             $table->enum('role', ['admin', 'student', 'teacher']);
             $table->string('password');
             $table->string('dob')->nullable();
             $table->string('profile_pics')->nullable();
+            $table->string('signature_url')->nullable();
             $table->string('address')->nullable();
             $table->string('gender')->nullable();
             $table->string('citizenship')->nullable();

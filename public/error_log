@@ -1,0 +1,6 @@
+[20-Mar-2023 13:06:34 UTC] PHP Fatal error:  Cannot declare class App\Http\Livewire\Student\SubjectRegistration, because the name is already in use in /home/ambassadors/public_html/app/Http/Livewire/Teacher/SubjectRegistration.php on line 0
+[22-Mar-2023 12:26:10 UTC] PHP Fatal error:  Cannot declare class App\Http\Middleware\IsTeacher, because the name is already in use in /home/ambassadors/public_html/app/Http/Middleware/IsAdmin.php on line 14
+[22-Mar-2023 12:53:57 UTC] PHP Parse error:  syntax error, unexpected namespaced name "instanceof\Illuminate\Session\..." in /home/ambassadors/public_html/app/Exceptions/Handler.php on line 44
+[22-Mar-2023 12:59:00 UTC] PHP Parse error:  syntax error, unexpected namespaced name "instanceof\Illuminate\Session\..." in /home/ambassadors/public_html/app/Exceptions/Handler.php on line 44
+[22-Mar-2023 13:00:17 UTC] PHP Parse error:  syntax error, unexpected namespaced name "instanceof\Illuminate\Session\..." in /home/ambassadors/public_html/app/Exceptions/Handler.php on line 44
+[14-Jun-2023 01:24:59 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/ambassadors/public_html/app/Http/Controllers/DashboardController.php on line 3

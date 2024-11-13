@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Student;
 use Livewire\Component;
 
 use App\Models\Subject;
+use App\Models\SubjectTerm;
 use App\Models\Student;
 use App\Models\Result;
 use DB;
@@ -22,8 +23,10 @@ class SubjectsOffered extends Component
         $this->student = $student;
         $classStageId = $student->class_stage_id;
         $category = $student->category;
-        $this->generalSubjects = Subject::where('class_stage_id', $classStageId)->where('category', "")->get();
-        $this->specificSubjects = Subject::where('class_stage_id', $classStageId)->where('category', $category)->get();
+        $this->generalSubjects = SubjectTerm::where('class_stage_id', $classStageId)
+                                    ->where('session_id', active_session()->id)
+                                    ->where('term_id', active_term()->id)
+                                    ->get();
     }
 
     public function store() {
@@ -37,6 +40,7 @@ class SubjectsOffered extends Component
                 'term_id' => $current_term_id,
                 'subject_id' => $subjectId,
                 'class_id' => $this->student->class_id,
+                'class_code' => $this->student->class_code,
                 'student_id' => $this->student->id,
             ])->count();
             if($subjectAlreadyRegistered !=0) {
@@ -45,6 +49,7 @@ class SubjectsOffered extends Component
                     'term_id' => $current_term_id,
                     'subject_id' => $subjectId,
                     'class_id' => $this->student->class_id,
+                    'class_code' => $this->student->class_code,
                     'student_id' => $this->student->id,
                     'totalca' => 0,
                     'total_score' => 0,

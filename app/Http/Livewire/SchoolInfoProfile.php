@@ -7,14 +7,19 @@ use Livewire\Component;
 use App\Models\SchoolInfo;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Request;
 
 use Livewire\WithFileUploads;
 
 class SchoolInfoProfile extends Component
 {
     use WithFileUploads;
-    public $schoolInfo, $pics, $name, $codename, $stamp_img_url, $address, $type, $setup_complete, $readonly = "";
-
+    public $schoolInfo, $pics, $name, $codename, $stamp_img_url, $address, $type, $school_colors, $setup_complete, $readonly = "";
+    
+    public function updateSchoolColor($hex) {
+        $this->school_colors = $hex;
+    }
     public function update() {
         $updateSchoolInfo = SchoolInfo::find(school_info()->id);
         $updateSchoolInfo->name = $this->name;
@@ -41,6 +46,9 @@ class SchoolInfoProfile extends Component
         $updateSchoolInfo = SchoolInfo::find(school_info()->id);
         $oldfile = school_info()->stamp_img_url;
         $fileName = $this->pics->store('profile-pics/school-info', 'public_uploads');
+        
+
+        $updateSchoolInfo->school_colors = $this->school_colors;
         $updateSchoolInfo->stamp_img_url = $fileName;
         $updateSchoolInfo->save();
         // $absolutePath = url('/uploads/'.$fileName);
@@ -50,7 +58,7 @@ class SchoolInfoProfile extends Component
         // unlink($oldfile);
         Storage::disk('public_uploads')->delete($oldfile);
         $this->emit('toast:success', [
-            'text' => "School logo has been updated",
+            'text' => "School logo has been updated".$this->school_colors,
             'modalID' => "#behaviour_assessment_modal"
         ]);
         $this->mount();

@@ -18,6 +18,7 @@
                     <div class="mt-3">
                         <h4>{{$student->user->full_name}}</h4>
                         <p class="text-primary mb-1">{{$student->class->shortname}} Student</p>
+                        <p class="text-primary mb-1">{{$student->user->username}}</p>
                         <p class="text-muted font-size-sm">{{$student->user->address}}</p>
                         {{-- <a href="{{ url('/')}}" class="btn btn-primary">Academic Report</a> --}}
                     </div>
@@ -59,6 +60,18 @@
                         </div>
                         <div class="col-sm-9 text-secondary">
                             <input type="text" wire:model="email" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Gender</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            <select class="form-control @error('gender') is-invalid @enderror" id="gender"
+                                wire:model="gender">
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
                         </div>
                     </div>
                     <div class="row mb-3">

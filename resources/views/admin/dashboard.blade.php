@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="page-header">
-                <h2 class="pageheader-title">Examify App</h2>
+                <h2 class="pageheader-title">{{config('app.name')}}</h2>
                 <div class="page-breadcrumb">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
@@ -44,8 +44,7 @@
                         
                     </div>
                     <div class="card-footer pt-2 mt-4">
-                        <livewire:session-year.add-session />
-                        {{-- <livewire:session-year.change-session /> --}}
+                         <livewire:session-year.change-session /> 
                     </div>
                     
                 </div>

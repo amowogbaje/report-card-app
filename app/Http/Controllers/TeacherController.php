@@ -11,6 +11,7 @@ use App\Models\Term;
 use App\Models\Teacher;
 use App\Models\ClassTeacher;
 use App\Models\ClassLevel;
+use DB;
 
 
 use Auth;
@@ -30,6 +31,50 @@ class TeacherController extends Controller
         $noOfSubjects = $teacherSubjectClassObject->count();
         $subjectAndClasses = $teacherSubjectClassObject->get();
         return view('teachers.subjects', compact('subjectAndClasses', 'noOfSubjects'));
+    }
+    
+    public function registerStudent(Request $request) {
+        $current_session_id = active_session()->id;
+        $current_term_id = active_term()->id;
+        $class_code = ClassLevel::where('id', $request->class_id)->first()->code;
+        
+        
+        $selectedStudents = $request->selectedStudents;
+        // return json_encode($selectedStudents);
+        if (is_array($selectedStudents) && !empty($selectedStudents)) {
+            foreach ($selectedStudents as $studentId) {
+                $studentAlreadyRegistered = DB::table('results')->where([
+                    'session_id' => $current_session_id,
+                    'term_id' => $current_term_id,
+                    'subject_id' => $request->subject_id,
+                    'class_id' => $request->class_id,
+                    'class_code' => $class_code,
+                    'student_id' => $studentId,
+                ])->count();
+        
+                if ($studentAlreadyRegistered == 0) {
+                    DB::table('results')->insert([
+                        'session_id' => $current_session_id,
+                        'term_id' => $current_term_id,
+                        'subject_id' => $request->subject_id,
+                        'class_id' => $request->class_id,
+                        'class_code' => $class_code,
+                        'student_id' => $studentId,
+                        'totalca' => 0,
+                        'total_score' => 0,
+                    ]);
+                }
+            }
+        } else {
+            // Handle the case where $selectedStudents is null or not an array
+            Log::info('Selected students is either null or not an array.');
+        }
+        
+        return back()->with('success', 'Students have been successfully registed');
+        
+        
+        
+
     }
 
     public function classAssigned() {
@@ -68,14 +113,12 @@ class TeacherController extends Controller
             $user->state_origin = $request->state_origin;
             $user->citizenship = $request->citizenship;
             $user->dob = $request->dob;
-            // if($this->dob =="null")
             $user->save();
             if($user) {
                 return back()->with('success', $request->firstname.' info has been Successfully edited');
             }
             else {
                 return back()->with('error','Something goes wrong while updating....!!');
-                // $this->resetFields();
             }
 
     }

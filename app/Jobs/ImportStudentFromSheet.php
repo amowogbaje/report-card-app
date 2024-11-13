@@ -49,16 +49,16 @@ class ImportStudentFromSheet implements ShouldQueue
         foreach ($rows as $row) {
             
             $emailExist = DB::table('users')->where('email', $row['email'])->count();
-            $phoneExist = DB::table('users')->where('phone', $row['phone'])->count();
-            if($emailExist == 0 && $phoneExist == 0) {
+            // $phoneExist = DB::table('users')->where('phone', $row['phone'])->count();
+            if($emailExist == 0) {
                 $userId = DB::table('users')->insertGetId([
                     'firstname' => $row['firstname'],
                     'lastname' => $row['lastname'],
                     'othernames' => $row['othernames'],
                     'email' => $row['email'],
-                    'phone' => $row['phone'],
+                    // 'phone' => $row['phone'],
                     // 'dob' => $row['date_of_birth'],
-                    'username' => 'not yet assigned',
+                    'username' => htmlspecialchars($row['username']),
                     // 'username' => $row['admission_no'],
                     'school_info_id' => $schoolInfo->id,
                     'gender' => strtolower($row['gender']),
@@ -71,7 +71,7 @@ class ImportStudentFromSheet implements ShouldQueue
                 ]);
     
                 if($userId) {
-                    $studentClassCode = Classlevel::where('id', $this->class_id)->first()->code;
+                    $studentClassCode = ClassLevel::where('id', $this->class_id)->first()->code;
                     $firstStudentCheck = Student::where('class_code', $studentClassCode)->count();
                     if($firstStudentCheck == 0) {
                         $StudentMatricNo = "001";
@@ -88,15 +88,15 @@ class ImportStudentFromSheet implements ShouldQueue
     
                     $studentId = DB::table('students')->insertGetId([
                         'user_id' => $userId,
-                        'guardian_phone' => $row['phone'],
+                        'guardian_phone' => "0".$row['phone'],
                         // 'email' => $row[3],
-                        'class_code' => Classlevel::where('id', $this->class_id)->first()->code,
+                        'class_code' => ClassLevel::where('id', $this->class_id)->first()->code,
                         'class_matric_no' => $StudentMatricNo,
                         // 'school_info_id' => $schoolInfo->id,
                         'class_id' => $this->class_id,
                         'guardian_name' => $row['guardian_name'],
                         'guardian_address' => $row['guardian_address'],
-                        'class_stage_id' => Classlevel::where('id', $this->class_id)->first()->class_stage_id,
+                        'class_stage_id' => ClassLevel::where('id', $this->class_id)->first()->class_stage_id,
                         // 'category' => $category,
                     ]);
 
@@ -108,9 +108,6 @@ class ImportStudentFromSheet implements ShouldQueue
                 }
             }
             elseif($emailExist != 0) {
-                return null;
-            }
-            elseif($phoneExist != 0) {
                 return null;
             }
             

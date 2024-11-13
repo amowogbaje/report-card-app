@@ -22,7 +22,14 @@
             <div class="form-group">
                 <input name="password" class="form-control form-control-lg" id="password" type="password" placeholder="Password">
             </div>
-            <div class="form-group">
+            {{-- <div class="form-group">
+                 
+                <select class="form-control" id="session_and_term" name="session_and_term">
+                    @foreach ($session_and_terms as $session_and_term)
+                        <option value="{{$session_and_term->id}}">{{$session_and_term->name}}</option>
+                    @endforeach
+                </select>
+            </div> --}}
 
             <!-- Remember Me -->
             {{-- <div class="block mt-4">

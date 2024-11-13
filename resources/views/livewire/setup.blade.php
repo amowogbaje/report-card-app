@@ -11,7 +11,7 @@
                     </p>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="card-tab-2" data-toggle="tab" href="#card-2" role="tab" aria-controls="card-2" aria-selected="false">Add Subjects</a>
+                    <a class="nav-link" id="card-tab-2" data-toggle="tab" href="#card-2" role="tab" aria-controls="card-2" aria-selected="false" title="Assign teachers here">Add Subjects</a>
                 </li>
                 @if(isset(active_term()->id))
                 <li class="nav-item">
@@ -31,7 +31,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="card-tab-6" data-toggle="tab" href="#card-6" role="tab" aria-controls="card-6" aria-selected="false">Assign Teachers</a>
+                    <a class="nav-link" id="card-tab-6" data-toggle="tab" href="#card-6" role="tab" aria-controls="card-6" aria-selected="false">Assigned Teachers</a>
                 </li>
             </ul>
         </div>

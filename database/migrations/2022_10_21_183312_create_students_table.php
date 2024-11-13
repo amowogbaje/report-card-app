@@ -18,6 +18,7 @@ class CreateStudentsTable extends Migration
             $table->integer('user_id');
             $table->integer('class_id');
             $table->string('guardian_name')->nullable();
+            $table->string('email')->unique();
             $table->string('guardian_address')->nullable();
             $table->string('guardian_phone')->nullable();
             $table->string('student_phone')->nullable();

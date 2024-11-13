@@ -4,6 +4,7 @@
           <div class="card-body">
               <div class="d-flex flex-column align-items-center text-center">
                 <form action="">
+                    <h2>Upload Your Profile Pics Here</h2>
                     <label for="profilePics">
                         @if(!empty($teacher->user->profile_pics))
                             <img src="{{url('uploads/'.$teacher->user->profile_pics)}}" alt="user" class="rounded-circle border border-info" width="110">
@@ -19,7 +20,22 @@
                     </label>
                     <input style="display: none" wire:model = "pics" id="profilePics" type="file" accept="image/*"/>
                     <br>
-                    <button class="btn btn-info form-control" wire:click.prevent = "uploadPics">Save</button>
+                    <button class="btn btn-info form-control" wire:click.prevent = "uploadPics"><div wire:loading wire:target="uploadPics"><span class="dashboard-spinner spinner-success spinner-xs mr-2"></span></div>Save</button>
+                </form>
+                <hr>
+                <form action="" class="my-5">
+                    <h2>Upload Your Signature Here</h2>
+                    <label for="signatureUrl">
+                        @if(!empty($teacher->user->signature_url))
+                            <img src="{{url('uploads/'.$teacher->user->signature_url)}}" alt="user" class="rounded-0" width="110">
+                        @else
+                            <img src="{{asset('assets/images/good.jpg')}}" alt="Signature" class="rounded-0 p-1" width="110">
+                            
+                        @endif
+                    </label>
+                    <input style="display: none" wire:model = "signature" id="signatureUrl" type="file" accept="image/*"/>
+                    <br>
+                    <button class="btn btn-info form-control" wire:click.prevent = "uploadSignature"><div wire:loading wire:target="uploadSignature"><span class="dashboard-spinner spinner-success spinner-xs mr-2"></span></div>Save</button>
                 </form>
                   <div class="mt-3">
                       <h4>{{$teacher->user->full_name}}</h4>

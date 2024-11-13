@@ -79,8 +79,8 @@
                                         srcset="">
                                     <div class="schoolTitleBoxText">
                                         <h4 class="fs-5 my-2 text-center">{{$schoolInfo->name}}</h4>
-                                        <h5 class="fs-4 my-2 text-center">{{$student->class_stage->name}} End of
-                                            {{$current_term->name}} Report
+                                        <h5 class="fs-4 my-2 text-center">{{$student->class_stage->name}} School End of
+                                            {{$current_term->name}} Term Academic Report
                                         </h5>
                                     </div>
 
@@ -95,43 +95,52 @@
                         <table width="2200" style="margin-bottom: 2em; margin-top: 1em;">
                             <tr>
                                 <td style="vertical-align: top" width="1750">
-                                    <table width="1700">
+                                    <table width="1750">
                                         <tr>
-                                            <table width="1500" class="border-line text-center" style="font-size:2em">
+                                            <table width="1700" class="border-line text-center" style="font-size:2em">
 
                                                 <tr>
+                                                    @if($student->user->profile_pics != "")
                                                     <td width="300" rowspan="3" align="right"
                                                         style="border:none; padding: 0em; margin: 0em">
-                                                        @if($student->user->profile_pics != "")
                                                         <img width="420"
                                                             style="border-radius: none; border: solid {{$colorsArray['mainTextColor']}} thick; margin: 0; margin-left: 10px"
                                                             src="{{url('uploads/'.$student->user->profile_pics)}}"
                                                             alt="" srcset="">
-                                                        @endif
+                                                        
                                                     </td>
+                                                    @endif
+                                                    @if($student->class_stage_id < 7)
+                                                    <th height="40" colspan="11">Name: <span
+                                                            class="text-underline text-uppercase py-3">{{$student->user->fullname}}</span>
+                                                    </th>
+                                                    @else
                                                     <th height="40" colspan="10">Name: <span
                                                             class="text-underline text-uppercase py-3">{{$student->user->fullname}}</span>
                                                     </th>
+                                                    @endif
 
                                                 </tr>
-                                                <tr class="py-3">
+                                                <tr class="py-3 px-3">
                                                     <td height="40">Admission No</td>
                                                     <td>Session</td>
                                                     <td>Class</td>
+                                                    <td>Number in Class</td>
                                                     <td>Sex</td>
                                                     <td>Mark Obtainable</td>
                                                     <td>Mark Obtained</td>
-                                                    <td>Average Score</td>
+                                                    <td>Class Average Score</td>
                                                     <td>Percentage</td>
                                                     <td>Attendance</td>
                                                     @if($student->class_stage_id < 7)
                                                         <td>Position In Class</td>
                                                     @endif
                                                 </tr>
-                                                <tr class="py-3">
+                                                <tr class="py-3 px-3">
                                                     <td height="40">{{ucfirst($student->user->username)}}</td>
                                                     <td>{{$current_session->name}}</td>
                                                     <td>{{$student->class->shortname}}</td>
+                                                    <td>{{$numberInClass}}</td>
                                                     <td>{{ucfirst($student->user->gender)}}</td>
                                                     <td>{{$academicAssessmentsArray['markObtainable']}}</td>
                                                     <td>{{$academicAssessmentsArray['markObtained']}}</td>
@@ -139,7 +148,7 @@
                                                     <td>{{$academicAssessmentsArray['percentage']}}</td>
                                                     <td>{{$studentAttendance}} out of {{$overallAttendance}}</td>
                                                    @if($student->class_stage_id < 7)
-                                                        <td>{{$position_in_class}}</td>
+                                                        <td>{!!$position_in_class!!}</td>
                                                     @endif
                                                     
                                                 </tr>
@@ -160,7 +169,11 @@
                                                             <th colspan="6">Continous Assessment</th>
                                                             <th colspan="2" rowspan="2">Term's Exam</th>
                                                             <th colspan="2" rowspan="2">Total </th>
-                                                            <th colspan="8" rowspan="2">Summary of Term's Work </th>
+                                                            @if($student->class_stage_id == 7)
+                                                            <th colspan="10" rowspan="2">Summary of Term's Work </th>
+                                                            @elseif($student->class_stage_id < 7)
+                                                            <th colspan="9" rowspan="2">Summary of Term's Work</th>
+                                                            @endif
                                                         </tr>
                                                         <tr class="text-uppercase px-1">
 
@@ -168,8 +181,8 @@
                                                             <th colspan="2">2nd Test</th>
                                                             <th colspan="2">3rd Test</th>
                                                         </tr>
-                                                        <tr class="text-uppercase px-1">
-                                                            <th>Subjects</th>
+                                                        <tr class="text-uppercase px-1" >
+                                                            <th style="height: 40px;">Subjects</th>
                                                             @if(active_term()->id == 2)
                                                             <th>1st Term</th>
                                                             @endif
@@ -189,6 +202,9 @@
                                                             <th>Mark Obtained</th>
                                                             <th>Percentage Score </th>
                                                             <th>Class Average </th>
+                                                            @if($student->class_stage_id == 7)
+                                                            <th>Numbers In Class</th>
+                                                            @endif
                                                             <th>Class Highest Mark </th>
                                                             <th>Class Lowest Mark </th>
                                                             <th>Grade </th>
@@ -201,7 +217,7 @@
 
                                                         @foreach ($results as $result)
                                                         <tr class="text-center px-1" style="font-size: 1.5em;">
-                                                            <td width="200" height="30" style=" padding-left: 1.1em"
+                                                            <td width="200" @if($student->class_stage_id == 7) height="45" @else height="60" @endif style="padding-left: 1.1em;"
                                                                 class=" text-left py-0 px-2">{{$result->subject->name}}
                                                             </td>
                                                             @if(active_term()->id == 2)
@@ -235,13 +251,16 @@
                                                             <td>{{$result->total_score}}</td>
                                                             <td>{{$result->cumulative_percentage}}</td>
                                                             <td>{{$result->average_score}}</td>
+                                                            @if($student->class_stage_id == 7)
+                                                            <td>{{$result->classSubject($student, $result->subject->id)->count()}}</td>
+                                                            @endif
                                                             <td>{{$result->highest_score}}</td>
                                                             <td>{{$result->lowest_score}}</td>
                                                             <td>{{$result->grade}}</td>
                                                             <td>{!! $result->position !!}</td>
                                                             <td>
-                                                                {{$result->subjectTeacher($result->subject->id, $result->classlevel->id)->firstname}}
                                                                 {{$result->subjectTeacher($result->subject->id, $result->classlevel->id)->lastname}}
+                                                                {{abbreviate($result->subjectTeacher($result->subject->id, $result->classlevel->id)->firstname)}}
                                                             </td>
                                                         </tr>
                                                         @endforeach
@@ -284,7 +303,7 @@
                                                     @foreach ($behaviourAssessmentsArray as $title => $mark)
                                                     <tr class="py-2">
                                                         <th width="250" style="color: #000; padding-left: 1.1em"
-                                                            class="px-2 text-left text-uppercase">{{camelCase($title)}}
+                                                            class="px-2 text-left text-uppercase">{{removeUnderScoreAddSpace($title)}}
                                                         </th>
                                                         @for ($i = 5; $i >= 1; $i--)
                                                         @if($mark == $i)
@@ -337,7 +356,7 @@
                                                     @foreach ($skillAssessmentsArray as $title => $mark)
                                                     <tr class="py-2">
                                                         <th width="250" style="color: #000; padding-left: 1.1em"
-                                                            class="text-left text-uppercase">{{camelCase($title)}}</th>
+                                                            class="text-left text-uppercase">{{removeUnderScoreAddSpace($title)}}</th>
                                                         @for ($i = 5; $i >= 1; $i--)
                                                         @if($mark == $i)
                                                         <td width="40">
@@ -367,8 +386,15 @@
                                             <th height="40" class="text-left">Class Teacher's Remark:</th>
                                         </tr>
                                         <tr class="px-3">
-                                            <td height="40">{{$classTeacherComment}}</td>
+                                            <td height="40">{!! $classTeacherComment !!}</td>
                                         </tr>
+                                        @if(!empty($classTeacherSignature))
+                                        <tr class="px-3">
+                                            <td>
+                                                <img src="{{url('uploads/'.$classTeacherSignature)}}" alt="signature" class="rounded-0" width="110">
+                                            </td>
+                                        </tr>
+                                        @endif
                                     </table>
                                     <table width="450" class="my-3 text-left"
                                         style="font-size: 2em; border: solid {{$colorsArray['mainTextColor']}} thin; margin-top: 1em">
@@ -376,8 +402,15 @@
                                             <th height="40" class="text-left">Principal's Remark:</th>
                                         </tr>
                                         <tr class="px-3">
-                                            <td height="40">{{$principalComment}}</td>
+                                            <td height="40">{!! $principalComment !!}</td>
                                         </tr>
+                                        @if(!empty($principalSignature))
+                                        <tr class="px-3">
+                                            <td>
+                                                <img src="{{url('uploads/'.$principalSignature)}}" alt="signature" class="rounded-0" width="110">
+                                            </td>
+                                        </tr>
+                                        @endif
                                     </table>
                                 </td>
                             </tr>
